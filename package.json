@@ -15,6 +15,7 @@
   "dependencies": {
     "@floating-ui/dom": "1.6.8",
     "@stylistic/stylelint-config": "^1.0.1",
+    "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^10.11.1",
     "@vueuse/math": "^10.11.1",
     "apexcharts": "3.49.2",
