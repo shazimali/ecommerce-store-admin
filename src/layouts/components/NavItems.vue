@@ -15,6 +15,19 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
   />
   <VerticalNavSectionTitle  
     :item="{
+      heading: 'Utils',
+    }"
+  />
+  <VerticalNavLink
+  v-show="canUserAccess('website_access')"
+    :item="{
+      title: 'Websites',
+      icon: 'bx-building',
+      to: '/websites',
+    }"
+  />
+  <VerticalNavSectionTitle  
+    :item="{
       heading: 'User Management',
     }"
   />

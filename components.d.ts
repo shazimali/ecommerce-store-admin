@@ -23,5 +23,7 @@ declare module 'vue' {
     ThemeSwitcher: typeof import('./src/@core/components/ThemeSwitcher.vue')['default']
     UserOperations: typeof import('./src/components/UserOperations.vue')['default']
     VueApexCharts: typeof import('vue3-apexcharts')['default']
+    WebsiteOperations: typeof import('./src/components/websiteOperations.vue')['default']
+    WebsitOperations: typeof import('./src/components/websitOperations.vue')['default']
   }
 }

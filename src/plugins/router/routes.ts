@@ -39,6 +39,14 @@ export const routes = [
           if(!canUserAccess('permission_access')) return '/error'
         }
       },
+      {
+        path: 'websites',
+        name:'websites',
+        component: () => import('@/pages/websites.vue'),
+        beforeEnter() {
+          if(!canUserAccess('website_access')) return '/error'
+        }
+      },
     ],
   },
   {
