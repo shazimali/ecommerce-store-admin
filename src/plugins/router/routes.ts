@@ -47,6 +47,14 @@ export const routes = [
           if(!canUserAccess('website_access')) return '/error'
         }
       },
+      {
+        path: 'categories',
+        name:'categories',
+        component: () => import('@/pages/categories.vue'),
+        beforeEnter() {
+          if(!canUserAccess('category_access')) return '/error'
+        }
+      },
     ],
   },
   {

@@ -10,13 +10,10 @@ declare module 'vue' {
     CardStatisticsHorizontal: typeof import('./src/@core/components/cards/CardStatisticsHorizontal.vue')['default']
     CardStatisticsVertical: typeof import('./src/@core/components/cards/CardStatisticsVertical.vue')['default']
     CardStatisticsWithImages: typeof import('./src/@core/components/cards/CardStatisticsWithImages.vue')['default']
-    ConfirmDailog: typeof import('./src/components/ConfirmDailog.vue')['default']
     DeleteDailog: typeof import('./src/components/DeleteDailog.vue')['default']
     ErrorHeader: typeof import('./src/components/ErrorHeader.vue')['default']
-    Modal: typeof import('./src/components/Modal.vue')['default']
     MoreBtn: typeof import('./src/@core/components/MoreBtn.vue')['default']
     PermissionOperations: typeof import('./src/components/PermissionOperations.vue')['default']
-    RoleModal: typeof import('./src/components/RoleModal.vue')['default']
     RoleOperations: typeof import('./src/components/RoleOperations.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -24,6 +21,5 @@ declare module 'vue' {
     UserOperations: typeof import('./src/components/UserOperations.vue')['default']
     VueApexCharts: typeof import('vue3-apexcharts')['default']
     WebsiteOperations: typeof import('./src/components/websiteOperations.vue')['default']
-    WebsitOperations: typeof import('./src/components/websitOperations.vue')['default']
   }
 }
