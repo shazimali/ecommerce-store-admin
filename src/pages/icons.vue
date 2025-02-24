@@ -9,6 +9,7 @@ const iconsList = [
   'bx-extension',
   'bx-category-alt',
   'bx-alarm',
+  'bx bxs-category',
   'bx-alarm-add',
   'bx-alarm-exclamation',
   'bx-camera',

@@ -55,6 +55,14 @@ export const routes = [
           if(!canUserAccess('category_access')) return '/error'
         }
       },
+      {
+        path: 'subcategories',
+        name:'subcategories',
+        component: () => import('@/pages/sub-categories.vue'),
+        beforeEnter() {
+          if(!canUserAccess('subcategory_access')) return '/error'
+        }
+      },
     ],
   },
   {

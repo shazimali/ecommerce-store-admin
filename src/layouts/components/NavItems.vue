@@ -34,6 +34,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/categories',
     }"
   />
+  <VerticalNavLink
+  v-show="canUserAccess('subcategory_access')"
+    :item="{
+      title: 'Sub Categories',
+      icon: 'bx bxs-category',
+      to: '/subcategories',
+    }"
+  />
   <VerticalNavSectionTitle  
     :item="{
       heading: 'User Management',

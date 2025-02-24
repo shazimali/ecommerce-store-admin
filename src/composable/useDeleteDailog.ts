@@ -1,6 +1,7 @@
 import { deleteCategory } from "@/services/CategoriesService";
 import { deletePermission } from "@/services/PermissionsService";
 import { deleteRole } from "@/services/RolesService";
+import { deleteSubCategory } from "@/services/SubCategoriesService";
 import { deleteUser } from "@/services/UsersService";
 import { deleteWebsite } from "@/services/WebsiteService";
 import { rand } from "@vueuse/core";
@@ -64,6 +65,20 @@ export function useDeleteDailog(){
         }
         if(action == 'category'){
             deleteCategory(id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+                isActive.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'subcategory'){
+            deleteSubCategory(id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
