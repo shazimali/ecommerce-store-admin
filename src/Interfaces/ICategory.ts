@@ -1,9 +1,9 @@
 export interface ICategory {
     title: string,
     slug: string,
-    image: string,
+    image: {},
+    order: number,
     websites:[],
-    countries:[]
 }
 export interface ICategoryList {
     category : [ICategory]

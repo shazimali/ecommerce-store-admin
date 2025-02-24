@@ -37,3 +37,14 @@ export const canUserAccess = (val:string) => {
   return user_permissions.filter(pr => pr == val).length > 0 ? true : false;
 } 
 
+// 👉 Slug
+export const slugify = (slug:string) => {
+  
+  return slug.toLowerCase()
+  .trim()
+  .replace(/[^\w\s-]/g, '')
+  .replace(/[\s_-]+/g, '-')
+  .replace(/^-+|-+$/g, '');
+
+} 
+

@@ -1,3 +1,4 @@
+import { deleteCategory } from "@/services/CategoriesService";
 import { deletePermission } from "@/services/PermissionsService";
 import { deleteRole } from "@/services/RolesService";
 import { deleteUser } from "@/services/UsersService";
@@ -49,6 +50,20 @@ export function useDeleteDailog(){
         }
         if(action == 'website'){
             deleteWebsite(id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+                isActive.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'category'){
+            deleteCategory(id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
