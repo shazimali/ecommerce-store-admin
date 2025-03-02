@@ -1,11 +1,6 @@
 import { IProduct, IProductPrice } from "@/Interfaces/IProduct";
 import axios from "axios";
 
-const headers = {
-    headers: {
-        'Content-Type': 'application/json',
-    }
-  };
 
 export const  fetchProducts = async (current_page :number,item_per_page :number, search:string) => {
     return await axios.get('/products?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
@@ -26,7 +21,9 @@ export const fetchProductByID = async (id :number) => {
 }
 
 export const updateProduct = async  (id : number , data : IProduct )=>{
-    return await axios.put('/products/update/'+id,{ ...data },headers)
+    return await axios.post('/products/update/'+id,{ ...data },{
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
 export const deleteProduct = async  (id : number)=>{

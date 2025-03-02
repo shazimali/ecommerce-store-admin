@@ -1,12 +1,6 @@
 import { IBanner } from "@/Interfaces/IBanner";
 import axios from "axios";
 
-const headers = {
-    headers: {
-        'Content-Type': 'application/json',
-    }
-  };
-
 export const  fetchBanners = async (current_page :number,item_per_page :number, search:string) => {
     return await axios.get('/banners?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
 }
@@ -26,7 +20,9 @@ export const fetchBannerByID = async (id :number) => {
 }
 
 export const updateBanner = async  (id : number , data : IBanner )=>{
-    return await axios.put('/banners/update/'+id,{ ...data },headers)
+    return await axios.post('/banners/update/'+id,{ ...data },{
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
 export const deleteBanner = async  (id : number)=>{

@@ -75,8 +75,7 @@ export function useSubCategoryOperation (){
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
                 toast.success(res.data.message)
-            })
-            .catch((err) => {
+            }).catch((err) => {
               if(err.response.status == "422"){
                 errorMessages.value =  err.response.data.errors
                 formLoading.value = false;
@@ -112,10 +111,8 @@ export function useSubCategoryOperation (){
             form.value.order = 0;
             loading.value = true;
     
-            //get all permissions
             fetchAllCategories().then((res) => {
                 lstCategories.value = res.data.data
-                //get selected permissions in role edit case
                 if(id != 0){
                     fetchSubCategoryByID(id).then((res) => {
                         let data = res.data.data;

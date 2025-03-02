@@ -42,9 +42,9 @@
                     :src="item.image"
                   ></v-img>
             </template>
-            <template v-slot:item.websites="{ item }">
-                <v-chip v-for="website in item.websites" :key="website" color="red" class="mx-1 my-1">
-                    {{ website }}
+            <template v-slot:item.categories="{ item }">
+                <v-chip v-for="category in item.categories" :key="category" color="red" class="mx-1 my-1">
+                    {{ category }}
                 </v-chip>
             </template>
               <template v-slot:item.actions="{ item }">

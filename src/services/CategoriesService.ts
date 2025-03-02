@@ -26,7 +26,9 @@ export const fetchCategoryByID = async (id :number) => {
 }
 
 export const updateCategory = async  (id : number , data : ICategory )=>{
-    return await axios.put('/categories/update/'+id,{ ...data },headers)
+    return await axios.post('/categories/update/'+id,{ ...data },{
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
 export const deleteCategory = async  (id : number)=>{

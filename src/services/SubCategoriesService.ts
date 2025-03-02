@@ -1,12 +1,6 @@
 import { ISubCategory } from "@/Interfaces/ISubCategory";
 import axios from "axios";
 
-const headers = {
-    headers: {
-        'Content-Type': 'application/json',
-    }
-  };
-
 export const  fetchSubCategories = async (current_page :number,item_per_page :number, search:string) => {
     return await axios.get('/subcategories?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
 }
@@ -25,8 +19,10 @@ export const fetchSubCategoryByID = async (id :number) => {
     return await axios.get('/subcategories/edit/'+id)
 }
 
-export const updateSubCategory = async  (id : number , data : ISubCategory )=>{
-    return await axios.put('/subcategories/update/'+id,{ ...data },headers)
+export const updateSubCategory = async  (id : number , data : ISubCategory )=> {
+    return await axios.post('/subcategories/update/'+id,{ ...data },{
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
 export const deleteSubCategory = async  (id : number)=>{

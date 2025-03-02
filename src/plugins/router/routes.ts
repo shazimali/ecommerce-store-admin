@@ -11,8 +11,7 @@ export const routes = [
         name:'dashboard',
         component: () => import('@/pages/dashboard.vue'),
         beforeEnter() {
-          // if(!canUserAccess('dashboard_access')) return '/error'
-          if(!canUserAccess('user_access')) return '/error'
+          if(!canUserAccess('dashboard_access')) return '/error'
         }
       },
       {
