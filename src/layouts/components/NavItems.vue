@@ -42,6 +42,22 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/subcategories',
     }"
   />
+  <VerticalNavLink
+  v-show="canUserAccess('product_access')"
+    :item="{
+      title: 'Products',
+      icon: 'bx bxl-product-hunt',
+      to: '/products',
+    }"
+  />
+  <VerticalNavLink
+  v-show="canUserAccess('banner_access')"
+    :item="{
+      title: 'Banners',
+      icon: 'bx bx-slideshow',
+      to: '/banners',
+    }"
+  />
   <VerticalNavSectionTitle  
     :item="{
       heading: 'User Management',

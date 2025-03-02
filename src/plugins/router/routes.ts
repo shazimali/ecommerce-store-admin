@@ -63,6 +63,22 @@ export const routes = [
           if(!canUserAccess('subcategory_access')) return '/error'
         }
       },
+      {
+        path: 'products',
+        name:'products',
+        component: () => import('@/pages/products.vue'),
+        beforeEnter() {
+          if(!canUserAccess('product_access')) return '/error'
+        }
+      },
+      {
+        path: 'banners',
+        name:'banners',
+        component: () => import('@/pages/banners.vue'),
+        beforeEnter() {
+          if(!canUserAccess('banner_access')) return '/error'
+        }
+      }
     ],
   },
   {
