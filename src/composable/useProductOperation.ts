@@ -147,7 +147,6 @@ export function useProductOperation (){
                     fetchProductByID(id).then((res) => {
                         let data = res.data.data;
                         form.value = data;
-                        form.value.is_new = data.is_new;
                         imageInput.value = null;
                         imageSrc.value = data.image_src;
                         form.value.sub_categories = data.sub_categories.map(({id}) => id);

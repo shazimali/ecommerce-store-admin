@@ -84,7 +84,7 @@
                 </v-col>
                 <v-col cols="4">
                     <v-switch
-                    :v-model="form.is_new"
+                    :model-value="form.is_new"
                     @change="handleState('is_new')"
                     color="primary"
                     label="New"
@@ -92,7 +92,7 @@
                 </v-col>
                 <v-col cols="4">
                     <v-switch
-                    :v-model="form.is_featured"
+                    :model-value="form.is_featured"
                     @change="handleState('is_featured')"
                     color="primary"
                     label="Featured"
