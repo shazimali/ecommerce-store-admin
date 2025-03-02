@@ -14,14 +14,14 @@
               ></v-text-field>
           <v-spacer></v-spacer>
   
-              <CategoryOperation 
-              v-if="canUserAccess('category_create')"
+              <BannerOperation 
+              v-if="canUserAccess('banner_create')"
               btn-title="create"
-              modal-title="Create Category"
-              :category-id=0
+              modal-title="Create Banner"
+              :banner-id=0
               color="primary"
               size="default"
-              @refresh-category-list="doFetchBanners"
+              @refresh-banner-list="doFetchBanners"
               />
           </v-subheader>
           <v-card>
@@ -48,19 +48,19 @@
                 </v-chip>
             </template>
               <template v-slot:item.actions="{ item }">
-                  <CategoryOperation 
-                      v-if="canUserAccess('banner_edit')"
+                    <BannerOperation 
+                      v-if="canUserAccess('banner_update')"
                       btn-title="Edit"
                       modal-title="Edit Banner"
                       color="primary"
-                      :category-id="item.id"
+                      :banner-id="item.id"
                       size="x-small"
                       @refresh-banner-list="doFetchBanners"
-                      />
+                    />
                       <DeleteDailog
                       v-if="canUserAccess('banner_delete')"
                       :id="item.id"
-                      action="category"
+                      action="banner"
                       @refresh-list="doFetchBanners"
                       />
               </template>
@@ -71,7 +71,7 @@
   </template>
   <script setup lang="ts">
 import { canUserAccess } from '@/@core/utils/helpers';
-import CategoryOperation from '@/components/CategoryOperation.vue';
+import BannerOperation from '@/components/BannerOperation.vue';
 import { useBanners } from '@/composable/useBanners';
 const { lstBanners,
       loading,
