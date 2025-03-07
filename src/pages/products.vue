@@ -66,18 +66,6 @@
                                         @refresh-product-list="doFetchProducts"
                                         />
                                     </template>
-                                    <VListItemTitle> Edit</VListItemTitle>
-                                </VListItem>
-                                <VListItem link>
-                                    <template #prepend>
-                                        <DeleteDailog
-                                        v-if="canUserAccess('product_delete')"
-                                        :id="item.id"
-                                        action="product"
-                                        @refresh-list="doFetchProducts"
-                                        />
-                                    </template>
-                                    <VListItemTitle> Delete</VListItemTitle>
                                 </VListItem>
                                 <VListItem link>
                                     <template #prepend>
@@ -88,11 +76,32 @@
                                         color="primary"
                                         :product-id="item.id"
                                         size="x-small"
-                                        @refresh-product-price-list="doFetchProducts"
                                         />
                                     </template>
-                                    <VListItemTitle> Prices</VListItemTitle>
                                 </VListItem>
+                                <VListItem link>
+                                    <template #prepend>
+                                        <ProductColor 
+                                        v-if="canUserAccess('product_color_access')"
+                                        btn-title="Edit"
+                                        modal-title="Colors"
+                                        color="primary"
+                                        :product-id="item.id"
+                                        size="x-small"
+                                        />
+                                    </template>
+                                </VListItem>
+                                <VListItem link>
+                                    <template #prepend>
+                                        <DeleteDailog
+                                        v-if="canUserAccess('product_delete')"
+                                        :id="item.id"
+                                        action="product"
+                                        @refresh-list="doFetchProducts"
+                                        />
+                                    </template>
+                                </VListItem>
+                               
                             </v-list>
                         </v-menu>
               </template>
@@ -103,6 +112,7 @@
   </template>
   <script setup lang="ts">
 import { canUserAccess } from '@/@core/utils/helpers';
+import ProductColor from '@/components/ProductColor.vue';
 import ProductOperation from '@/components/ProductOperation.vue';
 import { useProducts } from '@/composable/useProducts';
 const { lstProducts,

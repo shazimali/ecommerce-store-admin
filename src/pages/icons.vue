@@ -9,6 +9,7 @@ const iconsList = [
   'bx-extension',
   'dots-vertical-rounded',
   'bx bx-dots-vertical',
+  'bx bx-palette',
   'bx bx-dollar-circle',
   'bx-category-alt',
   'bx-alarm',

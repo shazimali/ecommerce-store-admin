@@ -7,6 +7,12 @@
         color="error"
         v-bind="activatorProps"
         />
+        &nbsp;
+        &nbsp;
+        <v-label
+        v-if="action == 'product'"
+        v-bind="activatorProps"
+        > Delete</v-label>
       </template>
 
       <template v-slot:default="{ isActive }">

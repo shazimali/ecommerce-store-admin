@@ -7,6 +7,12 @@
         @click="getAllPrices(productId)"
         v-bind="activatorProps"
         />
+        &nbsp;
+        &nbsp;
+        <v-label
+        @click="getAllPrices(productId)"
+        v-bind="activatorProps"
+        > Prices</v-label>
       </template>
 
       <template v-slot:default="{ isActive }">

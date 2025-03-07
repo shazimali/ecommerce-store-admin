@@ -1,4 +1,4 @@
-import { IProduct, IProductPrice } from "@/Interfaces/IProduct";
+import { IProduct, IProductColor, IProductPrice } from "@/Interfaces/IProduct";
 import axios from "axios";
 
 
@@ -40,4 +40,18 @@ export const saveProductPrice = async  (data: IProductPrice)=>{
 
 export const deleteProductPrice = async  (id : number)=>{
     return await axios.delete('/products/prices/delete/'+id)
+}
+
+export const fetchAllColorsByProductID = async  (id : number)=>{
+    return await axios.get('/products/colors/'+id)
+}
+
+export const saveProductColor = async  (data:IProductColor)=>{
+    return await axios.post('/products/colors/store',{...data},{
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
+}
+
+export const deleteProductColor = async  (id : number)=>{
+    return await axios.delete('/products/colors/delete/'+id)
 }

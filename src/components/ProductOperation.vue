@@ -17,6 +17,13 @@
         @click="getAllSubCategories(productId)"
         v-bind="activatorProps"
         />
+        &nbsp;
+        &nbsp;
+        <v-label
+        v-if="btnTitle == 'Edit'"
+        @click="getAllSubCategories(productId)"
+        v-bind="activatorProps"
+        > Edit</v-label>
       </template>
 
       <template v-slot:default="{ isActive }">

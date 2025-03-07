@@ -1,7 +1,7 @@
 import { deleteBanner } from "@/services/BannersService";
 import { deleteCategory } from "@/services/CategoriesService";
 import { deletePermission } from "@/services/PermissionsService";
-import { deleteProduct, deleteProductPrice } from "@/services/ProductsService";
+import { deleteProduct, deleteProductColor, deleteProductPrice } from "@/services/ProductsService";
 import { deleteRole } from "@/services/RolesService";
 import { deleteSubCategory } from "@/services/SubCategoriesService";
 import { deleteUser } from "@/services/UsersService";
@@ -109,6 +109,19 @@ export function useDeleteDailog(){
         }
         if(action == 'product_price'){
             deleteProductPrice(id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'product_color'){
+            deleteProductColor(id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{

@@ -43,3 +43,32 @@ export interface IProductFetchPrice {
 export interface IProductPriceList {
     product_price : [IProductFetchPrice]
 }
+
+export interface IProductColor {
+    id: number,
+    product_head_id: number,
+    color_name: string,
+    color_image: {},
+    image1: {},
+    image2: {},
+    image3: {},
+    image4: {},
+    image5: {},
+}
+
+export interface IProductFetchColor {
+    id: number,
+    product_head_id: number,
+    color_name: string,
+    color_image_src: string,
+    image1_src:string,
+    image2_src:string,
+    image3_src:string,
+    image4_src:string,
+    image5_src:string
+}
+
+
+export interface IProductColorList {
+    product_color : [IProductFetchColor]
+}
