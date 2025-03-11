@@ -85,6 +85,22 @@ export const routes = [
         beforeEnter() {
           if(!canUserAccess('facility_access')) return '/error'
         }
+      },
+      {
+        path: 'suppliers',
+        name:'suppliers',
+        component: () => import('@/pages/suppliers.vue'),
+        beforeEnter() {
+          if(!canUserAccess('supplier_access')) return '/error'
+        }
+      },
+      {
+        path: 'purchases',
+        name:'purchases',
+        component: () => import('@/pages/purchases.vue'),
+        beforeEnter() {
+          if(!canUserAccess('purchase_access')) return '/error'
+        }
       }
     ],
   },

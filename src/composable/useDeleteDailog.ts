@@ -5,6 +5,7 @@ import { deletePermission } from "@/services/PermissionsService";
 import { deleteProduct, deleteProductColor, deleteProductPrice } from "@/services/ProductsService";
 import { deleteRole } from "@/services/RolesService";
 import { deleteSubCategory } from "@/services/SubCategoriesService";
+import { deleteSupplier } from "@/services/SuppliersService";
 import { deleteUser } from "@/services/UsersService";
 import { deleteWebsite } from "@/services/WebsiteService";
 import { rand } from "@vueuse/core";
@@ -149,6 +150,19 @@ export function useDeleteDailog(){
         }
         if(action == 'facility'){
             deleteFacility(id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'supplier'){
+            deleteSupplier(id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{

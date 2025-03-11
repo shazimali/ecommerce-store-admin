@@ -24,6 +24,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SubCategoryOperation: typeof import('./src/components/SubCategoryOperation.vue')['default']
+    SupplierOperation: typeof import('./src/components/SupplierOperation.vue')['default']
     ThemeSwitcher: typeof import('./src/@core/components/ThemeSwitcher.vue')['default']
     UserOperations: typeof import('./src/components/UserOperations.vue')['default']
     VueApexCharts: typeof import('vue3-apexcharts')['default']

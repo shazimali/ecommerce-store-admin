@@ -66,6 +66,22 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/facilities',
     }"
   />
+  <VerticalNavLink
+  v-show="canUserAccess('supplier_access')"
+    :item="{
+      title: 'Suppliers',
+      icon: 'bx bx-cylinder',
+      to: '/suppliers',
+    }"
+  />
+  <VerticalNavLink
+  v-show="canUserAccess('purchase_access')"
+    :item="{
+      title: 'Purchases',
+      icon: 'bx bx-purchase-tag',
+      to: '/purchases',
+    }"
+  />
   <VerticalNavSectionTitle  
     :item="{
       heading: 'User Management',
