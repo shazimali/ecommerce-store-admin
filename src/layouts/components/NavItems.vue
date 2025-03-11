@@ -22,7 +22,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
   v-show="canUserAccess('website_access')"
     :item="{
       title: 'Websites',
-      icon: 'bx-building',
+      icon: 'bx bx-store',
       to: '/websites',
     }"
   />
@@ -56,6 +56,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       title: 'Banners',
       icon: 'bx bx-slideshow',
       to: '/banners',
+    }"
+  />
+  <VerticalNavLink
+  v-show="canUserAccess('facility_access')"
+    :item="{
+      title: 'Facilities',
+      icon: 'bx-building',
+      to: '/facilities',
     }"
   />
   <VerticalNavSectionTitle  

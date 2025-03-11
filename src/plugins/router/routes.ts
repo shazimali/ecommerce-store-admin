@@ -77,6 +77,14 @@ export const routes = [
         beforeEnter() {
           if(!canUserAccess('banner_access')) return '/error'
         }
+      },
+      {
+        path: 'facilities',
+        name:'facilities',
+        component: () => import('@/pages/facilities.vue'),
+        beforeEnter() {
+          if(!canUserAccess('facility_access')) return '/error'
+        }
       }
     ],
   },

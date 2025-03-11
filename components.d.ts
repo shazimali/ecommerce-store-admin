@@ -14,6 +14,7 @@ declare module 'vue' {
     CategoryOperation: typeof import('./src/components/CategoryOperation.vue')['default']
     DeleteDailog: typeof import('./src/components/DeleteDailog.vue')['default']
     ErrorHeader: typeof import('./src/components/ErrorHeader.vue')['default']
+    FacilityOperation: typeof import('./src/components/FacilityOperation.vue')['default']
     MoreBtn: typeof import('./src/@core/components/MoreBtn.vue')['default']
     PermissionOperations: typeof import('./src/components/PermissionOperations.vue')['default']
     ProductColor: typeof import('./src/components/ProductColor.vue')['default']

@@ -1,5 +1,6 @@
 import { deleteBanner } from "@/services/BannersService";
 import { deleteCategory } from "@/services/CategoriesService";
+import { deleteFacility } from "@/services/FacilitiesService";
 import { deletePermission } from "@/services/PermissionsService";
 import { deleteProduct, deleteProductColor, deleteProductPrice } from "@/services/ProductsService";
 import { deleteRole } from "@/services/RolesService";
@@ -135,6 +136,19 @@ export function useDeleteDailog(){
         }
         if(action == 'banner'){
             deleteBanner(id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'facility'){
+            deleteFacility(id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
