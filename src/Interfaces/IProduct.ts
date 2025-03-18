@@ -13,6 +13,11 @@ export interface IProduct {
     is_featured: boolean,
     coming_soon: boolean,
     image: {},
+    image1: {},
+    image2: {},
+    image3: {},
+    image4: {},
+    image5: {},
     order: number,
     sub_categories:[],
 }
@@ -71,4 +76,11 @@ export interface IProductFetchColor {
 
 export interface IProductColorList {
     product_color : [IProductFetchColor]
+}
+
+export interface IProductListForPurchase {
+    title: string,
+    code: string|number,
+    colors: [IProductColor],
+    prices: [IProductPrice]
 }

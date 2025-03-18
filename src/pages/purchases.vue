@@ -14,42 +14,42 @@
               ></v-text-field>
           <v-spacer></v-spacer>
   
-              <SupplierOperation 
-              v-if="canUserAccess('supplier_create')"
+              <PurchaseOperation 
+              v-if="canUserAccess('purchase_create')"
               btn-title="create"
-              modal-title="Create Supplier"
-              :supplier-id=0
+              modal-title="Create Purchase"
+              :purchase-id=0
               color="primary"
               size="default"
-              @refresh-supplier-list="doFetchSuppliers"
+              @refresh-purchase-list="doFetchPurchases"
               />
           </v-subheader>
           <v-card>
               <v-data-table-server
               :headers="headers"
               :search="search"
-              :items="lstSuppliers"
+              :items="lstPurchases"
               :items-length="total_items"
               v-model:page="current_page"
               v-model:items-per-page="item_per_page"
               :loading="loading"
-              @update:options ="doFetchSuppliers"
+              @update:options ="doFetchPurchases"
               >
               <template v-slot:item.actions="{ item }">
-                  <SupplierOperation 
-                      v-if="canUserAccess('supplier_edit')"
+                  <PurchaseOperation 
+                      v-if="canUserAccess('purchase_edit')"
                       btn-title="Edit"
                       modal-title="Edit Website"
                       color="primary"
-                      :supplier-id="item.id"
+                      :purchase-id="item.id"
                       size="x-small"
-                      @refresh-supplier-list="doFetchSuppliers"
+                      @refresh-purchase-list="doFetchPurchases"
                       />
                       <DeleteDailog
-                      v-if="canUserAccess('supplier_delete')"
+                      v-if="canUserAccess('purchase_delete')"
                       :id="item.id"
-                      action="supplier"
-                      @refresh-list="doFetchSuppliers"
+                      action="purchase"
+                      @refresh-list="doFetchPurchases"
                       />
               </template>
               </v-data-table-server>
@@ -59,15 +59,16 @@
   </template>
   <script setup lang="ts">
 import { canUserAccess } from '@/@core/utils/helpers';
-import { useSuppliers } from '@/composable/useSuppliers';
-const { lstSuppliers,
+import PurchaseOperation from '@/components/PurchaseOperation.vue';
+import { usePurchases } from '@/composable/usePurchases';
+const { lstPurchases,
       loading,
       headers,
       total_items,
       current_page,
       item_per_page,
       search,
-      doFetchSuppliers
-      } = useSuppliers();
+      doFetchPurchases
+      } = usePurchases();
   </script>
   

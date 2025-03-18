@@ -9,7 +9,17 @@ export function useProductOperation (){
     
     const loading = ref<boolean>(false);
     const imageInput = ref<HTMLInputElement | null>(null);
+    const imageInput1 = ref<HTMLInputElement | null>(null);
+    const imageInput2 = ref<HTMLInputElement | null>(null);
+    const imageInput3 = ref<HTMLInputElement | null>(null);
+    const imageInput4 = ref<HTMLInputElement | null>(null);
+    const imageInput5 = ref<HTMLInputElement | null>(null);
     const imageSrc = ref<string>('');
+    const imageSrc1 = ref<string>('');
+    const imageSrc2 = ref<string>('');
+    const imageSrc3 = ref<string>('');
+    const imageSrc4 = ref<string>('');
+    const imageSrc5 = ref<string>('');
     const lstSubCategories = ref<ISubCategoryList>([]);
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
@@ -29,6 +39,11 @@ export function useProductOperation (){
         is_featured:false,
         coming_soon:false,
         image:imageInput,
+        image1:imageInput1,
+        image2:imageInput2,
+        image3:imageInput3,
+        image4:imageInput4,
+        image5:imageInput5,
         order:0,
         sub_categories:[]
     });
@@ -48,10 +63,28 @@ export function useProductOperation (){
         form.value.slug = slugify(form.value.title);
     }
 
-    const handleImageChange = (e:HTMLInputElement) => {
+    const handleImageChange = (e:HTMLInputElement, type: string) => {
+      
       var files = e.target.files;
       if (!files.length) return;
+
+      if(type == 'image')
       imageInput.value = e.target.files[0];
+
+      if(type == 'image1')
+        imageInput1.value = e.target.files[0];
+
+      if(type == 'image2')
+        imageInput2.value = e.target.files[0];
+
+      if(type == 'image3')
+        imageInput3.value = e.target.files[0];
+
+      if(type == 'image4')
+        imageInput4.value = e.target.files[0];
+
+      if(type == 'image5')
+        imageInput5.value = e.target.files[0];
     }
 
     const handleState = (type:string) => {
@@ -149,6 +182,18 @@ export function useProductOperation (){
                         form.value = data;
                         imageInput.value = null;
                         imageSrc.value = data.image_src;
+                        imageInput1.value = null;
+                        imageSrc1.value = data.image_src1;
+                        imageInput2.value = null;
+                        imageSrc2.value = data.image_src2;
+                        imageInput2.value = null;
+                        imageSrc2.value = data.image_src2;
+                        imageInput3.value = null;
+                        imageSrc3.value = data.image_src3;
+                        imageInput4.value = null;
+                        imageSrc4.value = data.image_src4;
+                        imageInput5.value = null;
+                        imageSrc5.value = data.image_src5;
                         form.value.sub_categories = data.sub_categories.map(({id}) => id);
                         if(form.value.sub_categories.length  == lstSubCategories.value.length){
                             isSelectAllSubCategories.value = true;
@@ -180,6 +225,11 @@ export function useProductOperation (){
         handleState,
         lstSubCategories,
         imageSrc,
+        imageSrc1,
+        imageSrc2,
+        imageSrc3,
+        imageSrc4,
+        imageSrc5,
         handleSlug,
         isCompleted
     }

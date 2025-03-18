@@ -48,3 +48,11 @@ export const slugify = (slug:string) => {
 
 } 
 
+export const commaFormate = (num: number) => {
+  return (
+      Number(num)
+      .toString()
+      .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+  );
+}
+

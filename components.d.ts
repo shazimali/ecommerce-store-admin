@@ -20,6 +20,7 @@ declare module 'vue' {
     ProductColor: typeof import('./src/components/ProductColor.vue')['default']
     ProductOperation: typeof import('./src/components/ProductOperation.vue')['default']
     ProductPrice: typeof import('./src/components/ProductPrice.vue')['default']
+    PurchaseOperation: typeof import('./src/components/PurchaseOperation.vue')['default']
     RoleOperations: typeof import('./src/components/RoleOperations.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

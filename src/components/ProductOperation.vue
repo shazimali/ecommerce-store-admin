@@ -1,5 +1,5 @@
 <template>
-    <v-dialog max-width="800">
+    <v-dialog max-width="1200">
       <template v-slot:activator="{ props: activatorProps }">
         <v-btn
           v-if="btnTitle != 'Edit'"
@@ -122,7 +122,7 @@
                   placeholder="Short Description"
                 />
                 </v-col> 
-                <v-col cols="6">
+                <v-col cols="3">
                   <v-img
                   v-show="imageSrc"
                     :width="50"
@@ -133,8 +133,83 @@
                   v-model="form.image"
                   :error-messages="errorMessages.image"
                   label="Image"
-                  @change="(event) => handleImageChange(event)"
-                  placeholder="Upload website image"
+                  @change="(event) => handleImageChange(event, 'image')"
+                  
+                    />
+                </v-col>
+                <v-col cols="3">
+                  <v-img
+                  v-show="imageSrc1"
+                    :width="50"
+                    :height="50"
+                    :src="imageSrc1"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.image1"
+                  :error-messages="errorMessages.image1"
+                  label="Image1"
+                  @change="(event) => handleImageChange(event, 'image1')"
+                  
+                    />
+                </v-col>
+                <v-col cols="3">
+                  <v-img
+                  v-show="imageSrc2"
+                    :width="50"
+                    :height="50"
+                    :src="imageSrc2"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.image2"
+                  :error-messages="errorMessages.image2"
+                  label="Image2"
+                  @change="(event) => handleImageChange(event, 'image2')"
+                  
+                    />
+                </v-col>
+                <v-col cols="3">
+                  <v-img
+                  v-show="imageSrc3"
+                    :width="50"
+                    :height="50"
+                    :src="imageSrc3"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.image3"
+                  :error-messages="errorMessages.image3"
+                  label="Image3"
+                  @change="(event) => handleImageChange(event, 'image3')"
+                  
+                    />
+                </v-col>
+                <v-col cols="3">
+                  <v-img
+                  v-show="imageSrc4"
+                    :width="50"
+                    :height="50"
+                    :src="imageSrc4"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.image4"
+                  :error-messages="errorMessages.image4"
+                  label="Image4"
+                  @change="(event) => handleImageChange(event, 'image4')"
+                  
+                    />
+                </v-col>
+                <v-col cols="3">
+                  <v-img
+                  v-show="imageSrc5"
+                    :width="50"
+                    :height="50"
+                    :src="imageSrc5"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.image5"
+                  :error-messages="errorMessages.image5"
+                  label="Image5"
+                  @change="(event) => handleImageChange(event, 'image5')"
+                  
                     />
                 </v-col>
                 <v-col cols="6">
@@ -241,6 +316,11 @@ const {
     selectAllSubCategories,
     isSelectAllSubCategories,
     imageSrc,
+    imageSrc1,
+    imageSrc2,
+    imageSrc3,
+    imageSrc4,
+    imageSrc5,
     handleSlug,
     handleState,
     getAllSubCategories,
