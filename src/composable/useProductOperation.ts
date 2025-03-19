@@ -95,7 +95,7 @@ export function useProductOperation (){
             form.value.is_featured = form.value.is_featured == true ? false : true;
         }
         if(type == 'coming_soon'){
-            form.value.is_featured = form.value.coming_soon == true ? false : true;
+            form.value.coming_soon = form.value.coming_soon == true ? false : true;
         }
     }
 
