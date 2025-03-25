@@ -126,7 +126,9 @@ const handleTotalPrice = () => {
 }
 
 const handleDelete = (id:number) => {
-  form.value.purchase_detail =  form.value.purchase_detail.filter((item) => item.list_id !== id )
+  form.value.purchase_detail =  form.value.purchase_detail.filter((item) => item.list_id !== id );
+  handleTotalQty();
+  handleTotalPrice();
 }
 
 const handleChangeProductPrice = (net_price:number, id:number) => {
