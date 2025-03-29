@@ -87,6 +87,14 @@ export const routes = [
         }
       },
       {
+        path: 'social-medias',
+        name:'social-medias',
+        component: () => import('@/pages/social-medias.vue'),
+        beforeEnter() {
+          if(!canUserAccess('facility_access')) return '/error'
+        }
+      },
+      {
         path: 'suppliers',
         name:'suppliers',
         component: () => import('@/pages/suppliers.vue'),
