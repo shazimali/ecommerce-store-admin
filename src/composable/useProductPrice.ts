@@ -10,6 +10,7 @@ export function useProductPrice (){
     const lstPrices = ref<IProductPriceList[]>([]);
     const priceLoading = ref<boolean>(false);
     const lstCountries = ref<ICountriesList[]>([]);
+    const lstDiscounts = ref<[]>(Array.from(Array(99).keys(), item => item + 1));
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
     const form = ref<IProductPrice>({
@@ -71,6 +72,7 @@ export function useProductPrice (){
         lstPrices,
         lstCountries,
         formLoading,
+        lstDiscounts,
         getAllPrices,
         form
     }

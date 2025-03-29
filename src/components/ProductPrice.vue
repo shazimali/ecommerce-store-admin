@@ -47,7 +47,7 @@
                 <v-col cols="4">
                     <v-select
                     v-model="form.discount"
-                    :items="[10.20,30,40.50,60,70,80,90,100]"
+                    :items="lstDiscounts"
                     label="Discount"
                     />
                 </v-col>
@@ -154,6 +154,7 @@ const {
     getAllPrices,
     lstCountries,
     lstPrices,
+    lstDiscounts,
     formLoading,
     } = useProductPrice();
 </script>
