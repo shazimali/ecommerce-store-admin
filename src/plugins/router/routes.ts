@@ -109,6 +109,14 @@ export const routes = [
         beforeEnter() {
           if(!canUserAccess('purchase_access')) return '/error'
         }
+      },
+      {
+        path: 'settings',
+        name:'settings',
+        component: () => import('@/pages/settings.vue'),
+        beforeEnter() {
+          if(!canUserAccess('setting_access')) return '/error'
+        }
       }
     ],
   },
