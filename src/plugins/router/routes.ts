@@ -117,7 +117,15 @@ export const routes = [
         beforeEnter() {
           if(!canUserAccess('setting_access')) return '/error'
         }
-      }
+      },
+      {
+        path: 'coupons',
+        name:'coupons',
+        component: () => import('@/pages/coupons.vue'),
+        beforeEnter() {
+          if(!canUserAccess('coupon_access')) return '/error'
+        }
+      },
     ],
   },
   {

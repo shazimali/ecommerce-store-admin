@@ -98,6 +98,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/settings'
     }"
   />
+  <VerticalNavLink
+   v-show="canUserAccess('coupon_access')"
+    :item="{
+      title: 'Coupons',
+      icon: 'bx bxs-coupon',
+      to: '/coupons'
+    }"
+  />
   <VerticalNavSectionTitle  
     :item="{
       heading: 'User Management',
