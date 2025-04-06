@@ -90,6 +90,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/purchases',
     }"
   />
+  <VerticalNavLink
+   v-show="canUserAccess('setting_access')"
+    :item="{
+      title: 'Settings',
+      icon: 'bx bx-cog',
+      to: '/settings'
+    }"
+  />
   <VerticalNavSectionTitle  
     :item="{
       heading: 'User Management',
@@ -119,4 +127,5 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/permissions'
     }"
   />
+  
 </template>

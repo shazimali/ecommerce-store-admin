@@ -24,6 +24,7 @@ declare module 'vue' {
     RoleOperations: typeof import('./src/components/RoleOperations.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SettingOperation: typeof import('./src/components/SettingOperation.vue')['default']
     SocialMediaOperation: typeof import('./src/components/SocialMediaOperation.vue')['default']
     SubCategoryOperation: typeof import('./src/components/SubCategoryOperation.vue')['default']
     SupplierOperation: typeof import('./src/components/SupplierOperation.vue')['default']
