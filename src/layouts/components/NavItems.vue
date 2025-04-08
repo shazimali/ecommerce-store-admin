@@ -106,6 +106,15 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/coupons'
     }"
   />
+  <VerticalNavLink
+   v-show="canUserAccess('blog_access')"
+    :item="{
+      title: 'Blogs',
+      icon: 'bx bx-message-square-edit',
+      to: '/blogs'
+    }"
+  />
+  
   <VerticalNavSectionTitle  
     :item="{
       heading: 'User Management',

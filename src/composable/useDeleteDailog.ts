@@ -1,4 +1,5 @@
 import { deleteBanner } from "@/services/BannersService";
+import { deleteBlog } from "@/services/BlogsService";
 import { deleteCategory } from "@/services/CategoriesService";
 import { deleteCoupon } from "@/services/CouponsService";
 import { deleteFacility } from "@/services/FacilitiesService";
@@ -219,6 +220,19 @@ export function useDeleteDailog(){
         }
         if(action == 'coupon'){
           deleteCoupon(id).then((res) => {
+              if(res.status == 201){
+                  toast.error(res.data.message)
+              }else{
+                  toast.success(res.data.message)
+              }
+              isCompleted.value = rand(1,10);
+              formLoading.value = false;
+          }).catch((err) => {
+              console.log(err)
+          })
+        }
+        if(action == 'blog'){
+          deleteBlog(id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{

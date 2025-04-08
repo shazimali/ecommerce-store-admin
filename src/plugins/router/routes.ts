@@ -126,6 +126,14 @@ export const routes = [
           if(!canUserAccess('coupon_access')) return '/error'
         }
       },
+      {
+        path: 'blogs',
+        name:'blogs',
+        component: () => import('@/pages/blogs.vue'),
+        beforeEnter() {
+          if(!canUserAccess('blog_access')) return '/error'
+        }
+      },
     ],
   },
   {
