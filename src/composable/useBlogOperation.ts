@@ -8,6 +8,7 @@ export function useBlogOperation (){
     
     const loading = ref<boolean>(false);
     const imageInput = ref<HTMLInputElement | null>(null);
+    const imageSrc = ref<string>('');
     const lstCountries = ref<ICountriesList>([]);
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
@@ -15,7 +16,7 @@ export function useBlogOperation (){
     const form = ref<IBlog>({
         title:'',
         slug:'',
-        image:'',
+        image: imageInput,
         description:'',
         seo_title:'',
         seo_desc:'',
@@ -34,10 +35,17 @@ export function useBlogOperation (){
         countries:string
     ]>([]);
 
+    const handleImageChange = (e:HTMLInputElement) => {
+      var files = e.target.files;
+      if (!files.length) return;
+      imageInput.value = e.target.files[0];
+    }
+
 
     const getBlogsByID =  (id:number) => {
       fetchBlogByID(id).then((res) => {
         form.value = res.data.data;
+        imageSrc.value = res.data.data.img_src
       }).catch((err) => {
         toast.error(err.message);
       })
@@ -103,7 +111,7 @@ export function useBlogOperation (){
             form.value.countries=[];
             form.value.title='';
             form.value.slug='';
-            form.value.image='';
+           imageInput.value=null;
             form.value.description='';
             form.value.seo_title='';
             form.value.seo_desc='';
@@ -119,7 +127,7 @@ export function useBlogOperation (){
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.slug = data.slug;
-                        form.value.image = data.image;
+                        imageSrc.value = data.image_src;
                         form.value.description = data.description;
                         form.value.seo_title = data.seo_title;
                         form.value.seo_desc = data.seo_desc;
@@ -146,8 +154,9 @@ export function useBlogOperation (){
         loading,
         handleSubmit,
         errorMessages,
+        handleImageChange,
         formLoading,
-        imageInput,
+        imageSrc,
         getBlogsByID,
         selectAllCountries,
         isSelectAllCountries,

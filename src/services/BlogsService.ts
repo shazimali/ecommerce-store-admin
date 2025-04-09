@@ -11,7 +11,9 @@ export const  fetchAllCountries = async () => {
 }
 
 export const saveBlog = async (data : IBlog) => {
-    return await axios.post('/blogs/store',{ ...data })
+    return await axios.post('/blogs/store',{ ...data }, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
 export const fetchBlogByID = async (id :number) => {
@@ -19,7 +21,9 @@ export const fetchBlogByID = async (id :number) => {
 }
 
 export const updateBlog = async  (id : number , data : IBlog )=>{
-    return await axios.put('/blogs/update/'+id,{ ...data })
+    return await axios.put('/blogs/update/'+id,{ ...data }, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
 export const deleteBlog = async  (id : number)=>{

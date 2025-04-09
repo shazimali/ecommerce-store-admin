@@ -48,14 +48,20 @@
               />
               </v-col>
               <v-col cols="6">
-                <v-text-field
-                v-model="form.image"
-                :error-messages="errorMessages.image"
-                label="Image"
-                type="text"
-                placeholder="Image"
-              />
-              </v-col>
+                  <v-img
+                  v-show="imageSrc"
+                    :width="50"
+                    :height="50"
+                    :src="imageSrc"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.image"
+                  :error-messages="errorMessages.image"
+                  label="Image"
+                  @change="(event) => handleImageChange(event)"
+                  placeholder="Upload banner image"
+                    />
+                </v-col>
               <v-col cols="6">
                 <v-text-field
                 v-model="form.description"
@@ -158,7 +164,6 @@ const {
   selectAllCountries,
   isSelectAllCountries,
   imageSrc,
-  handleSlug,
   getAllCountries,
   lstCountries,
   handleImageChange,

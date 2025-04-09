@@ -1,7 +1,7 @@
 export interface IBlog {
     title: string,
     slug: string,
-    image: string,
+    image: {},
     description: string,
     seo_title: string,
     seo_desc: string,
