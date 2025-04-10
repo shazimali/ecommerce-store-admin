@@ -21,7 +21,7 @@ export const fetchBlogByID = async (id :number) => {
 }
 
 export const updateBlog = async  (id : number , data : IBlog )=>{
-    return await axios.put('/blogs/update/'+id,{ ...data }, {
+    return await axios.post('/blogs/update/'+id,{ ...data }, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 }

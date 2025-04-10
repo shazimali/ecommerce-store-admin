@@ -62,42 +62,33 @@
                   placeholder="Upload banner image"
                     />
                 </v-col>
-              <v-col cols="6">
-                <v-text-field
-                v-model="form.description"
-                :error-messages="errorMessages.description"
-                label="Description"
-                type="text"
-                placeholder="Description"
-              />
+                <v-col cols="6">
+                  <v-select
+                  v-model="form.status"
+                  :error-messages="errorMessages.status"
+                  :items="['ACTIVE','INACTIVE']"
+                  label="Status"
+                />
               </v-col>
               <v-col cols="6">
                 <v-text-field
                 v-model="form.seo_title"
                 :error-messages="errorMessages.seo_title"
-                label="Seo_Title"
+                label="Seo Title"
                 type="text"
-                placeholder="Seo_Title"
+                placeholder="Seo Title"
               />
               </v-col>
               <v-col cols="6">
                 <v-text-field
                 v-model="form.seo_desc"
                 :error-messages="errorMessages.seo_desc"
-                label="Seo_Desc"
+                label="Seo Desc"
                 type="text"
-                placeholder="Seo_Desc"
+                placeholder="Seo Desc"
               />
               </v-col>
-              <v-col cols="6">
-                <v-text-field
-                v-model="form.status"
-                :error-messages="errorMessages.status"
-                label="Status"
-                type="text"
-                placeholder="Status"
-              />
-              </v-col>
+             
               <v-col cols="12">
                 <div class="d-flex justify-space-between">
                   <h5>Countries</h5>
@@ -116,6 +107,17 @@
                   </v-row>
                 </v-container>
               </v-col>
+              <v-col cols="12">
+                    <label for="">Description</label>
+                  <QuillEditor
+                   v-model:content="form.description"
+                   content-type="html"
+                   toolbar="full" 
+                   theme="snow" />
+                </v-col>
+                <v-col class="text-sm text-error">
+                      {{ errorMessages.description }}
+                      </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
@@ -166,6 +168,7 @@ const {
   imageSrc,
   getAllCountries,
   lstCountries,
+  handleSlug,
   handleImageChange,
   formLoading,
   } = useBlogOperation();

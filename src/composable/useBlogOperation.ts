@@ -1,3 +1,4 @@
+import { slugify } from "@/@core/utils/helpers";
 import { IBlog } from "@/Interfaces/IBlog";
 import { ICountriesList } from "@/Interfaces/ICountry";
 import { fetchAllCountries, fetchBlogByID, saveBlog, updateBlog } from "@/services/BlogsService";
@@ -50,6 +51,11 @@ export function useBlogOperation (){
         toast.error(err.message);
       })
     }
+
+    const handleSlug = () => {
+            form.value.slug = slugify(form.value.title);
+    }
+
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
@@ -162,6 +168,7 @@ export function useBlogOperation (){
         isSelectAllCountries,
         getAllCountries,
         form,
+        handleSlug,
         lstCountries,
         isCompleted
     }
