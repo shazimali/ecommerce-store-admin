@@ -13,6 +13,7 @@ declare module 'vue' {
     CardStatisticsVertical: typeof import('./src/@core/components/cards/CardStatisticsVertical.vue')['default']
     CardStatisticsWithImages: typeof import('./src/@core/components/cards/CardStatisticsWithImages.vue')['default']
     CategoryOperation: typeof import('./src/components/CategoryOperation.vue')['default']
+    CodOperation: typeof import('./src/components/CodOperation.vue')['default']
     CouponOperation: typeof import('./src/components/CouponOperation.vue')['default']
     DeleteDailog: typeof import('./src/components/DeleteDailog.vue')['default']
     ErrorHeader: typeof import('./src/components/ErrorHeader.vue')['default']

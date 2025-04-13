@@ -114,6 +114,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/blogs'
     }"
   />
+  <VerticalNavLink
+  v-show="canUserAccess('cod_access')"
+    :item="{
+      title: 'COD',
+      icon: 'bx bxl-codepen',
+      to: '/cod',
+    }"
+  />
   
   <VerticalNavSectionTitle  
     :item="{
