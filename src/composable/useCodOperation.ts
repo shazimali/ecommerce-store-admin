@@ -120,14 +120,8 @@ export function useCodOperation (){
               if(id != 0){
                   fetchCodByID(id).then((res) => {
                       let data = res.data.data;
-                      form.value.title = data.title;
-                      form.value.api_test_url = data.api_test_url;
-                      form.value.api_url = data.api_url;
-                      form.value.api_key = data.api_key;
-                      form.value.api_password = data.api_password;
-                      form.value.status=data.status;
-                      
-                      
+                      form.value = data;
+                      form.value.countries = data.countries.map(({id}) => id);
                   }).catch((err) => {
                       toast.error(err.message)
                       loading.value = false;

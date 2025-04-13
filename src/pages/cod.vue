@@ -17,7 +17,7 @@
             <CodOperation
             v-if="canUserAccess('cod_create')"
             btn-title="create"
-            modal-title="Create Cod"
+            modal-title="Create COD"
             :cod-id=0
             color="primary"
             size="default"
@@ -48,7 +48,7 @@
                     color="primary"
                     :cod-id="item.id"
                     size="x-small"
-                    @refresh-blog-list="doFetchCod"
+                    @refresh-cod-list="doFetchCod"
                     />
                     <DeleteDailog
                     v-if="canUserAccess('cod_delete')"
