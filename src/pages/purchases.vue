@@ -35,6 +35,11 @@
               :loading="loading"
               @update:options ="doFetchPurchases"
               >
+              <template v-slot:item.invoice_id="{item}">
+            <a :href="`/print/${item.id}/?type=purchaseInvoice`" target="_blank">
+          inv#{{ item.invoice_id }}
+            </a>
+        </template>
               <template v-slot:item.actions="{ item }">
                   <PurchaseOperation 
                       v-if="canUserAccess('purchase_edit')"

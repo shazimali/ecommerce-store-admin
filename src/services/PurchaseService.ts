@@ -17,6 +17,10 @@ export const fetchPurchaseByID = async (id :number) => {
     return await axios.get('/purchases/edit/'+id)
 }
 
+export const fetchPurchaseInvoiceByIDForPrint = async (id :number | string) => {
+  return await axios.get('/purchases/fetch-purchase-invoice-for-print/'+id)
+}
+
 export const updatePurchase = async  (id : number , data : IPurchase )=>{
     return await axios.put('/purchases/update/'+id,{ ...data })
 }

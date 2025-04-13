@@ -149,7 +149,12 @@ export const routes = [
         path: 'error',
         name: 'error',
         component: () => import('@/pages/[...error].vue')
-      }
+      },
+      {
+        path: '/print/:id',
+        name: 'print',
+        component: () => import('@/pages/prints/invoice.vue')
+      },
     ],
   },
 ]
