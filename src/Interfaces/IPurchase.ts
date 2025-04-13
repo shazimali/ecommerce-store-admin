@@ -51,6 +51,8 @@ export interface IProduct{
   title: string,
   color: string,
   code: number,
+  qty: number,
+  price: number,
   sku: number,
   description: string,
  

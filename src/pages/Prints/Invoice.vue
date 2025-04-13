@@ -17,26 +17,17 @@
               <td>Name:</td>
               <td><b>Every Day Plastic Industry</b></td>
             </tr>
-            <tr v-for="(product, index) in invoiceData.products" :key="index">
-             <td>
-              <tr>
-                <td>Product:</td>
-                <td>{{ product.title }}</td>
-              </tr>
-              <tr>
-                <td>Color:</td>
-                <td>{{ product.color  }}</td>
-              </tr>
-              <tr>
-                <td>Code:</td>
-                <td>{{ product.code}}</td>
-              </tr>
-              <tr>
-                <td>Sku:</td>
-                <td>{{ product.sku }}</td>
-              </tr>
-              <v-divider v-if="index < invoiceData.products.length - 1" class="my-2"></v-divider>
-             </td>
+            <tr>
+              <td>Email:</td>
+              <td>info@everydayplastic.co</td>
+            </tr>
+            <tr>
+              <td>Address:</td>
+              <td>Gujranwala, Pakistan</td>
+            </tr>
+            <tr>
+              <td>Phone:</td>
+              <td><b>03030330033</b></td>
             </tr>
           </table>
         </v-col>
@@ -108,16 +99,26 @@
                 <td>{{ product.sku }}</td>
                 <td>{{ product.title }}</td>
                 <td>{{ product.color }}</td>  
-                <td>{{ commaFormate(invoiceData.total_price) }}</td>
-                <td>{{ commaFormate(invoiceData.total_qty)}}</td>
-                <td>{{  commaFormate(invoiceData.total_price * invoiceData.total_qty) }}</td>
+                <td>{{ commaFormate(product.price) }}</td>
+                <td>{{ commaFormate(product.qty)}}</td>
+                <td>{{ commaFormate(product.price * product.qty) }}</td>
+              </tr>  
+              <tr :style="{'text-transform':'none','text-align':'center'}">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>{{ commaFormate(invoiceData.total_qty) }}</b></td>
               </tr>
-              
-
-    
             </tbody>
-          </table> 
-             
+          </table>
+          <v-row>
+            <v-col class="text-end mr-15 mt-10">
+              <b>Total Amount : {{ commaFormate(invoiceData.total_price) }}</b>
+            </v-col>
+          </v-row> 
     </v-container>
    
   </div>
