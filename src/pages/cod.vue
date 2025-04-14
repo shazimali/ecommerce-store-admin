@@ -44,7 +44,7 @@
                 <CodOperation 
                     v-if="canUserAccess('cod_edit')"
                     btn-title="Edit"
-                    modal-title="Edit Cod"
+                    modal-title="Edit COD"
                     color="primary"
                     :cod-id="item.id"
                     size="x-small"

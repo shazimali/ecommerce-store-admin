@@ -12,10 +12,10 @@ export function useCod(){
        const loading = ref<boolean>(false)
        const headers = [
                { title: "Title", align: "start",value: "title" },
-               { title: "Api Test Url", value: "api_test_url"},
-               { title: "Api Url", value: "api_url"},
-               { title: "Api Key", value: "api_key"},
-               { title: "Api Password", value: "api_password"},
+              //  { title: "Api Test Url", value: "api_test_url"},
+              //  { title: "Api Url", value: "api_url"},
+              //  { title: "Api Key", value: "api_key"},
+              //  { title: "Api Password", value: "api_password"},
                { title: "Status", value: "status"},
                { title: "Countries", value: "countries"},
                { title: "Created At", value: "created_at"},
