@@ -4,6 +4,7 @@ import { deleteCategory } from "@/services/CategoriesService";
 import { deleteCod } from "@/services/CodService";
 import { deleteCoupon } from "@/services/CouponsService";
 import { deleteFacility } from "@/services/FacilitiesService";
+import { deletePage } from "@/services/PagesService";
 import { deletePermission } from "@/services/PermissionsService";
 import { deleteProduct, deleteProductColor, deleteProductPrice } from "@/services/ProductsService";
 import { deletePurchase } from "@/services/PurchaseService";
@@ -246,7 +247,20 @@ export function useDeleteDailog(){
           })
         }
         if(action == 'cod'){
-          deleteCod(id).then((res) => {
+            deleteCod(id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+          }
+        if(action == 'page'){
+          deletePage(id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
