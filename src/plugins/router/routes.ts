@@ -134,6 +134,14 @@ export const routes = [
           if(!canUserAccess('blog_access')) return '/error'
         }
       },
+      {
+        path: 'pages',
+        name:'pages',
+        component: () => import('@/pages/pages.vue'),
+        beforeEnter() {
+          if(!canUserAccess('page_access')) return '/error'
+        }
+      },
     ],
   },
   {

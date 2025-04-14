@@ -114,6 +114,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/blogs'
     }"
   />
+  <VerticalNavLink
+   v-show="canUserAccess('page_access')"
+    :item="{
+      title: 'Pages',
+      icon: 'bx bxs-notepad',
+      to: '/pages'
+    }"
+  />
   
   <VerticalNavSectionTitle  
     :item="{
