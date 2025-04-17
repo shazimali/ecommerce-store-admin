@@ -6,6 +6,7 @@ import { deleteCoupon } from "@/services/CouponsService";
 import { deleteFacility } from "@/services/FacilitiesService";
 import { deletePage } from "@/services/PagesService";
 import { deletePermission } from "@/services/PermissionsService";
+import { deleteProductReview } from "@/services/ProductReviewService";
 import { deleteProduct, deleteProductColor, deleteProductPrice } from "@/services/ProductsService";
 import { deletePurchase } from "@/services/PurchaseService";
 import { deleteRole } from "@/services/RolesService";
@@ -261,6 +262,19 @@ export function useDeleteDailog(){
           }
         if(action == 'page'){
           deletePage(id).then((res) => {
+              if(res.status == 201){
+                  toast.error(res.data.message)
+              }else{
+                  toast.success(res.data.message)
+              }
+              isCompleted.value = rand(1,10);
+              formLoading.value = false;
+          }).catch((err) => {
+              console.log(err)
+          })
+        }
+        if(action == 'product_review'){
+          deleteProductReview(id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{

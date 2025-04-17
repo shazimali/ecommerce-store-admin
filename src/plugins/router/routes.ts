@@ -150,6 +150,14 @@ export const routes = [
           if(!canUserAccess('page_access')) return '/error'
         }
       },
+      {
+        path: 'product-review',
+        name:'product-review',
+        component: () => import('@/pages/product-review.vue'),
+        beforeEnter() {
+          if(!canUserAccess('product_review_access')) return '/error'
+        }
+      },
     ],
   },
   {

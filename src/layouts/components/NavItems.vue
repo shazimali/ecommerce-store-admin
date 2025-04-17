@@ -131,6 +131,15 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/cod',
     }"
   />
+
+  <VerticalNavLink
+  v-show="canUserAccess('product_review_access')"
+    :item="{
+      title: 'Product Review',
+      icon: 'bx bx-history',
+      to: '/product-review',
+    }"
+  />
   
   <VerticalNavSectionTitle  
     :item="{
