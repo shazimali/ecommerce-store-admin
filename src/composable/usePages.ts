@@ -14,7 +14,7 @@ export function usePages(){
        const headers = [
                { title: "Title", align: "start",value: "title" },
                { title: "Slug", value: "slug" },
-               { title: "Content", value: "content" },
+              //  { title: "Content", value: "content" },
                { title: "Seo Title", value: "seo_title"},
                { title: "Seo Desc", value: "seo_description"},
                { title: "Status", value: "status"},
