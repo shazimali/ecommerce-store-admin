@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
         <v-subheader class="py-0 d-flex justify-space-between rounded-lg mb-3">
-            <h3>Blogs</h3>
+            <h3>Product Review</h3>
             <v-spacer></v-spacer>
 
             <v-text-field
