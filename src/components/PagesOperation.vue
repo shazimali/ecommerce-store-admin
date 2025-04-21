@@ -73,6 +73,15 @@
                 placeholder="Seo Desc"
               />
               </v-col>
+
+              <v-col cols="6">
+                  <v-select
+                  v-model="form.position"
+                  :error-messages="errorMessages.position"
+                  :items="['HEADER','FOOTER']"
+                  label="Page Position"
+                />
+              </v-col>
              
               <v-col cols="12">
                 <div class="d-flex justify-space-between">

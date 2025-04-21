@@ -19,6 +19,7 @@ export function usePageOperation (){
         status:'',
         seo_title:'',
         seo_description:'',
+        position: '',
         countries:[]
     });
 
@@ -28,7 +29,8 @@ export function usePageOperation (){
         content: string, 
         status: string, 
         seo_title: string, 
-        seo_description: string, 
+        seo_description: string,
+        position: string, 
         countries:string
     ]>([]);
 
@@ -60,7 +62,7 @@ export function usePageOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','','','']
+                errorMessages.value = ['','','','','','','','']
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -80,7 +82,7 @@ export function usePageOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','','','']
+                errorMessages.value = ['','','','','','','','']
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -109,6 +111,7 @@ export function usePageOperation (){
             form.value.status='';
             form.value.seo_title='';
             form.value.seo_description='';
+            form.value.position= '';
             loading.value = true;
     
             //get all countries
@@ -124,6 +127,7 @@ export function usePageOperation (){
                         form.value.status = data.status;
                         form.value.seo_title = data.seo_title;
                         form.value.seo_description = data.seo_description;
+                        form.value.position = data.position;
                         form.value.countries = data.countries.map(({id}) => id);
     
                         if(form.value.countries.length  == lstCountries.value.length){

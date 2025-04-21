@@ -5,6 +5,7 @@ export interface IPages{
   status: string,
   seo_title: string,
   seo_description: string,
+  position: string,
   countries:[]
 
 }
