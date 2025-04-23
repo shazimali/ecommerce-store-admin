@@ -19,6 +19,7 @@ export function useCouponOperation (){
       discount: '',
       date_from:'',
       date_to:'',
+      status: '',
       country_id:''
   });
 
@@ -28,6 +29,7 @@ export function useCouponOperation (){
       discount:number, 
       date_from:string, 
       date_to:string,
+      status: string,
       country:string
   ]>([]);
 
@@ -57,7 +59,7 @@ export function useCouponOperation (){
             }else if(err.response.status == "401"){  
               toast.error(err.response.data.message);
               formLoading.value = false;
-              errorMessages.value = ['','','','','','']
+              errorMessages.value = ['','','','','','','']
             }else{
               toast.error(err.message)
               formLoading.value = false;
@@ -77,7 +79,7 @@ export function useCouponOperation (){
             }else if(err.response.status == "401"){  
               toast.error(err.response.data.message);
               formLoading.value = false;
-              errorMessages.value = ['','','','','','']
+              errorMessages.value = ['','','','','','','']
             }else{
               toast.error(err.message)
               formLoading.value = false;
@@ -95,6 +97,7 @@ export function useCouponOperation (){
           form.value.discount='';
           form.value.date_from='';
           form.value.date_to='';
+          form.value.status='';
           form.value.country_id='';
           loading.value = true;
   
@@ -109,6 +112,7 @@ export function useCouponOperation (){
                       form.value.discount = data.discount;
                       form.value.date_from = data.date_from;
                       form.value.date_to = data.date_to;
+                      form.value.status= data.status;
                       form.value.country_id = data.country_id;
                       
                   }).catch((err) => {

@@ -75,6 +75,14 @@
               />
               </v-col>
               <v-col cols="6">
+                  <v-select
+                  v-model="form.status"
+                  :error-messages="errorMessages.status"
+                  :items="['ACTIVE','INACTIVE']"
+                  label="Status"
+                />
+              </v-col>
+              <v-col cols="6">
                 <v-select
                     v-model="form.country_id"
                     :items="lstCountries"

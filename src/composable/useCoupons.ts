@@ -18,6 +18,7 @@ export function useCoupons(){
                { title: "Date_From", value: "date_from" },
                { title: "Date_To", value: "date_to" },
                { title: "Country", value: "country" },
+               {title: "Status", value: "status"},
                { title: "Created At", value: "created_at"},
                { title: "Actions", value: "actions" }
               
