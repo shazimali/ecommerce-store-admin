@@ -158,6 +158,14 @@ export const routes = [
           if(!canUserAccess('product_review_access')) return '/error'
         }
       },
+      {
+        path: 'orders',
+        name:'orders',
+        component: () => import('@/pages/order.vue'),
+        beforeEnter() {
+          if(!canUserAccess('order_access')) return '/error'
+        }
+      },
     ],
   },
   {

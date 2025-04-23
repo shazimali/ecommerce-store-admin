@@ -140,6 +140,15 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/product-review',
     }"
   />
+
+  <VerticalNavLink
+  v-show="canUserAccess('order_access')"
+    :item="{
+      title: 'Order',
+      icon: 'bx bx-cart',
+      to: '/orders',
+    }"
+  />
   
   <VerticalNavSectionTitle  
     :item="{
