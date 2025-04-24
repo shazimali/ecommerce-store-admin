@@ -144,7 +144,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
   <VerticalNavLink
   v-show="canUserAccess('order_access')"
     :item="{
-      title: 'Order',
+      title: 'Orders',
       icon: 'bx bx-cart',
       to: '/orders',
     }"

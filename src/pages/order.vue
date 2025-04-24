@@ -17,11 +17,19 @@
             v-model:page="current_page"
             v-model:items-per-page="item_per_page"
             :loading="loading"
-            @update:options =" doFetchOrder"
+            @update:options ="doFetchOrder"
             >
-         
-          
-           
+            <template v-slot:item.status="{ item }">
+                <v-chip  :key="item.id" color="primary" class="mx-1 my-1">
+                    {{ item.status }}
+                </v-chip>
+            </template>
+            <template v-slot:item.sub_total="{ item }">
+               <v-text>{{ commaFormate(item.sub_total) }}</v-text>
+            </template>
+            <template v-slot:item.total="{ item }">
+              <v-text>{{ commaFormate(item.total) }}</v-text>
+            </template>
             </v-data-table-server>
         </v-card>
     </v-col>
@@ -29,6 +37,7 @@
 </template>
 <script setup lang="ts">
 
+import { commaFormate } from '@/@core/utils/helpers';
 import { useOrder } from '@/composable/useOrder';
 
 

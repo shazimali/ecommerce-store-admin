@@ -19,12 +19,11 @@ export function useOrder(){
                { title: "Shipping Charges", value: "shipping_charges" },
                { title: "Code", value: "code" },
                { title: "Discount", value: "discount" },
-               { title: "Discount", value: "discount" },
                { title: "Name", value: "name" },
                { title: "Email", value: "email" },
-               {title: "Status", value: "status"},
+               {title:  "Status", value: "status"},
                { title: "Created At", value: "created_at"},
-               { title: "Actions", value: "actions" }
+              //  { title: "Actions", value: "actions" }
               
            ]
        onMounted(() => {
