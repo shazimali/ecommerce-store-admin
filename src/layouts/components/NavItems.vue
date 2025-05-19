@@ -149,6 +149,15 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
       to: '/orders',
     }"
   />
+
+  <VerticalNavLink
+  v-show="canUserAccess('customer_access')"
+    :item="{
+      title: 'Customers',
+      icon: 'bxr  bx-user',
+      to: '/customers',
+    }"
+  />
   
   <VerticalNavSectionTitle  
     :item="{

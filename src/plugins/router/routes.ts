@@ -166,6 +166,14 @@ export const routes = [
           if(!canUserAccess('order_access')) return '/error'
         }
       },
+      {
+        path: 'customers',
+        name:'customers',
+        component: () => import('@/pages/customer.vue'),
+        beforeEnter() {
+          if(!canUserAccess('customer_access')) return '/error'
+        }
+      },
     ],
   },
   {
