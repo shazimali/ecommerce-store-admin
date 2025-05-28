@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BannerOperation: typeof import('./src/components/BannerOperation.vue')['default']
     BlogOperation: typeof import('./src/components/BlogOperation.vue')['default']
+    BookOrder: typeof import('./src/components/BookOrder.vue')['default']
     CardStatisticsHorizontal: typeof import('./src/@core/components/cards/CardStatisticsHorizontal.vue')['default']
     CardStatisticsVertical: typeof import('./src/@core/components/cards/CardStatisticsVertical.vue')['default']
     CardStatisticsWithImages: typeof import('./src/@core/components/cards/CardStatisticsWithImages.vue')['default']

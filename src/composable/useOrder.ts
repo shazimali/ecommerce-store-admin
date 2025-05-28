@@ -13,17 +13,20 @@ export function useOrder(){
        const loading = ref<boolean>(false)
        const headers = [
                { title: "Order", align: "start",value: "order_id" },
-               { title: "Sub Total", value: "sub_total" },
+              //  { title: "Sub Total", value: "sub_total" },
+              { title: "Customer Name", value: "customer_name" },
+              { title: "Customer Phone", value: "phone" },
+              {title: "country", value: 'country'},
+              {title: "city", value: 'city'},
                { title: "Total", value: "total" },
-               { title: "Free Shipping", value: "free_shipping" },
-               { title: "Shipping Charges", value: "shipping_charges" },
-               { title: "Code", value: "code" },
-               { title: "Discount", value: "discount" },
-               { title: "Name", value: "name" },
-               { title: "Email", value: "email" },
+              //  { title: "Free Shipping", value: "free_shipping" },
+              //  { title: "Shipping Charges", value: "shipping_charges" },
+              //  { title: "Code", value: "code" },
+              //  { title: "Discount", value: "discount" },
+              //  { title: "Email", value: "email" },
                {title:  "Status", value: "status"},
                { title: "Created At", value: "created_at"},
-              //  { title: "Actions", value: "actions" }
+               { title: "Actions", value: "actions" }
               
            ]
        onMounted(() => {

@@ -19,17 +19,65 @@
             :loading="loading"
             @update:options ="doFetchOrder"
             >
+            <template v-slot:item.order_id="{item}">
+            <a :href="item.slip_link" target="_blank">
+              ED#{{ item.order_id }}
+            </a>
+            </template>
+            <!-- <template v-slot:item.free_shipping="{ item }">
+                <v-chip v-if="item.free_shipping == 1"  :key="item.id" color="success" class="mx-1 my-1">
+                    YES
+                </v-chip>
+                <v-chip v-if="item.free_shipping == 0"  :key="item.id" color="primary" class="mx-1 my-1">
+                    NO
+                </v-chip>
+            </template> -->
+            <!-- <template v-slot:item.shipping_charges="{ item }">
+                <v-chip v-if="item.free_shipping == 1"  :key="item.id" color="success" class="mx-1 my-1">
+                  N/A
+                </v-chip>
+                <v-chip v-if="item.free_shipping == 0"  :key="item.id" color="primary" class="mx-1 my-1">
+                  {{ item.shipping_charges }}
+                </v-chip>
+            </template> -->
             <template v-slot:item.status="{ item }">
-                <v-chip  :key="item.id" color="primary" class="mx-1 my-1">
+                <v-chip v-if="item.status == 'PLACED'"  :key="item.id" color="warning" class="mx-1 my-1">
+                    {{ item.status }}
+                </v-chip>
+                <v-chip v-if="item.status == 'IN_TRANSIT'"  :key="item.id" color="default" class="mx-1 my-1">
                     {{ item.status }}
                 </v-chip>
             </template>
-            <template v-slot:item.sub_total="{ item }">
-               <v-text>{{ commaFormate(item.sub_total) }}</v-text>
-            </template>
+        
             <template v-slot:item.total="{ item }">
               <v-text>{{ commaFormate(item.total) }}</v-text>
             </template>
+            <template v-slot:item.actions="{ item }">
+                      <a
+                       v-if="item.status != 'PLACED'" 
+                       target="_blank"
+                      :href="item.slip_link">
+                         <VIcon
+                        icon="bx bx-receipt"
+                        color="secondary"
+                        />
+                      </a>
+                      <BookOrder
+                      v-if="item.status == 'PLACED'" 
+                      color="warning"
+                      :order-id="item.order_id"
+                      size="x-small"
+                      @refresh-order-list="doFetchOrder"
+                      />
+                    <DeleteDailog
+                      v-if="item.status == 'PLACED'" 
+                      :id="item.order_id"
+                      action="order"
+                      @refresh-list="doFetchOrder"
+                      />
+                   
+
+              </template>
             </v-data-table-server>
         </v-card>
     </v-col>
@@ -38,6 +86,7 @@
 <script setup lang="ts">
 
 import { commaFormate } from '@/@core/utils/helpers';
+import BookOrder from '@/components/BookOrder.vue';
 import { useOrder } from '@/composable/useOrder';
 
 
