@@ -13,6 +13,10 @@ export const  sendBookOrder = async (data : IBookOrder) => {
   return await axios.post('/orders/book',{...data})  
 }
 
+export const  updateBookedOrderStatus = async (data : IBookOrder) => {
+  return await axios.post('/orders/book/status',{...data})  
+}
+
 export const  deleteOrder = async (id:number) => {
   return await axios.post('/orders/delete/'+id)  
 }

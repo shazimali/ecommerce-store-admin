@@ -45,6 +45,12 @@
                     {{ item.status }}
                 </v-chip>
                 <v-chip v-if="item.status == 'IN_TRANSIT'"  :key="item.id" color="default" class="mx-1 my-1">
+                    Shipped
+                </v-chip>
+                <v-chip v-if="item.status == 'DELIVERED'"  :key="item.id" color="success" class="mx-1 my-1">
+                    {{ item.status }}
+                </v-chip>
+                 <v-chip v-if="item.status == 'CANCELLED'"  :key="item.id" color="error" class="mx-1 my-1">
                     {{ item.status }}
                 </v-chip>
             </template>
@@ -53,21 +59,33 @@
               <v-text>{{ commaFormate(item.total) }}</v-text>
             </template>
             <template v-slot:item.actions="{ item }">
-                      <a
-                       v-if="item.status != 'PLACED'" 
-                       target="_blank"
-                      :href="item.slip_link">
-                         <VIcon
-                        icon="bx bx-receipt"
-                        color="secondary"
-                        />
-                      </a>
                       <BookOrder
                       v-if="item.status == 'PLACED'" 
+                      icon="bx bxs-truck"
                       color="warning"
+                      :status="item.status"
                       :order-id="item.order_id"
                       size="x-small"
                       @refresh-order-list="doFetchOrder"
+                      />
+                      <BookOrder
+                      v-if="item.status == 'IN_TRANSIT'" 
+                      color="secondary"
+                      icon="bx bx-package"
+                      :status="item.status"
+                      :order-id="item.order_id"
+                      size="x-small"
+                      @refresh-order-list="doFetchOrder"
+                      />
+                       <VIcon
+                       v-if="item.status == 'DELIVERED'" 
+                      icon="bx bx-user-check"
+                      color="success"
+                      />
+                       <VIcon
+                       v-if="item.status == 'CANCELLED'" 
+                      icon="bx bx-user-x"
+                      color="error"
                       />
                     <DeleteDailog
                       v-if="item.status == 'PLACED'" 

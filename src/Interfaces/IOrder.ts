@@ -25,6 +25,8 @@ export interface ICODCompanyList {
 
 export interface IBookOrder {
   'cod_company': string,
+  'track_number':string,
+  'status':string,
   'weight': number | string,
   'piece': number | string,
   'order_id': number | string,

@@ -2,8 +2,8 @@
     <v-dialog max-width="800">
       <template v-slot:activator="{ props: activatorProps }">
         <VIcon
-        icon="bx bxs-truck"
-        color="warning"
+        :icon="icon"
+        :color="color"
         @click="fetchAllCODCompanies()"
         v-bind="activatorProps"
         />
@@ -15,8 +15,8 @@
             <div v-if="loading" class=" d-flex justify-center">
               <v-progress-circular indeterminate></v-progress-circular>
             </div>
-            <v-form v-else @submit.prevent="handleSubmit(orderId,isActive)">
-              <v-row>
+            <v-form v-else @submit.prevent="handleSubmit(orderId,status,isActive)">
+              <v-row v-if="status == 'PLACED'">
                  <v-col cols="6">
                   <v-select
                   v-model="form.cod_company"
@@ -25,6 +25,15 @@
                   :item-title="item => item? `${item.title}`: ''"
                   item-value="title"
                   label="COD Company"
+                />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                  v-model="form.track_number"
+                  :error-messages="errorMessages.track_number"
+                  label="Track Number"
+                  type="text"
+                  placeholder="Track Number"
                 />
                 </v-col>
                 <v-col cols="6">
@@ -55,10 +64,20 @@
                 />
                 </v-col>
               </v-row>
+              <v-row v-if="status != 'PLACED'">
+                <v-col cols="12">
+                  <v-select
+                  v-model="form.status"
+                  :error-messages="errorMessages.status"
+                  :items="['DELIVERED','CANCELLED']"
+                  label="Order Status"
+                />
+                </v-col>
+              </v-row>
               <v-row>
                 <v-col cols="12">
                   <v-btn
-                  text="Book"
+                  :text="status == 'PLACED' ? 'Book':'Update'"
                   variant="elevated"
                   type="submit"
                   class="mr-2"
@@ -84,7 +103,7 @@
 import { useBookOrder } from '@/composable/useBookOrder';
 import { defineEmits } from 'vue';
 const emit = defineEmits(['refreshOrderList']);
-const props = defineProps<{orderId:number}>()
+const props = defineProps<{orderId:number,status:string,icon:string,color:string}>()
 const { 
     loading,
     fetchAllCODCompanies,
