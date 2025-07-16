@@ -8,7 +8,9 @@ export function useBannerOperation (){
     
     const loading = ref<boolean>(false);
     const imageInput = ref<HTMLInputElement | null>(null);
+    const mobImageInput = ref<HTMLInputElement | null>(null);
     const imageSrc = ref<string>('');
+    const mobImgSrc = ref<string>('');
     const lstWebsites = ref<IWebsiteList>([]);
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
@@ -20,6 +22,7 @@ export function useBannerOperation (){
         btn_text:'',
         btn_link:'',
         image:imageInput,
+        mob_image:mobImageInput,
         order:0,
         websites:[]
     });
@@ -27,6 +30,7 @@ export function useBannerOperation (){
     const errorMessages = ref<[
         title:string, 
         image:string,
+        mob_image:string,
         order:string,
         websites:string
     ]>([]);
@@ -38,10 +42,17 @@ export function useBannerOperation (){
       imageInput.value = e.target.files[0];
     }
 
+    const handleMobImageChange = (e:HTMLInputElement) => {
+      var files = e.target.files;
+      if (!files.length) return;
+      mobImageInput.value = e.target.files[0];
+    }
+
     const getBannerByID =  (id:number) => {
       fetchBannerByID(id).then((res) => {
         form.value = res.data.data;
         imageSrc.value = res.data.data.img_src
+        mobImgSrc.value = res.data.data.mob_image_src
       }).catch((err) => {
         toast.error(err.message);
       })
@@ -82,7 +93,7 @@ export function useBannerOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','']
+                errorMessages.value = ['','','','','']
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -111,6 +122,7 @@ export function useBannerOperation (){
             form.value.btn_text='';
             form.value.btn_link='';
             imageInput.value=null;
+            mobImageInput.value=null;
             form.value.order = 0;
             loading.value = true;
     
@@ -123,6 +135,7 @@ export function useBannerOperation (){
                         let data = res.data.data;
                         form.value = data;
                         imageSrc.value = data.image_src;
+                        mobImgSrc.value = data.mob_image_src;
                         form.value.websites = data.websites.map(({id}) => id);
     
                         if(form.value.websites.length  == lstWebsites.value.length){
@@ -146,6 +159,7 @@ export function useBannerOperation (){
         handleSubmit,
         errorMessages,
         handleImageChange,
+        handleMobImageChange,
         formLoading,
         getBannerByID,
         selectAllWebsites,
@@ -154,6 +168,7 @@ export function useBannerOperation (){
         form,
         lstWebsites,
         imageSrc,
+        mobImgSrc,
         isCompleted
     }
 }

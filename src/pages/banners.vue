@@ -42,6 +42,13 @@
                     :src="item.image"
                   ></v-img>
             </template>
+            <template v-slot:item.mob_image="{ item }">
+                <v-img
+                    :width="50"
+                    :height="50"
+                    :src="item.mob_image"
+                  ></v-img>
+            </template>
             <template v-slot:item.websites="{ item }">
                 <v-chip v-for="website in item.websites" :key="website" color="red" class="mx-1 my-1">
                     {{ website }}

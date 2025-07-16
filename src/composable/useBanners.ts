@@ -13,6 +13,7 @@ export function useBanners(){
        const headers = [
                { title: "Title", align: "start",value: "title" },
                { title: "Image", value: "image"},
+               { title: "Mob Image", value: "mob_image"},
                { title: "Order", value: "order"},
                { title: "Websites", value: "websites"},
                { title: "Created At", value: "created_at"},

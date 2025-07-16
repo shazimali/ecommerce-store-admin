@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useLogin } from '@/composable/useLogin';
-import logo from '@images/logo.svg?raw';
 const {form, isPasswordVisible, handleSubmit, errorMessages, loading} = useLogin();
 </script>
 
@@ -22,11 +21,12 @@ const {form, isPasswordVisible, handleSubmit, errorMessages, loading} = useLogin
             <!-- eslint-disable vue/no-v-html -->
             <div
               class="d-flex"
-              v-html="logo"
-            />
-            <h1>
+            >
+            <img height="100" width="180" src="/logo.png" alt="logo">
+            </div>
+            <!-- <h1>
               Everyday Shops
-            </h1>
+            </h1> -->
           </RouterLink>
         </VCardItem>
 

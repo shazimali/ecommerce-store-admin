@@ -38,6 +38,15 @@
                 />
                 </v-col>
                 <v-col cols="6">
+                  <v-text-field
+                  v-model="form.order"
+                  :error-messages="errorMessages.order"
+                  label="Order"
+                  type="text"
+                  placeholder="Order"
+                />
+                </v-col>
+                <v-col cols="12">
                   <v-img
                   v-show="imageSrc"
                     :width="50"
@@ -53,6 +62,21 @@
                     />
                 </v-col>
                 <v-col cols="12">
+                  <v-img
+                  v-show=""
+                    :width="50"
+                    :height="50"
+                    :src="mobImgSrc"
+                  ></v-img>
+                  <v-file-input
+                  v-model="form.mob_image"
+                  :error-messages="errorMessages.mob_image"
+                  label="Mobile Image"
+                  @change="(event) => handleMobImageChange(event)"
+                  placeholder="Upload banner mobile image"
+                    />
+                </v-col>
+                <!-- <v-col cols="12">
                   <v-text-field
                   v-model="form.heading"
                   :error-messages="errorMessages.heading"
@@ -69,8 +93,8 @@
                   type="text"
                   placeholder="Sub Heading"
                 />
-                </v-col>
-                <v-col cols="6">
+                </v-col> -->
+                <!-- <v-col cols="6">
                   <v-text-field
                   v-model="form.btn_text"
                   :error-messages="errorMessages.btn_text"
@@ -87,16 +111,8 @@
                   type="text"
                   placeholder="Button URL"
                 />
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                  v-model="form.order"
-                  :error-messages="errorMessages.order"
-                  label="Order"
-                  type="text"
-                  placeholder="Order"
-                />
-                </v-col>
+                </v-col> -->
+                
                 <v-col cols="12">
                   <div class="d-flex justify-space-between">
                     <h5>Websites</h5>
@@ -164,9 +180,11 @@ const {
     selectAllWebsites,
     isSelectAllWebsites,
     imageSrc,
+    mobImgSrc,
     getAllWebsites,
     lstWebsites,
     handleImageChange,
+    handleMobImageChange,
     formLoading,
     } = useBannerOperation();
 

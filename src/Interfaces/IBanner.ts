@@ -5,6 +5,7 @@ export interface IBanner {
     btn_text: string, 
     btn_link: string,
     image: {},
+    mob_image: {},
     order: number,
     websites:[],
 }
