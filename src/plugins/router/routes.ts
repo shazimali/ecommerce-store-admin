@@ -87,6 +87,14 @@ export const routes = [
         }
       },
       {
+        path: 'collections',
+        name:'Collections',
+        component: () => import('@/pages/collections.vue'),
+        beforeEnter() {
+          if(!canUserAccess('collection_access')) return '/error'
+        }
+      },
+      {
         path: 'social-medias',
         name:'social-medias',
         component: () => import('@/pages/social-medias.vue'),
@@ -176,6 +184,11 @@ export const routes = [
         path: 'login',
         name:'login',
         component: () => import('@/pages/login.vue'),
+      },
+      {
+        path: 'forgot-password',
+        name:'forgot-password',
+        component: () => import('@/pages/forgot-password.vue'),
       },
       {
         path: 'error',

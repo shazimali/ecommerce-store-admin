@@ -37,6 +37,7 @@ export function useProductOperation (){
         status:'',
         is_new:false,
         is_featured:false,
+        is_trending:false,
         coming_soon:false,
         image:imageInput,
         image1:imageInput1,
@@ -93,6 +94,9 @@ export function useProductOperation (){
         }
         if(type == 'is_featured'){
             form.value.is_featured = form.value.is_featured == true ? false : true;
+        }
+        if(type == 'is_trending'){
+            form.value.is_trending = form.value.is_trending == true ? false : true;
         }
         if(type == 'coming_soon'){
             form.value.coming_soon = form.value.coming_soon == true ? false : true;

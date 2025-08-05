@@ -1,10 +1,10 @@
-import { IProductList } from '@/Interfaces/IProduct';
-import { fetchProducts } from '@/services/ProductsService';
+import { ICollectionList } from '@/Interfaces/ICollection';
+import { fetchCollections } from '@/services/CollectionsService';
 import { onMounted } from 'vue';
 import { toast } from 'vue3-toastify';
 
-export function useProducts(){
-       const lstProducts = ref<IProductList>([])
+export function useCollections(){
+       const lstCollections = ref<ICollectionList>([])
        const total_items = ref<number>()
        const current_page = ref<number>(1)
        const item_per_page = ref<number>(5)
@@ -12,25 +12,25 @@ export function useProducts(){
        const loading = ref<boolean>(false)
        const headers = [
                { title: "Title", align: "start",value: "title" },
-               { title: "image", value: "image"},
-               { title: "SKU", value: "sku"},
-               { title: "New", value: "is_new"},
-               { title: "Featured", value: "is_featured"},
-               { title: "Trending", value: "is_trending"},
-               { title: "Coming Soon", value: "coming_soon"},
-               { title: "Sub Categories", value: "sub_categories"},
+               { title: "Slug", value: "slug"},
+               { title: "Image", value: "image"},
+               { title: "Mob Image", value: "mob_image"},
+               { title: "Order", value: "order"},
+               { title: "Websites", value: "websites"},
+               { title: "Products", value: "products"},
                { title: "Status", value: "status"},
+               { title: "Position", value: "position"},
                { title: "Created At", value: "created_at"},
                { title: "Actions", value: "actions" }
            ]
        onMounted(() => {
-        doFetchProducts();
+        doFetchCollections();
        })
 
-       const doFetchProducts = () => {
+       const doFetchCollections = () => {
             loading.value = true;
-            fetchProducts(current_page.value,item_per_page.value,search.value).then((res) => {
-                lstProducts.value = res.data.data
+            fetchCollections(current_page.value,item_per_page.value,search.value).then((res) => {
+                lstCollections.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;
                }).catch((err) => {
@@ -40,13 +40,13 @@ export function useProducts(){
        }
        
   return {
-    lstProducts,
+    lstCollections,
     loading,
     headers,
     total_items,
     current_page,
     item_per_page,
     search,
-    doFetchProducts,
+    doFetchCollections,
   }
 }

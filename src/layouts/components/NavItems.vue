@@ -67,6 +67,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
     }"
   />
   <VerticalNavLink
+  v-show="canUserAccess('collection_access')"
+    :item="{
+      title: 'Collections',
+      icon: 'bx bx-collection',
+      to: '/collections',
+    }"
+  />
+  <VerticalNavLink
   v-show="canUserAccess('social_media_access')"
     :item="{
       title: 'Social Medias',

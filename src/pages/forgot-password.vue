@@ -32,10 +32,10 @@ const {form, isPasswordVisible, handleSubmit, errorMessages, loading} = useLogin
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Welcome to Everyday Shops! 👋🏻
+            Forgot Password
           </h4>
           <p class="mb-0">
-            Please sign-in to your account
+            Please enter email address
           </p>
         </VCardText>
 
@@ -55,27 +55,6 @@ const {form, isPasswordVisible, handleSubmit, errorMessages, loading} = useLogin
 
               <!-- password -->
               <VCol cols="12">
-                <VTextField
-                  v-model="form.password"
-                  label="Password"
-                  placeholder="············"
-                  :type="isPasswordVisible ? 'text' : 'password'"
-                  autocomplete="password"
-                  :error-messages="errorMessages.password"
-                  :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                />
-
-                <!-- remember me checkbox -->
-                <div class="d-flex align-center justify-space-between flex-wrap my-6">
-                  <VCheckbox
-                    v-model="form.remember"
-                    label="Remember me"
-                  />
-                  <RouterLink class="text-primary" to="/forgot-password">
-                    Forgot Password?
-                  </RouterLink>
-                </div>
 
                 <!-- login button -->
                 <VBtn
@@ -83,8 +62,8 @@ const {form, isPasswordVisible, handleSubmit, errorMessages, loading} = useLogin
                   type="submit"
                   :loading="loading"
                 >
-                <template v-slot:loader><v-progress-circular indeterminate></v-progress-circular> Login</template>
-                  Login
+                <template v-slot:loader><v-progress-circular indeterminate></v-progress-circular> Sending</template>
+                  Send Reset Link
                 </VBtn>
               </VCol>
             </VRow>

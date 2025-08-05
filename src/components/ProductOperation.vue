@@ -89,7 +89,7 @@
                   label="Status"
                 />
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
                     <v-switch
                     :model-value="form.is_new"
                     @change="handleState('is_new')"
@@ -97,7 +97,7 @@
                     label="New"
                     ></v-switch>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
                     <v-switch
                     :model-value="form.is_featured"
                     @change="handleState('is_featured')"
@@ -105,7 +105,15 @@
                     label="Featured"
                     ></v-switch>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
+                    <v-switch
+                    :model-value="form.is_trending"
+                    @change="handleState('is_trending')"
+                    color="primary"
+                    label="Trending"
+                    ></v-switch>
+                </v-col>
+                <v-col cols="3">
                     <v-switch
                     :model-value="form.coming_soon"
                     @change="handleState('coming_soon')"

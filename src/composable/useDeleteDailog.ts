@@ -2,6 +2,7 @@ import { deleteBanner } from "@/services/BannersService";
 import { deleteBlog } from "@/services/BlogsService";
 import { deleteCategory } from "@/services/CategoriesService";
 import { deleteCod } from "@/services/CodService";
+import { deleteCollection } from "@/services/CollectionsService";
 import { deleteCoupon } from "@/services/CouponsService";
 import { deleteFacility } from "@/services/FacilitiesService";
 import { deleteOrder } from "@/services/OrderService";
@@ -287,8 +288,21 @@ export function useDeleteDailog(){
               console.log(err)
           })
         }
-         if(action == 'order'){
+        if(action == 'order'){
           deleteOrder(id).then((res) => {
+              if(res.status == 201){
+                  toast.error(res.data.message)
+              }else{
+                  toast.success(res.data.message)
+              }
+              isCompleted.value = rand(1,10);
+              formLoading.value = false;
+          }).catch((err) => {
+              console.log(err)
+          })
+        }
+         if(action == 'collection'){
+          deleteCollection(id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{

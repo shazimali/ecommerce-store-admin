@@ -10,6 +10,7 @@ export interface IProduct {
     seo_desc: string,
     status: string,
     is_new: boolean,
+    is_trending: boolean,
     is_featured: boolean,
     coming_soon: boolean,
     image: {},
