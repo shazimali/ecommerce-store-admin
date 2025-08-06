@@ -142,6 +142,7 @@ export function useCollectionOperation (){
             form.value.slug='';
             form.value.status='';
             imageInput.value=null;
+            imageMobInput.value=null;
             form.value.order = 0;
             loading.value = true;
     
