@@ -5,6 +5,7 @@ import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 // Components
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
+import Notifications from '@/layouts/components/Notifications.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 </script>
 
@@ -37,19 +38,11 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
           </span>
         </div>
 
-        <VSpacer />
-
-        <IconBtn
-          href="https://github.com/themeselection/sneat-vuetify-vuejs-admin-template-free"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <VIcon icon="bxl-github" />
-        </IconBtn>
-
-        <IconBtn>
+        <VSpacer />  
+        <!-- <IconBtn>
           <VIcon icon="bx-bell" />
-        </IconBtn>
+        </IconBtn> -->
+        <Notifications/>
 
         <NavbarThemeSwitcher class="me-1" />
 
