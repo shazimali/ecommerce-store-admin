@@ -47,6 +47,15 @@
                 />
                 </v-col>
                 <v-col cols="12">
+                  <v-text-field
+                  v-model="form.btn_link"
+                  :error-messages="errorMessages.btn_link"
+                  label="URL"
+                  type="text"
+                  placeholder="URL"
+                />
+                </v-col>
+                <v-col cols="12">
                   <v-img
                   v-show="imageSrc"
                     :width="50"

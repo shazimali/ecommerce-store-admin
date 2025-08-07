@@ -15,6 +15,7 @@ export function useBanners(){
                { title: "Image", value: "image"},
                { title: "Mob Image", value: "mob_image"},
                { title: "Order", value: "order"},
+               { title: "URL", value: "btn_link"},
                { title: "Websites", value: "websites"},
                { title: "Created At", value: "created_at"},
                { title: "Actions", value: "actions" }
