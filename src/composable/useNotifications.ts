@@ -1,5 +1,5 @@
 import { INotification, INotificationsList } from "@/Interfaces/INotification";
-import { deleteAllNotifications, fetchNotifications, storeNotification, updateNotification } from "@/services/AuthService";
+import { deleteAllNotifications, fetchNotifications, storeNotification, updateNotification } from "@/services/NotificationsService";
 import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useNotifications(){
