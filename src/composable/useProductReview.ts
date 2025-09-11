@@ -14,9 +14,9 @@ export function useProductReview(){
                { title: "Product", align: "start",value: "product" },
                { title: "Rating", value: "rating"},
                { title: "Review", value: "review"},
-               { title: "Image1", value: "image1"},
-               { title: "Image2", value: "image2"},
-               { title: "Image3", value: "image3"},
+              //  { title: "Image1", value: "image1"},
+              //  { title: "Image2", value: "image2"},
+              //  { title: "Image3", value: "image3"},
                { title: "Status", value: "status"},
                { title: "Created At", value: "created_at"},
                { title: "Actions", value: "actions" }

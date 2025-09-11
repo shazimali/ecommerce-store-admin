@@ -35,27 +35,36 @@
             :loading="loading"
             @update:options ="doFetchProductReview"
             >
-          <template v-slot:item.image1="{ item }">
+          <!-- <template v-slot:item.image1="{ item }">
               <v-img
                   :width="50"
                   :height="50"
                   :src="item.image1"
                 ></v-img>
-          </template>
-          <template v-slot:item.image2="{ item }">
+          </template> -->
+          <!-- <template v-slot:item.image2="{ item }">
               <v-img
                   :width="50"
                   :height="50"
                   :src="item.image2"
                 ></v-img>
-          </template>
-          <template v-slot:item.image3="{ item }">
+          </template> -->
+          <!-- <template v-slot:item.image3="{ item }">
               <v-img
                   :width="50"
                   :height="50"
                   :src="item.image3"
                 ></v-img>
-          </template>
+          </template> -->
+          <template v-slot:item.status="{ item }">
+                <v-chip v-if="item.status == 'ACTIVE'"  :key="item.id" color="success" class="mx-1 my-1">
+                    {{ item.status }}
+                </v-chip>
+                <v-chip v-if="item.status == 'INACTIVE'"  :key="item.id" color="error" class="mx-1 my-1">
+                    {{ item.status }}
+                </v-chip>
+                
+            </template>
             <template v-slot:item.actions="{ item }">
                 <ProductReviewOperation 
                     v-if="canUserAccess('product_review_edit')"
