@@ -1,10 +1,11 @@
 import { ISubCategory } from '@/Interfaces/ISubCategory';
+import httpClient from '@/plugins/httpClient';
 import { fetchSubCategories } from '@/services/SubCategoriesService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useSubCategories(){
-       const lstSubCategories = ref<ISubCategory>([])
+       const lstSubCategories = ref<ISubCategory[]>([])
        const total_items = ref<number>()
        const current_page = ref<number>(1)
        const item_per_page = ref<number>(5)
@@ -25,7 +26,7 @@ export function useSubCategories(){
 
        const doFetchSubCategories = () => {
             loading.value = true;
-            fetchSubCategories(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchSubCategories(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstSubCategories.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

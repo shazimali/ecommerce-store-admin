@@ -1,9 +1,8 @@
 export interface ISocialMedia {
+    id: number,
     title: string,
     class: string,
     url: string,
-    websites:[],
+    websites: number[],
 }
-export interface ISocialMediaList {
-    socialMedia : [ISocialMedia]
-}
+export type ISocialMediaList = ISocialMedia[];

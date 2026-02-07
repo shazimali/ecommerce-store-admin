@@ -1,10 +1,9 @@
 export interface ISubCategory {
+    id: number,
     title: string,
     slug: string,
     image: {},
     order: number,
-    categories:[],
+    categories: number[],
 }
-export interface ISubCategoryList {
-    category : [ISubCategory]
-}
+export type ISubCategoryList = ISubCategory[];

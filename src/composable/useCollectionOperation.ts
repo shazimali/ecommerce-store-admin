@@ -2,8 +2,10 @@ import { slugify } from "@/@core/utils/helpers";
 import { ICollection } from "@/Interfaces/ICollection";
 import { IProductList } from "@/Interfaces/IProduct";
 import { IWebsiteList } from "@/Interfaces/IWebsite";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllExtra, fetchCollectionByID, saveCollection, updateCollection } from "@/services/CollectionsService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useCollectionOperation (){
     
@@ -19,6 +21,7 @@ export function useCollectionOperation (){
     const isSelectAllWebsites = ref<boolean>(false);
     const isSelectAllProducts= ref<boolean>(false);
     const form = ref<ICollection>({
+        id:0,
         title:'',
         slug:'',
         status:'',
@@ -30,35 +33,26 @@ export function useCollectionOperation (){
         products:[],
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        slug: string, 
-        image:string,
-        mob_image:string,
-        order:string,
-        position:string,
-        products:string,
-        websites:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const handleSlug = () => {
         form.value.slug = slugify(form.value.title);
     }
 
-    const handleImageChange = (e:HTMLInputElement) => {
+    const handleImageChange = (e:any) => {
       var files = e.target.files;
       if (!files.length) return;
       imageInput.value = e.target.files[0];
     }
 
-    const handleMobImageChange = (e:HTMLInputElement) => {
+    const handleMobImageChange = (e:any) => {
       var files = e.target.files;
       if (!files.length) return;
       imageMobInput.value = e.target.files[0];
     }
 
     const getCollectionByID =  (id:number) => {
-      fetchCollectionByID(id).then((res) => {
+      fetchCollectionByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         imageSrc.value = res.data.data.image_src
         imageMobSrc.value = res.data.data.mob_image_src
@@ -69,7 +63,7 @@ export function useCollectionOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveCollection(form.value).then((res) => {
+            saveCollection(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -82,14 +76,14 @@ export function useCollectionOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
               }
             })
         }else{
-            updateCollection(id,form.value).then((res) => {
+            updateCollection(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -102,7 +96,7 @@ export function useCollectionOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -114,7 +108,7 @@ export function useCollectionOperation (){
     const selectAllWebsites = () => {
         if(isSelectAllWebsites.value == true){
             isSelectAllWebsites.value = true;
-            form.value.websites = lstWebsites.value.map(({id}) => id);
+            form.value.websites = lstWebsites.value.map(({id}:any) => id);
         }
         if(isSelectAllWebsites.value == false){
             form.value.websites = []
@@ -126,7 +120,7 @@ export function useCollectionOperation (){
     const selectAllProducts = () => {
         if(isSelectAllProducts.value == true){
             isSelectAllProducts.value = true;
-            form.value.products = lstProducts.value.map(({id}) => id);
+            form.value.products = lstProducts.value.map(({id}:any) => id);
         }
         if(isSelectAllProducts.value == false){
             form.value.products = []
@@ -147,11 +141,11 @@ export function useCollectionOperation (){
             loading.value = true;
     
             //get all permissions
-            fetchAllExtra().then((res) => {
+            fetchAllExtra(httpClient).then((res) => {
                 lstWebsites.value = res.data.websites
                 lstProducts.value = res.data.products
                 if(id != 0){
-                    fetchCollectionByID(id).then((res) => {
+                    fetchCollectionByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.slug = data.slug;
@@ -162,8 +156,8 @@ export function useCollectionOperation (){
                         imageMobInput.value = null;
                         imageSrc.value = data.image_src;
                         imageMobSrc.value = data.mob_image_src;
-                        form.value.websites = data.websites.map(({id}) => id);
-                        form.value.products = data.products.map(({id}) => id);
+                        form.value.websites = data.websites.map(({id}:any) => id);
+                        form.value.products = data.products.map(({id}:any) => id);
     
                         if(form.value.websites.length  == lstWebsites.value.length){
                             isSelectAllWebsites.value = true;

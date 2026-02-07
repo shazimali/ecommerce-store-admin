@@ -1,5 +1,7 @@
 import { IProductColor, IProductColorList } from "@/Interfaces/IProduct";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllColorsByProductID, saveProductColor } from "@/services/ProductsService";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function useProductColor (){
@@ -22,7 +24,8 @@ export function useProductColor (){
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
     const form = ref<IProductColor>({
-        product_head_id:null,
+        id: 0,
+        product_head_id:0,
         color_name: '',
         color_image: colorImageInput,
         image1: image1Input,
@@ -32,23 +35,23 @@ export function useProductColor (){
         image5: image5Input,
     });
 
-    const errorMessages = ref<[country_id:string, price: string, discount:string, discount_from:string, discount_to:string]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         form.value.product_head_id=id;
-            saveProductColor(form.value).then((res) => {
+            saveProductColor(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 toast.success(res.data.message)
                 getAllColors(form.value.product_head_id);
                 errorMessages.value = ['','','','',''];
                 form.value.color_name= '';
-                form.value.color_image= null;
-                form.value.image1= null;
-                form.value.image2= null;
-                form.value.image3= null;
-                form.value.image4= null;
-                form.value.image5= null;
+                form.value.color_image= colorImageInput;
+                form.value.image1= image1Input;
+                form.value.image2= image2Input;
+                form.value.image3= image3Input;
+                form.value.image4= image4Input;
+                form.value.image5= image5Input;
             })
             .catch((err) => {
               if(err.response.status == "422"){
@@ -64,7 +67,7 @@ export function useProductColor (){
               }
             })
     }
-    const handleImageChange = (e:HTMLInputElement, type:string) => {
+    const handleImageChange = (e:any, type:string) => {
         var files = e.target.files;
         if (!files.length) return;
 
@@ -81,17 +84,17 @@ export function useProductColor (){
         if(type == 'image3'){
             image3Input.value =  e.target.files[0];
         }
-        if(type == 'image1'){
+        if(type == 'image4'){
             image4Input.value =  e.target.files[0];
         }
-        if(type == 'image1'){
+        if(type == 'image5'){
             image5Input.value =  e.target.files[0];
         }
     }
 
     const getAllColors = (id:number) => {
         colorLoading.value = true;
-        fetchAllColorsByProductID(id).then((res) => {
+        fetchAllColorsByProductID(httpClient, id).then((res) => {
             colorLoading.value = false;
             lstColors.value = res.data.data
         }).catch((err) => {

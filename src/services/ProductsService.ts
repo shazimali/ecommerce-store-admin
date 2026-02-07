@@ -1,57 +1,57 @@
 import { IProduct, IProductColor, IProductPrice } from "@/Interfaces/IProduct";
-import axios from "axios";
+import { AxiosInstance } from "axios";
 
 
-export const  fetchProducts = async (current_page :number,item_per_page :number, search:string) => {
-    return await axios.get('/products?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
+export const  fetchProducts = async (axiosInstance: AxiosInstance, current_page :number,item_per_page :number, search:string) => {
+    return await axiosInstance.get('/products?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
 }
 
-export const  fetchAllSubCategories = async () => {
-    return await axios.get('/products/get-all-sub-categories')  
+export const  fetchAllSubCategories = async (axiosInstance: AxiosInstance) => {
+    return await axiosInstance.get('/products/get-all-sub-categories')  
 }
 
-export const saveProduct = async (data : IProduct) => {
-    return await axios.post('/products/store',{ ...data },{
+export const saveProduct = async (axiosInstance: AxiosInstance, data : IProduct) => {
+    return await axiosInstance.post('/products/store',{ ...data },{
         headers: { 'Content-Type': 'multipart/form-data' }
     })
 }
 
-export const fetchProductByID = async (id :number) => {
-    return await axios.get('/products/edit/'+id)
+export const fetchProductByID = async (axiosInstance: AxiosInstance, id :number) => {
+    return await axiosInstance.get('/products/edit/'+id)
 }
 
-export const updateProduct = async  (id : number , data : IProduct )=>{
-    return await axios.post('/products/update/'+id,{ ...data },{
+export const updateProduct = async  (axiosInstance: AxiosInstance, id : number , data : IProduct )=>{
+    return await axiosInstance.post('/products/update/'+id,{ ...data },{
         headers: { 'Content-Type': 'multipart/form-data' }
     })
 }
 
-export const deleteProduct = async  (id : number)=>{
-    return await axios.delete('/products/delete/'+id)
+export const deleteProduct = async  (axiosInstance: AxiosInstance, id : number)=>{
+    return await axiosInstance.delete('/products/delete/'+id)
 }
 
-export const fetchAllPricesByProductID = async  (id : number)=>{
-    return await axios.get('/products/prices/'+id)
+export const fetchAllPricesByProductID = async  (axiosInstance: AxiosInstance, id : number)=>{
+    return await axiosInstance.get('/products/prices/'+id)
 }
 
-export const saveProductPrice = async  (data: IProductPrice)=>{
-    return await axios.post('/products/prices/store',{...data})
+export const saveProductPrice = async  (axiosInstance: AxiosInstance, data: IProductPrice)=>{
+    return await axiosInstance.post('/products/prices/store',{...data})
 }
 
-export const deleteProductPrice = async  (id : number)=>{
-    return await axios.delete('/products/prices/delete/'+id)
+export const deleteProductPrice = async  (axiosInstance: AxiosInstance, id : number)=>{
+    return await axiosInstance.delete('/products/prices/delete/'+id)
 }
 
-export const fetchAllColorsByProductID = async  (id : number)=>{
-    return await axios.get('/products/colors/'+id)
+export const fetchAllColorsByProductID = async  (axiosInstance: AxiosInstance, id : number)=>{
+    return await axiosInstance.get('/products/colors/'+id)
 }
 
-export const saveProductColor = async  (data:IProductColor)=>{
-    return await axios.post('/products/colors/store',{...data},{
+export const saveProductColor = async  (axiosInstance: AxiosInstance, data:IProductColor)=>{
+    return await axiosInstance.post('/products/colors/store',{...data},{
         headers: { 'Content-Type': 'multipart/form-data' }
     })
 }
 
-export const deleteProductColor = async  (id : number)=>{
-    return await axios.delete('/products/colors/delete/'+id)
+export const deleteProductColor = async  (axiosInstance: AxiosInstance, id : number)=>{
+    return await axiosInstance.delete('/products/colors/delete/'+id)
 }

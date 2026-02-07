@@ -1,8 +1,10 @@
 import { ISocialMedia } from "@/Interfaces/ISocialMedia";
 import { IWebsiteList } from "@/Interfaces/IWebsite";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllWebsites } from "@/services/BannersService";
 import { fetchSocialMediaByID, saveSocialMedia, updateSocialMedia } from "@/services/SocialMediasService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useSocialMediaOperation (){
     
@@ -13,21 +15,18 @@ export function useSocialMediaOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllWebsites = ref<boolean>(false);
     const form = ref<ISocialMedia>({
+        id: 0,
         title:'',
         class:'',
         url:'',
         websites:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        classes: string, 
-        countries:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
 
     const getSocialMediaByID =  (id:number) => {
-      fetchSocialMediaByID(id).then((res) => {
+      fetchSocialMediaByID(httpClient, id).then((res) => {
         form.value = res.data.data;
       }).catch((err) => {
         toast.error(err.message);
@@ -36,7 +35,7 @@ export function useSocialMediaOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveSocialMedia(form.value).then((res) => {
+            saveSocialMedia(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -56,7 +55,7 @@ export function useSocialMediaOperation (){
               }
             })
         }else{
-            updateSocialMedia(id,form.value).then((res) => {
+            updateSocialMedia(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -69,7 +68,7 @@ export function useSocialMediaOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -81,7 +80,7 @@ export function useSocialMediaOperation (){
     const selectAllWebsites = () => {
         if(isSelectAllWebsites.value == true){
             isSelectAllWebsites.value = true;
-            form.value.websites = lstWebsites.value.map(({id}) => id);
+            form.value.websites = lstWebsites.value.map(({id}:any) => id);
         }
         if(isSelectAllWebsites.value == false){
             form.value.websites = []
@@ -97,16 +96,16 @@ export function useSocialMediaOperation (){
             loading.value = true;
     
             //get all permissions
-            fetchAllWebsites().then((res) => {
+            fetchAllWebsites(httpClient).then((res) => {
                 lstWebsites.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchSocialMediaByID(id).then((res) => {
+                    fetchSocialMediaByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.class = data.class;
                         form.value.url = data.url;
-                        form.value.websites = data.websites.map(({id}) => id);
+                        form.value.websites = data.websites.map(({id}:any) => id);
     
                         if(form.value.websites.length  == lstWebsites.value.length){
                             isSelectAllWebsites.value = true;

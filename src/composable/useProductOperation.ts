@@ -1,9 +1,11 @@
 import { slugify } from "@/@core/utils/helpers";
 import { IProduct } from "@/Interfaces/IProduct";
 import { ISubCategoryList } from "@/Interfaces/ISubCategory";
+import httpClient from "@/plugins/httpClient";
 import { fetchCategoryByID } from "@/services/CategoriesService";
 import { fetchAllSubCategories, fetchProductByID, saveProduct, updateProduct } from "@/services/ProductsService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useProductOperation (){
     
@@ -25,6 +27,7 @@ export function useProductOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllSubCategories = ref<boolean>(false);
     const form = ref<IProduct>({
+        id:0,
         title:'',
         slug:'',
         code:'',
@@ -49,22 +52,13 @@ export function useProductOperation (){
         sub_categories:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        slug: string, 
-        code: string, 
-        status:string,
-        sku: string, 
-        description:string,
-        image:string,
-        order:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const handleSlug = () => {
         form.value.slug = slugify(form.value.title);
     }
 
-    const handleImageChange = (e:HTMLInputElement, type: string) => {
+    const handleImageChange = (e:any, type: string) => {
       
       var files = e.target.files;
       if (!files.length) return;
@@ -104,7 +98,7 @@ export function useProductOperation (){
     }
 
     const getCategoryByID =  (id:number) => {
-      fetchCategoryByID(id).then((res) => {
+      fetchCategoryByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         imageSrc.value = res.data.data.logo_src
       }).catch((err) => {
@@ -114,7 +108,7 @@ export function useProductOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveProduct(form.value).then((res) => {
+            saveProduct(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -127,14 +121,14 @@ export function useProductOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
               }
             })
         }else{
-            updateProduct(id,form.value).then((res) => {
+            updateProduct(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -159,7 +153,7 @@ export function useProductOperation (){
     const selectAllSubCategories = () => {
         if(isSelectAllSubCategories.value == true){
             isSelectAllSubCategories.value = true;
-            form.value.sub_categories = lstSubCategories.value.map(({id}) => id);
+            form.value.sub_categories = lstSubCategories.value.map(({id}:any) => id);
         }
         if(isSelectAllSubCategories.value == false){
             form.value.sub_categories = []
@@ -177,11 +171,11 @@ export function useProductOperation (){
             loading.value = true;
     
             //get all permissions
-            fetchAllSubCategories().then((res) => {
+            fetchAllSubCategories(httpClient).then((res) => {
                 lstSubCategories.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchProductByID(id).then((res) => {
+                    fetchProductByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value = data;
                         imageInput.value = null;
@@ -198,7 +192,7 @@ export function useProductOperation (){
                         imageSrc4.value = data.image_src4;
                         imageInput5.value = null;
                         imageSrc5.value = data.image_src5;
-                        form.value.sub_categories = data.sub_categories.map(({id}) => id);
+                        form.value.sub_categories = data.sub_categories.map(({id}:any) => id);
                         if(form.value.sub_categories.length  == lstSubCategories.value.length){
                             isSelectAllSubCategories.value = true;
                         }

@@ -1,6 +1,7 @@
 import { IBannerList } from '@/Interfaces/IBanner';
+import httpClient from '@/plugins/httpClient';
 import { fetchBanners } from '@/services/BannersService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useBanners(){
@@ -26,7 +27,7 @@ export function useBanners(){
 
        const doFetchBanners = () => {
             loading.value = true;
-            fetchBanners(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchBanners(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstBanners.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

@@ -1,7 +1,9 @@
 import { ICountriesList } from "@/Interfaces/ICountry";
 import { IFacility } from "@/Interfaces/IFacility";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCountries, fetchFacilityByID, saveFacility, updateFacility } from "@/services/FacilitiesService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useFacilityOperation (){
     
@@ -12,20 +14,17 @@ export function useFacilityOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllCountries = ref<boolean>(false);
     const form = ref<IFacility>({
+        id: 0,
         title:'',
         class:'',
         countries:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        classes: string, 
-        countries:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
 
     const getFacilityByID =  (id:number) => {
-      fetchFacilityByID(id).then((res) => {
+      fetchFacilityByID(httpClient, id).then((res) => {
         form.value = res.data.data;
       }).catch((err) => {
         toast.error(err.message);
@@ -34,7 +33,7 @@ export function useFacilityOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveFacility(form.value).then((res) => {
+            saveFacility(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -54,7 +53,7 @@ export function useFacilityOperation (){
               }
             })
         }else{
-            updateFacility(id,form.value).then((res) => {
+            updateFacility(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -95,15 +94,15 @@ export function useFacilityOperation (){
             loading.value = true;
     
             //get all permissions
-            fetchAllCountries().then((res) => {
+            fetchAllCountries(httpClient).then((res) => {
                 lstCountries.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchFacilityByID(id).then((res) => {
+                    fetchFacilityByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.class = data.class;
-                        form.value.countries = data.countries.map(({id}) => id);
+                        form.value.countries = data.countries.map(({id}:any) => id);
     
                         if(form.value.countries.length  == lstCountries.value.length){
                             isSelectAllCountries.value = true;

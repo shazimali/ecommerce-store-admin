@@ -1,4 +1,5 @@
 export interface IProduct {
+    id: number,
     title: string,
     slug: string,
     code: string|number,
@@ -20,11 +21,9 @@ export interface IProduct {
     image4: {},
     image5: {},
     order: number,
-    sub_categories:[],
+    sub_categories:number[],
 }
-export interface IProductList {
-    product : [IProduct]
-}
+export type IProductList = IProduct[];
 
 export interface IProductPrice {
     id: number,
@@ -46,9 +45,7 @@ export interface IProductFetchPrice {
     discount_to:number
 }
 
-export interface IProductPriceList {
-    product_price : [IProductFetchPrice]
-}
+export type IProductPriceList = IProductFetchPrice[];
 
 export interface IProductColor {
     id: number,
@@ -75,9 +72,7 @@ export interface IProductFetchColor {
 }
 
 
-export interface IProductColorList {
-    product_color : [IProductFetchColor]
-}
+export type IProductColorList = IProductFetchColor[];
 
 export interface IProductListForPurchase {
     title: string,

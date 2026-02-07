@@ -1,9 +1,11 @@
 import { ICountriesList } from "@/Interfaces/ICountry";
 import { ICoupon } from "@/Interfaces/ICoupon";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCountries, fetchCouponByID, saveCoupon, updateCoupon } from "@/services/CouponsService";
 
 
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from "vue3-toastify";
 
 export function useCouponOperation (){
@@ -14,6 +16,7 @@ export function useCouponOperation (){
   const isCompleted = ref<number>(0);
   
   const form = ref<ICoupon>({
+      id: 0,
       title:'',
       code:'',
       discount: '',
@@ -23,19 +26,11 @@ export function useCouponOperation (){
       country_id:''
   });
 
-  const errorMessages = ref<[
-      title:string,  
-      code:string,  
-      discount:number, 
-      date_from:string, 
-      date_to:string,
-      status: string,
-      country:string
-  ]>([]);
+  const errorMessages = ref<string[]>([]);
 
 
   const getCouponByID =  (id:number) => {
-    fetchCouponByID(id).then((res) => {
+    fetchCouponByID(httpClient, id).then((res) => {
       form.value = res.data.data;
     }).catch((err) => {
       toast.error(err.message);
@@ -46,7 +41,7 @@ export function useCouponOperation (){
   const handleSubmit = (id:number, isActive:Ref<boolean>) => {
       formLoading.value = true;
       if(id == 0){
-          saveCoupon(form.value).then((res) => {
+          saveCoupon(httpClient, form.value).then((res) => {
               formLoading.value = false;
               isActive.value = false;
               isCompleted.value = rand(1,10);
@@ -66,7 +61,7 @@ export function useCouponOperation (){
             }
           })
       }else{
-          updateCoupon(id,form.value).then((res) => {
+          updateCoupon(httpClient, id,form.value).then((res) => {
               formLoading.value = false;
               isActive.value = false;
               isCompleted.value = rand(1,10);
@@ -102,10 +97,10 @@ export function useCouponOperation (){
           loading.value = true;
   
           //get all countries
-          fetchAllCountries().then((res) => {
+          fetchAllCountries(httpClient).then((res) => {
               lstCountries.value = res.data.data
               if(id != 0){
-                  fetchCouponByID(id).then((res) => {
+                  fetchCouponByID(httpClient, id).then((res) => {
                       let data = res.data.data;
                       form.value.title = data.title;
                       form.value.code = data.code;

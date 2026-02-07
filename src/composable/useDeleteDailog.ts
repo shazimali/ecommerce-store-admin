@@ -1,3 +1,4 @@
+import httpClient from "@/plugins/httpClient";
 import { deleteBanner } from "@/services/BannersService";
 import { deleteBlog } from "@/services/BlogsService";
 import { deleteCategory } from "@/services/CategoriesService";
@@ -19,6 +20,7 @@ import { deleteSupplier } from "@/services/SuppliersService";
 import { deleteUser } from "@/services/UsersService";
 import { deleteWebsite } from "@/services/WebsiteService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from "vue3-toastify";
 
 export function useDeleteDailog(){
@@ -26,7 +28,7 @@ export function useDeleteDailog(){
     const formLoading = ref<boolean>(false);
     const doDelete = (id:number,action:string,isActive:Ref<boolean>) => {
         if(action == 'permission'){
-            deletePermission(id).then((res) => {
+            deletePermission(httpClient, id).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -36,7 +38,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'role'){
-            deleteRole(id).then((res) => {
+            deleteRole(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -50,7 +52,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'user'){
-            deleteUser(id).then((res) => {
+            deleteUser(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -64,7 +66,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'website'){
-            deleteWebsite(id).then((res) => {
+            deleteWebsite(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -78,7 +80,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'category'){
-            deleteCategory(id).then((res) => {
+            deleteCategory(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -92,7 +94,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'subcategory'){
-            deleteSubCategory(id).then((res) => {
+            deleteSubCategory(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -106,7 +108,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'product'){
-            deleteProduct(id).then((res) => {
+            deleteProduct(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -120,7 +122,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'product_price'){
-            deleteProductPrice(id).then((res) => {
+            deleteProductPrice(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -133,7 +135,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'product_color'){
-            deleteProductColor(id).then((res) => {
+            deleteProductColor(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -146,7 +148,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'banner'){
-            deleteBanner(id).then((res) => {
+            deleteBanner(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -159,7 +161,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'facility'){
-            deleteFacility(id).then((res) => {
+            deleteFacility(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -172,7 +174,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'social_media'){
-            deleteSocialMedia(id).then((res) => {
+            deleteSocialMedia(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -185,7 +187,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'supplier'){
-            deleteSupplier(id).then((res) => {
+            deleteSupplier(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -198,7 +200,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'purchase'){
-            deletePurchase(id).then((res) => {
+            deletePurchase(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -211,7 +213,7 @@ export function useDeleteDailog(){
             })
         }
         if(action == 'setting'){
-          deleteSetting(id).then((res) => {
+          deleteSetting(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
@@ -224,7 +226,7 @@ export function useDeleteDailog(){
           })
         }
         if(action == 'coupon'){
-          deleteCoupon(id).then((res) => {
+          deleteCoupon(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
@@ -237,7 +239,7 @@ export function useDeleteDailog(){
           })
         }
         if(action == 'blog'){
-          deleteBlog(id).then((res) => {
+          deleteBlog(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
@@ -250,7 +252,7 @@ export function useDeleteDailog(){
           })
         }
         if(action == 'cod'){
-            deleteCod(id).then((res) => {
+            deleteCod(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
@@ -263,7 +265,7 @@ export function useDeleteDailog(){
             })
           }
         if(action == 'page'){
-          deletePage(id).then((res) => {
+          deletePage(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
@@ -276,7 +278,7 @@ export function useDeleteDailog(){
           })
         }
         if(action == 'product_review'){
-          deleteProductReview(id).then((res) => {
+          deleteProductReview(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
@@ -289,7 +291,7 @@ export function useDeleteDailog(){
           })
         }
         if(action == 'order'){
-          deleteOrder(id).then((res) => {
+          deleteOrder(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{
@@ -302,7 +304,7 @@ export function useDeleteDailog(){
           })
         }
          if(action == 'collection'){
-          deleteCollection(id).then((res) => {
+          deleteCollection(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{

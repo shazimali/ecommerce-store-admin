@@ -1,6 +1,7 @@
 import { ISocialMediaList } from '@/Interfaces/ISocialMedia';
+import httpClient from '@/plugins/httpClient';
 import { fetchSocialMedias } from '@/services/SocialMediasService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useSocialMedias(){
@@ -23,7 +24,7 @@ export function useSocialMedias(){
 
        const doFetchSocialMedias = () => {
             loading.value = true;
-            fetchSocialMedias(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchSocialMedias(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstSocialMedias.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

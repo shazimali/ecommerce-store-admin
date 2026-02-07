@@ -1,4 +1,5 @@
 export interface ICoupon{
+  id: number,
   title: string,
   code: string,
   discount: number | string,
@@ -7,6 +8,4 @@ export interface ICoupon{
   status: string,
   country_id: number | string
 }
-export interface ICouponList {
- coupon : [ICoupon] 
-}
+export type ICouponList = ICoupon[];

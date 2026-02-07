@@ -1,22 +1,19 @@
 
 export interface IUser {
+    id: number,
     name: string,
     email: string,
     password: string,
     password_confirmation: string,
     type: string,
-    roles: []
+    roles: number[]
 }
 
-export interface IUserList {
-    users : [IUser]
-}
+export type IUserList = IUser[];
 
 export interface IRole {
     id: number,
     name: string
 }
 
-export interface  IRoleList {
-    roles : [IRole]
-}
+export type IRoleList = IRole[];

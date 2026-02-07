@@ -1,12 +1,11 @@
 export interface ICod {
-  title: string
+  id: number,
+  title: string,
   api_test_url: string,
   api_url: string,
   api_key: string,
   api_password: string,
   status: string,
-  countries: []
+  countries: number[]
 }
-export interface ICodList {
-  cod : [ICod]
-}
+export type ICodList = ICod[];

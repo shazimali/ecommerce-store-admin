@@ -1,6 +1,7 @@
 import { IBlogList } from '@/Interfaces/IBlog';
+import httpClient from '@/plugins/httpClient';
 import { fetchBlogs } from '@/services/BlogsService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useBlogs(){
@@ -28,7 +29,7 @@ export function useBlogs(){
 
        const doFetchBlogs = () => {
             loading.value = true;
-            fetchBlogs(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchBlogs(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstBlogs.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

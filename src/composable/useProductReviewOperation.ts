@@ -1,6 +1,8 @@
 import { IProductList, IProductReview } from "@/Interfaces/IProductReview";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllProductReview, fetchProductReviewByID, saveProductReview, updateProductReview } from "@/services/ProductReviewService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useProductReviewOperation (){
     
@@ -38,7 +40,6 @@ export function useProductReviewOperation (){
     ]>([]);
 
     
-
     const handleImageChange = (e:HTMLInputElement, type: string) => {
       
       var files = e.target.files;
@@ -59,7 +60,7 @@ export function useProductReviewOperation (){
    
 
     const getProductReviewByID =  (id:number) => {
-      fetchProductReviewByID(id).then((res) => {
+      fetchProductReviewByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         imageSrc1.value = res.data.data.image_src1;
         imageSrc2.value = res.data.data.image_src2;
@@ -71,7 +72,7 @@ export function useProductReviewOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveProductReview(form.value).then((res) => {
+            saveProductReview(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -91,7 +92,7 @@ export function useProductReviewOperation (){
               }
             })
         }else{
-            updateProductReview(id,form.value).then((res) => {
+            updateProductReview(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -127,11 +128,11 @@ export function useProductReviewOperation (){
             loading.value = true;
     
             //get all Products
-            fetchAllProductReview().then((res) => {
+            fetchAllProductReview(httpClient).then((res) => {
                 lstProduct.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchProductReviewByID(id).then((res) => {
+                    fetchProductReviewByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value = data;
                         imageInput1.value = null;

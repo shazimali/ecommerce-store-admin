@@ -1,9 +1,8 @@
 export interface IPermission {
+    id: number,
     name: string,
     key: string
 }
 
-export interface IPermissionList {
-    permissions : [IPermission]
-}
+export type IPermissionList = IPermission[];
 

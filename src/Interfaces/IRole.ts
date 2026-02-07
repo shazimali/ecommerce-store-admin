@@ -1,12 +1,10 @@
-
 export interface IRole {
+    id: number,
     name: string,
-    permissions: []
+    permissions: number[]
 }
 
-export interface IRoleList {
-    roles : [IRole]
-}
+export type IRoleList = IRole[];
 
 export interface IPermission {
     id: number,
@@ -14,6 +12,4 @@ export interface IPermission {
     key: string
 }
 
-export interface  IPermissionsList {
-    permissions : [IPermission]
-}
+export type IPermissionsList = IPermission[];

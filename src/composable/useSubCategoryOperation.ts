@@ -1,8 +1,10 @@
 import { slugify } from "@/@core/utils/helpers";
 import { ICategoryList } from "@/Interfaces/ICategory";
 import { ISubCategory } from "@/Interfaces/ISubCategory";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCategories, fetchSubCategoryByID, saveSubCategory, updateSubCategory } from "@/services/SubCategoriesService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useSubCategoryOperation (){
     
@@ -14,6 +16,7 @@ export function useSubCategoryOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllCategories = ref<boolean>(false);
     const form = ref<ISubCategory>({
+        id: 0,
         title:'',
         slug:'',
         image:imageInput,
@@ -21,26 +24,20 @@ export function useSubCategoryOperation (){
         categories:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        slug: string, 
-        image:string,
-        order:string,
-        categories:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const handleSlug = () => {
         form.value.slug = slugify(form.value.title);
     }
 
-    const handleImageChange = (e:HTMLInputElement) => {
+    const handleImageChange = (e:any) => {
       var files = e.target.files;
       if (!files.length) return;
       imageInput.value = e.target.files[0];
     }
 
     const getSubCategoryByID =  (id:number) => {
-      fetchSubCategoryByID(id).then((res) => {
+      fetchSubCategoryByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         imageSrc.value = res.data.data.logo_src
       }).catch((err) => {
@@ -50,7 +47,7 @@ export function useSubCategoryOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveSubCategory(form.value).then((res) => {
+            saveSubCategory(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -70,7 +67,7 @@ export function useSubCategoryOperation (){
               }
             })
         }else{
-            updateSubCategory(id,form.value).then((res) => {
+            updateSubCategory(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -94,7 +91,7 @@ export function useSubCategoryOperation (){
     const selectAllCategories = () => {
         if(isSelectAllCategories.value == true){
             isSelectAllCategories.value = true;
-            form.value.categories = lstCategories.value.map(({id}) => id);
+            form.value.categories = lstCategories.value.map(({id}:any) => id);
         }
         if(isSelectAllCategories.value == false){
             form.value.categories = []
@@ -111,17 +108,17 @@ export function useSubCategoryOperation (){
             form.value.order = 0;
             loading.value = true;
     
-            fetchAllCategories().then((res) => {
+            fetchAllCategories(httpClient).then((res) => {
                 lstCategories.value = res.data.data
                 if(id != 0){
-                    fetchSubCategoryByID(id).then((res) => {
+                    fetchSubCategoryByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.slug = data.slug;
                         form.value.order = data.order;
                         imageInput.value = null;
                         imageSrc.value = data.image_src;
-                        form.value.categories = data.categories.map(({id}) => id);
+                        form.value.categories = data.categories.map(({id}:any) => id);
     
                         if(form.value.categories.length  == lstCategories.value.length){
                             isSelectAllCategories.value = true;

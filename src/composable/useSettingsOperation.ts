@@ -1,7 +1,9 @@
 import { ICountriesList } from "@/Interfaces/ICountry";
 import { ISetting } from "@/Interfaces/ISetting";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCountries, fetchSettingByID, saveSetting, updateSetting } from "@/services/SettingsService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from "vue3-toastify";
 
 export function useSettingOperation (){
@@ -27,7 +29,7 @@ export function useSettingOperation (){
 
 
   const getSettingByID =  (id:number) => {
-    fetchSettingByID(id).then((res) => {
+    fetchSettingByID(httpClient, id).then((res) => {
       form.value = res.data.data;
     }).catch((err) => {
       toast.error(err.message);
@@ -38,7 +40,7 @@ export function useSettingOperation (){
   const handleSubmit = (id:number, isActive:Ref<boolean>) => {
       formLoading.value = true;
       if(id == 0){
-          saveSetting(form.value).then((res) => {
+          saveSetting(httpClient, form.value).then((res) => {
               formLoading.value = false;
               isActive.value = false;
               isCompleted.value = rand(1,10);
@@ -58,7 +60,7 @@ export function useSettingOperation (){
             }
           })
       }else{
-          updateSetting(id,form.value).then((res) => {
+          updateSetting(httpClient, id,form.value).then((res) => {
               formLoading.value = false;
               isActive.value = false;
               isCompleted.value = rand(1,10);
@@ -81,7 +83,6 @@ export function useSettingOperation (){
   }
 
   
-
   const getAllCountries = (id:number) => {
          
           form.value.title='';
@@ -91,10 +92,10 @@ export function useSettingOperation (){
           loading.value = true;
   
           //get all countries
-          fetchAllCountries().then((res) => {
+          fetchAllCountries(httpClient).then((res) => {
               lstCountries.value = res.data.data
               if(id != 0){
-                  fetchSettingByID(id).then((res) => {
+                  fetchSettingByID(httpClient, id).then((res) => {
                       let data = res.data.data;
                       form.value.title = data.title;
                       form.value.key = data.key;

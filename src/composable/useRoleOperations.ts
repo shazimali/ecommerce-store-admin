@@ -1,6 +1,8 @@
 import { IPermissionsList, IRole } from "@/Interfaces/IRole";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllPermissions, fetchRoleByID, saveRole, updateRole } from "@/services/RolesService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function useRoleOperations (){
@@ -11,6 +13,7 @@ export function useRoleOperations (){
     const isSelectAllPermissions = ref<boolean>(false);
     const isCompleted = ref<number>(0);
     const form = ref<IRole>({
+        id: 0,
         name:'',
         permissions:[]
     });
@@ -26,7 +29,7 @@ export function useRoleOperations (){
         }
         
     }
-    const errorMessages = ref<[name:string, permissions: string]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const getAllPermissions = (id:number) => {
         form.value.name= '';
@@ -34,16 +37,16 @@ export function useRoleOperations (){
         loading.value = true;
 
         //get all permissions
-        fetchAllPermissions().then((res) => {
+        fetchAllPermissions(httpClient).then((res) => {
             
             lstPermissions.value = res.data.data
             
             //get selected permissions in role edit case
             if(id != 0){
-                fetchRoleByID(id).then((res) => {
+                fetchRoleByID(httpClient, id).then((res) => {
                     let data = res.data.data;
                     form.value.name = data.name;
-                    form.value.permissions = data.permissions.map(({id}) => id);
+                    form.value.permissions = data.permissions.map(({id}:any) => id);
 
                     if(form.value.permissions.length  == lstPermissions.value.length){
                         isSelectAllPermissions.value = true;
@@ -65,7 +68,7 @@ export function useRoleOperations (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveRole(form.value).then((res) => {
+            saveRole(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -85,7 +88,7 @@ export function useRoleOperations (){
               }
             })
         }else{
-            updateRole(id,form.value).then((res) => {
+            updateRole(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);

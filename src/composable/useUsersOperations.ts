@@ -1,6 +1,8 @@
 import { IRoleList, IUser } from "@/Interfaces/IUser";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllRoles, fetchUserByID, saveUser, updateUser } from "@/services/UsersService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function useUsersOperations (){
@@ -11,6 +13,7 @@ export function useUsersOperations (){
     const isSelectAllRoles = ref<boolean>(false);
     const isCompleted = ref<number>(0);
     const form = ref<IUser>({
+        id: 0,
         name:'',
         email:'',
         password:'',
@@ -22,7 +25,7 @@ export function useUsersOperations (){
     const selectAllRoles = () => {
         if(isSelectAllRoles.value == true){
           isSelectAllRoles.value = true;
-            form.value.roles = lstRoles.value.map(({id}) => id);
+            form.value.roles = lstRoles.value.map(({id}:any) => id);
         }
         if(isSelectAllRoles.value == false){
             form.value.roles = []
@@ -30,13 +33,7 @@ export function useUsersOperations (){
         }
         
     }
-    const errorMessages = ref<[
-      name:string, 
-      email:string|number,
-      roles: string,
-      password: string|number,
-      password_confirmation: string|number
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const getAllRoles = (id:number) => {
         form.value.name= '';
@@ -46,16 +43,16 @@ export function useUsersOperations (){
         loading.value = true;
 
         //get all permissions
-        fetchAllRoles().then((res) => {
+        fetchAllRoles(httpClient).then((res) => {
             
             lstRoles.value = res.data.data
             
             //get selected permissions in role edit case
             if(id != 0){
-                fetchUserByID(id).then((res) => {
+                fetchUserByID(httpClient, id).then((res) => {
                     let data = res.data.data;
                     form.value = data;
-                    form.value.roles = data.roles.map(({id}) => id);
+                    form.value.roles = data.roles.map(({id}:any) => id);
 
                     if(form.value.roles.length  == lstRoles.value.length){
                       isSelectAllRoles.value = true;
@@ -77,7 +74,7 @@ export function useUsersOperations (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveUser(form.value).then((res) => {
+            saveUser(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -97,7 +94,7 @@ export function useUsersOperations (){
               }
             })
         }else{
-            updateUser(id,form.value).then((res) => {
+            updateUser(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -110,7 +107,7 @@ export function useUsersOperations (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;

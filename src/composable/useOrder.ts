@@ -1,6 +1,7 @@
 import { IOrderList } from '@/Interfaces/IOrder';
+import httpClient from '@/plugins/httpClient';
 import { fetchOrder } from '@/services/OrderService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 
@@ -35,7 +36,7 @@ export function useOrder(){
 
        const doFetchOrder = () => {
             loading.value = true;
-            fetchOrder(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchOrder(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
               lstOrder .value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

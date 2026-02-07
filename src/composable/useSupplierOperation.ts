@@ -1,6 +1,8 @@
 import { ISupplier } from "@/Interfaces/ISupplier";
+import httpClient from "@/plugins/httpClient";
 import { fetchSupplierByID, saveSupplier, updateSupplier } from "@/services/SuppliersService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function useSupplierOperation (){
@@ -11,21 +13,17 @@ export function useSupplierOperation (){
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
     const form = ref<ISupplier>({
+        id: 0,
         name:'',
         phone:'',
         address:'',
         email:''
     });
 
-    const errorMessages = ref<[
-        name:string, 
-        phone:string,
-        email:string,
-        address:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const getSupplierByID =  (id:number) => {
-      fetchSupplierByID(id).then((res) => {
+      fetchSupplierByID(httpClient, id).then((res) => {
         form.value = res.data.data;
       }).catch((err) => {
         toast.error(err.message);
@@ -34,7 +32,7 @@ export function useSupplierOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveSupplier(form.value).then((res) => {
+            saveSupplier(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -47,14 +45,14 @@ export function useSupplierOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
               }
             })
         }else{
-            updateSupplier(id,form.value).then((res) => {
+            updateSupplier(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -67,7 +65,7 @@ export function useSupplierOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
