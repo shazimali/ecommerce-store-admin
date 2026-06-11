@@ -26,15 +26,15 @@ export function useLogin(){
           toast.success('Logged in successfully')
         })
         .catch((err) => {
-          if(err.response.status == "422"){
+          if (err.response && err.response.status == "422") {
             errorMessages.value =  err.response.data.errors
             loading.value = false;
-          }else if(err.response.status == "401"){  
+          } else if (err.response && err.response.status == "401") {  
             toast.error(err.response.data.message);
             loading.value = false;
             errorMessages.value = ['','']
-          }else{
-            toast.error(err.message)
+          } else {
+            toast.error(err.message || 'An error occurred')
             loading.value = false;
           }
         })

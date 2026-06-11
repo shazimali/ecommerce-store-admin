@@ -43,6 +43,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
     }"
   />
   <VerticalNavLink
+  v-show="canUserAccess('badge_access')"
+    :item="{
+      title: 'Badges',
+      icon: 'bx bx-award',
+      to: '/badges',
+    }"
+  />
+  <VerticalNavLink
   v-show="canUserAccess('product_access')"
     :item="{
       title: 'Products',

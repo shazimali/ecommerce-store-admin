@@ -63,6 +63,14 @@ export const routes = [
         }
       },
       {
+        path: 'badges',
+        name:'badges',
+        component: () => import('@/pages/badges.vue'),
+        beforeEnter() {
+          if(!canUserAccess('badge_access')) return '/error'
+        }
+      },
+      {
         path: 'products',
         name:'products',
         component: () => import('@/pages/products.vue'),

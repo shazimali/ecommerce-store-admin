@@ -1,5 +1,6 @@
 import httpClient from "@/plugins/httpClient";
 import { deleteBanner } from "@/services/BannersService";
+import { deleteBadge } from "@/services/BadgesService";
 import { deleteBlog } from "@/services/BlogsService";
 import { deleteCategory } from "@/services/CategoriesService";
 import { deleteCod } from "@/services/CodService";
@@ -305,6 +306,19 @@ export function useDeleteDailog(){
         }
          if(action == 'collection'){
           deleteCollection(httpClient, id).then((res) => {
+              if(res.status == 201){
+                  toast.error(res.data.message)
+              }else{
+                  toast.success(res.data.message)
+              }
+              isCompleted.value = rand(1,10);
+              formLoading.value = false;
+          }).catch((err) => {
+              console.log(err)
+          })
+        }
+         if(action == 'badge'){
+          deleteBadge(httpClient, id).then((res) => {
               if(res.status == 201){
                   toast.error(res.data.message)
               }else{

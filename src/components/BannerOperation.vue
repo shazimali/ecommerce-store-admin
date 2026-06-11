@@ -72,7 +72,7 @@
                 </v-col>
                 <v-col cols="12">
                   <v-img
-                  v-show=""
+                  v-show="mobImgSrc"
                     :width="50"
                     :height="50"
                     :src="mobImgSrc"
