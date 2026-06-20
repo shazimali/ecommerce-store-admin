@@ -79,6 +79,14 @@ export const routes = [
         }
       },
       {
+        path: 'bundles',
+        name:'bundles',
+        component: () => import('@/pages/bundles.vue'),
+        beforeEnter() {
+          if(!canUserAccess('bundle_access')) return '/error'
+        }
+      },
+      {
         path: 'banners',
         name:'banners',
         component: () => import('@/pages/banners.vue'),
@@ -206,7 +214,7 @@ export const routes = [
       {
         path: '/print/:id',
         name: 'print',
-        component: () => import('@/pages/prints/invoice.vue')
+        component: () => import('@/pages/Prints/Invoice.vue')
       },
     ],
   },

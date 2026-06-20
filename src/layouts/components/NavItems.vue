@@ -59,6 +59,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'; /* Partia
     }"
   />
   <VerticalNavLink
+  v-show="canUserAccess('bundle_access')"
+    :item="{
+      title: 'Bundles',
+      icon: 'bx bx-package',
+      to: '/bundles',
+    }"
+  />
+  <VerticalNavLink
   v-show="canUserAccess('banner_access')"
     :item="{
       title: 'Banners',

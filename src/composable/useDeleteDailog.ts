@@ -12,6 +12,7 @@ import { deletePage } from "@/services/PagesService";
 import { deletePermission } from "@/services/PermissionsService";
 import { deleteProductReview } from "@/services/ProductReviewService";
 import { deleteProduct, deleteProductColor, deleteProductPrice } from "@/services/ProductsService";
+import { deleteBundle, deleteBundlePrice, deleteBundleColor } from "@/services/BundlesService";
 import { deletePurchase } from "@/services/PurchaseService";
 import { deleteRole } from "@/services/RolesService";
 import { deleteSetting } from "@/services/SettingsService";
@@ -137,6 +138,46 @@ export function useDeleteDailog(){
         }
         if(action == 'product_color'){
             deleteProductColor(httpClient, id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'bundle'){
+            deleteBundle(httpClient, id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+                isActive.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'bundle_price'){
+            deleteBundlePrice(httpClient, id).then((res) => {
+                if(res.status == 201){
+                    toast.error(res.data.message)
+                }else{
+                    toast.success(res.data.message)
+                }
+                isCompleted.value = rand(1,10);
+                formLoading.value = false;
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        if(action == 'bundle_color'){
+            deleteBundleColor(httpClient, id).then((res) => {
                 if(res.status == 201){
                     toast.error(res.data.message)
                 }else{
