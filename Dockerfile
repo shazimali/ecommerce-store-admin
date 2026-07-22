@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy package lock and configuration
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies without running postinstall scripts before source code exists
+RUN npm ci --ignore-scripts
 
 # Copy full application code
 COPY . .
@@ -21,7 +21,8 @@ ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_PUSHER_APP_KEY=$VITE_PUSHER_APP_KEY
 ENV VITE_PUSHER_APP_CLUSTER=$VITE_PUSHER_APP_CLUSTER
 
-# Build application production assets
+# Build icons and production static assets
+RUN npm run build:icons
 RUN npm run build
 
 # Stage 2: Production Nginx stage
