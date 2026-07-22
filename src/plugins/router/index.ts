@@ -8,9 +8,20 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'login' && !localStorage.getItem('token')) next({ name: 'login' })
-  else if(to.name == 'login' && localStorage.getItem('token')) next({name: 'dashboard'})
-  else next()
+  const token = localStorage.getItem('token')
+  const isPublicRoute = to.path === '/' || to.path === '/error' || to.name === 'home-portal' || to.name === 'error'
+  const isAuthRoute = to.path.startsWith('/admin/login') || to.path.startsWith('/admin/forgot-password')
+  const isAdminRoute = to.path.startsWith('/admin')
+
+  if (isPublicRoute) {
+    next()
+  } else if (isAdminRoute && !isAuthRoute && !token) {
+    next({ name: 'login' })
+  } else if (isAuthRoute && token) {
+    next({ name: 'dashboard' })
+  } else {
+    next()
+  }
 })
 
 export default function (app: App) {

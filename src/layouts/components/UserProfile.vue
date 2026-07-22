@@ -112,7 +112,7 @@ const {handleLogOut, user_name} = useUserProfile();
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem to="/admin/login">
             <template #prepend>
               <VIcon
                 class="me-2"

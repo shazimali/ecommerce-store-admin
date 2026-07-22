@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  ecommerce-store-admin:
+    image: ${DOCKER_HUB_IMAGE:-ecommerce-store-admin:latest}
+    container_name: ecommerce_store_admin
+    restart: unless-stopped
+    ports:
+      - "85:80"
+    environment:
+      - NODE_ENV=production

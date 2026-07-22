@@ -22,7 +22,7 @@ export function useLogin(){
           localStorage.setItem('user_email',res.data.user.email)
           localStorage.setItem('permissions',res.data.permissions)
           loading.value = false;
-          router.push('/dashboard')
+          router.push('/admin/dashboard')
           toast.success('Logged in successfully')
         })
         .catch((err) => {

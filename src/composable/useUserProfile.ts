@@ -12,7 +12,7 @@ export function useUserProfile() {
         let id: string = localStorage.getItem('user_id') || '0';
           window.localStorage.clear()
           logout(httpClient, parseInt(id)).then((res) => {
-            router.push('/login')
+            router.push('/admin/login')
           }).catch((err) => {
             console.log(err);
           })
