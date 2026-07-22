@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy package lock and configuration
 COPY package*.json ./
 
-# Install dependencies without running postinstall scripts before source code exists
-RUN npm ci --ignore-scripts
+# Install dependencies (--legacy-peer-deps handles apexcharts/vue3-apexcharts peer conflict)
+RUN npm ci --ignore-scripts --legacy-peer-deps
 
 # Copy full application code
 COPY . .
