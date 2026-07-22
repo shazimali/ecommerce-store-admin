@@ -1,6 +1,8 @@
-import { IWebsiteList } from '@/interfaces/IWebsite';
+import { IWebsiteList } from '@/Interfaces/IWebsite';
+import httpClient from '@/plugins/httpClient';
 import { fetchWebsites } from '@/services/WebsiteService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 
 export function useWebsite(){
@@ -27,7 +29,7 @@ export function useWebsite(){
 
        const doFetchWebsites = () => {
             loading.value = true;
-            fetchWebsites(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchWebsites(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstWebsites.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

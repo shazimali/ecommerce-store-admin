@@ -1,4 +1,5 @@
 export interface ICollection {
+    id: number,
     title: string,
     slug: string,
     status: string,
@@ -6,9 +7,7 @@ export interface ICollection {
     image: {},
     mob_image: {},
     order: number,
-    websites:[],
-    products:[],
+    websites:number[],
+    products:number[],
 }
-export interface ICollectionList {
-    collection : [ICollection]
-}
+export type ICollectionList = ICollection[];

@@ -1,9 +1,11 @@
 import { slugify } from "@/@core/utils/helpers";
 import { ICountriesList } from "@/Interfaces/ICountry";
 import { IPages } from "@/Interfaces/IPage";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCountries } from "@/services/FacilitiesService";
 import { fetchPageByID, savePage, updatePage } from "@/services/PagesService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function usePageOperation (){
     
@@ -13,6 +15,7 @@ export function usePageOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllCountries = ref<boolean>(false);
     const form = ref<IPages>({
+        id: 0,
         title:'',
         slug:'',
         content:'',
@@ -23,20 +26,11 @@ export function usePageOperation (){
         countries:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        slug: string, 
-        content: string, 
-        status: string, 
-        seo_title: string, 
-        seo_description: string,
-        position: string, 
-        countries:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
 
     const getPageByID =  (id:number) => {
-      fetchPageByID(id).then((res) => {
+      fetchPageByID(httpClient, id).then((res) => {
         form.value = res.data.data;
       }).catch((err) => {
         toast.error(err.message);
@@ -49,7 +43,7 @@ export function usePageOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            savePage(form.value).then((res) => {
+            savePage(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -69,7 +63,7 @@ export function usePageOperation (){
               }
             })
         }else{
-            updatePage(id,form.value).then((res) => {
+            updatePage(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -115,11 +109,11 @@ export function usePageOperation (){
             loading.value = true;
     
             //get all countries
-            fetchAllCountries().then((res) => {
+            fetchAllCountries(httpClient).then((res) => {
                 lstCountries.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchPageByID(id).then((res) => {
+                    fetchPageByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.slug = data.slug;
@@ -128,7 +122,7 @@ export function usePageOperation (){
                         form.value.seo_title = data.seo_title;
                         form.value.seo_description = data.seo_description;
                         form.value.position = data.position;
-                        form.value.countries = data.countries.map(({id}) => id);
+                        form.value.countries = data.countries.map(({id}:any) => id);
     
                         if(form.value.countries.length  == lstCountries.value.length){
                             isSelectAllCountries.value = true;

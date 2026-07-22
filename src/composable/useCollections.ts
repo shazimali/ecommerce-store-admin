@@ -1,6 +1,7 @@
 import { ICollectionList } from '@/Interfaces/ICollection';
+import httpClient from '@/plugins/httpClient';
 import { fetchCollections } from '@/services/CollectionsService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useCollections(){
@@ -29,7 +30,7 @@ export function useCollections(){
 
        const doFetchCollections = () => {
             loading.value = true;
-            fetchCollections(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchCollections(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstCollections.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

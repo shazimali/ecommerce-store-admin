@@ -1,6 +1,7 @@
 import { IPurchaseList } from '@/Interfaces/IPurchase';
+import httpClient from '@/plugins/httpClient';
 import { fetchPurchases } from '@/services/PurchaseService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function usePurchases(){
@@ -25,7 +26,7 @@ export function usePurchases(){
 
        const doFetchPurchases = () => {
             loading.value = true;
-            fetchPurchases(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchPurchases(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstPurchases.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

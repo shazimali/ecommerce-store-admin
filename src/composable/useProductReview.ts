@@ -1,6 +1,7 @@
 import { IProductReviewList } from '@/Interfaces/IProductReview';
+import httpClient from '@/plugins/httpClient';
 import { fetchProductReview } from '@/services/ProductReviewService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useProductReview(){
@@ -27,7 +28,7 @@ export function useProductReview(){
 
        const  doFetchProductReview = () => {
             loading.value = true;
-            fetchProductReview(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchProductReview(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstProductReview.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

@@ -72,7 +72,7 @@ const {form, isPasswordVisible, handleSubmit, errorMessages, loading} = useLogin
                     v-model="form.remember"
                     label="Remember me"
                   />
-                  <RouterLink class="text-primary" to="/forgot-password">
+                  <RouterLink class="text-primary" to="/admin/forgot-password">
                     Forgot Password?
                   </RouterLink>
                 </div>

@@ -1,6 +1,8 @@
 import { ISupplierList } from '@/Interfaces/ISupplier';
+import httpClient from '@/plugins/httpClient';
 import { fetchSuppliers } from '@/services/SuppliersService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 
 export function useSuppliers(){
@@ -24,7 +26,7 @@ export function useSuppliers(){
 
        const doFetchSuppliers = () => {
             loading.value = true;
-            fetchSuppliers(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchSuppliers(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstSuppliers.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

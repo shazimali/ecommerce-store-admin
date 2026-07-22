@@ -15,9 +15,9 @@ import 'vue3-toastify/dist/index.css';
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: import.meta.env.VITE_PUSHER_APP_KEY, // Or process.env.MIX_PUSHER_APP_KEY depending on your setup
-        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER, // Or process.env.MIX_PUSHER_APP_CLUSTER
-        forceTLS: false,
+        key: import.meta.env.VITE_PUSHER_APP_KEY, 
+        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER, 
+        forceTLS: true,
     });
     
 const app = createApp(App)

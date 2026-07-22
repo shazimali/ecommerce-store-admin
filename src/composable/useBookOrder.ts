@@ -1,6 +1,8 @@
 import { IBookOrder, ICODCompanyList } from '@/Interfaces/IOrder';
+import httpClient from '@/plugins/httpClient';
 import { fetchCODCompanies, sendBookOrder, updateBookedOrderStatus } from '@/services/OrderService';
 import { rand } from '@vueuse/core';
+import { ref, Ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useBookOrder(){
@@ -15,7 +17,7 @@ export function useBookOrder(){
             form.value.piece = '';
             form.value.weight = '';
             loading.value = true;
-            fetchCODCompanies().then((res) => {
+            fetchCODCompanies(httpClient).then((res) => {
                 lstCODCompanies.value = res.data.data
                 loading.value = false;
                }).catch((err) => {
@@ -48,7 +50,7 @@ export function useBookOrder(){
               form.value.order_id  = orderId;
               if(status == 'PLACED'){
 
-                sendBookOrder(form.value).then((res) => {
+                sendBookOrder(httpClient, form.value).then((res) => {
                     formLoading.value = false;
                     isActive.value = false;
                     isCompleted.value = rand(1,10);
@@ -68,7 +70,7 @@ export function useBookOrder(){
                   }
                 })
               }else{
-                 updateBookedOrderStatus(form.value).then((res) => {
+                 updateBookedOrderStatus(httpClient, form.value).then((res) => {
                     formLoading.value = false;
                     isActive.value = false;
                     isCompleted.value = rand(1,10);

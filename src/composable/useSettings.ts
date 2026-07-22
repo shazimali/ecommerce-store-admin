@@ -1,6 +1,7 @@
 import { ISettingList } from '@/Interfaces/ISetting';
+import httpClient from '@/plugins/httpClient';
 import { fetchSettings } from '@/services/SettingsService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 
@@ -26,7 +27,7 @@ export function useSettings(){
 
        const doFetchSettings = () => {
             loading.value = true;
-            fetchSettings(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchSettings(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstSettings.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

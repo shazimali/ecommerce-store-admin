@@ -1,8 +1,7 @@
 export interface IFacility {
+    id: number,
     title: string,
     class: string,
-    countries:[],
+    countries:number[],
 }
-export interface IFacilityList {
-    facility : [IFacility]
-}
+export type IFacilityList = IFacility[];

@@ -1,6 +1,8 @@
 import { IPermissionList } from '@/Interfaces/IPermission';
+import httpClient from '@/plugins/httpClient';
 import { fetchPermissions } from '@/services/PermissionsService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 
 export function usePermissions(){
@@ -24,7 +26,7 @@ export function usePermissions(){
 
        const doFetchPermissions = () => {
             loading.value = true;
-            fetchPermissions(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchPermissions(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                lstPermissions.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

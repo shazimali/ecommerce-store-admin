@@ -1,6 +1,7 @@
 import { ICodList } from '@/Interfaces/ICod';
+import httpClient from '@/plugins/httpClient';
 import { fetchCod } from '@/services/CodService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useCod(){
@@ -27,7 +28,7 @@ export function useCod(){
 
        const doFetchCod = () => {
             loading.value = true;
-            fetchCod(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchCod(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstCod.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

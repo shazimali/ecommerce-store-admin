@@ -1,5 +1,8 @@
 import { IInvoice } from "@/Interfaces/IPurchase";
+import httpClient from "@/plugins/httpClient";
 import { fetchPurchaseInvoiceByIDForPrint } from "@/services/PurchaseService";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 
 export function usePurchaseForPrint(){
@@ -32,7 +35,7 @@ export function usePurchaseForPrint(){
        })
 
        const doFetchPurchasesInvoice = () => {
-        fetchPurchaseInvoiceByIDForPrint(id).then((res) => {
+        fetchPurchaseInvoiceByIDForPrint(httpClient, Number(id)).then((res) => {
           invoice.value=res.data;
          
                

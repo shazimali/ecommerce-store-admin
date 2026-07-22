@@ -1,6 +1,8 @@
-import { IRoleList } from '@/interfaces/IRole';
+import { IRoleList } from '@/Interfaces/IRole';
+import httpClient from '@/plugins/httpClient';
 import { deleteRole, fetchRoles } from '@/services/RolesService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 export function useRoles(){
 
@@ -29,7 +31,7 @@ export function useRoles(){
        const  handleDelete = (id:number)=>{
         
             if(confirm("Do you really want to delete?")){
-               deleteRole(id).then((res) => {
+               deleteRole(httpClient, id).then((res) => {
                 if(res.data.status == 200){
                     toast.success(res.data.message);
                     doFetchRoles();
@@ -44,7 +46,7 @@ export function useRoles(){
 
        const doFetchRoles = () => {
             loading.value = true;
-            fetchRoles(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchRoles(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                lstRoles.value = res.data.data
                total_items.value = res.data.meta.total
                loading.value = false;

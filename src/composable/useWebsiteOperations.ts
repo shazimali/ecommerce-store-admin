@@ -1,6 +1,8 @@
 import { IWebsite } from "@/interfaces/IWebsite";
+import httpClient from "@/plugins/httpClient";
 import { fetchWebsiteByID, saveWebsite, updateWebsite } from "@/services/WebsiteService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function useWebsiteOperations (){
@@ -42,7 +44,7 @@ export function useWebsiteOperations (){
     }
 
     const getWebsiteByID =  (id:number) => {
-      fetchWebsiteByID(id).then((res) => {
+      fetchWebsiteByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         logoSrc.value = res.data.data.logo_src
       }).catch((err) => {
@@ -52,7 +54,7 @@ export function useWebsiteOperations (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveWebsite(form.value).then((res) => {
+            saveWebsite(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -72,7 +74,7 @@ export function useWebsiteOperations (){
               }
             })
         }else{
-            updateWebsite(id,form.value).then((res) => {
+            updateWebsite(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);

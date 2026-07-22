@@ -1,204 +1,246 @@
-
 import { canUserAccess } from '@/@core/utils/helpers';
+
 export const routes = [
-  { path: '/', redirect: '/dashboard' },
+  // 👉 Public Home Portal (5 Website Widgets - No Login Required)
   {
     path: '/',
+    name: 'home-portal',
+    component: () => import('@/pages/index.vue'),
+  },
+
+  // 👉 Admin Panel Dashboard & Management Routes (Under /admin)
+  {
+    path: '/admin',
+    redirect: '/admin/dashboard',
+  },
+  {
+    path: '/admin',
     component: () => import('@/layouts/default.vue'),
     children: [
       {
         path: 'dashboard',
-        name:'dashboard',
+        name: 'dashboard',
         component: () => import('@/pages/dashboard.vue'),
         beforeEnter() {
-          if(!canUserAccess('dashboard_access')) return '/error'
-        }
+          if (!canUserAccess('dashboard_access')) return '/error'
+        },
       },
       {
         path: 'roles',
-        name:'roles',
+        name: 'roles',
         component: () => import('@/pages/roles.vue'),
         beforeEnter() {
-          if(!canUserAccess('role_access')) return '/error'
-        }
+          if (!canUserAccess('role_access')) return '/error'
+        },
       },
       {
         path: 'users',
-        name:'users',
+        name: 'users',
         component: () => import('@/pages/users.vue'),
         beforeEnter() {
-          if(!canUserAccess('user_access')) return '/error'
-        }
+          if (!canUserAccess('user_access')) return '/error'
+        },
       },
       {
         path: 'permissions',
-        name:'permissions',
+        name: 'permissions',
         component: () => import('@/pages/permissions.vue'),
         beforeEnter() {
-          if(!canUserAccess('permission_access')) return '/error'
-        }
+          if (!canUserAccess('permission_access')) return '/error'
+        },
       },
       {
         path: 'websites',
-        name:'websites',
+        name: 'websites',
         component: () => import('@/pages/websites.vue'),
         beforeEnter() {
-          if(!canUserAccess('website_access')) return '/error'
-        }
+          if (!canUserAccess('website_access')) return '/error'
+        },
       },
       {
         path: 'categories',
-        name:'categories',
+        name: 'categories',
         component: () => import('@/pages/categories.vue'),
         beforeEnter() {
-          if(!canUserAccess('category_access')) return '/error'
-        }
+          if (!canUserAccess('category_access')) return '/error'
+        },
       },
       {
         path: 'subcategories',
-        name:'subcategories',
+        name: 'subcategories',
         component: () => import('@/pages/sub-categories.vue'),
         beforeEnter() {
-          if(!canUserAccess('subcategory_access')) return '/error'
-        }
+          if (!canUserAccess('subcategory_access')) return '/error'
+        },
+      },
+      {
+        path: 'badges',
+        name: 'badges',
+        component: () => import('@/pages/badges.vue'),
+        beforeEnter() {
+          if (!canUserAccess('badge_access')) return '/error'
+        },
       },
       {
         path: 'products',
-        name:'products',
+        name: 'products',
         component: () => import('@/pages/products.vue'),
         beforeEnter() {
-          if(!canUserAccess('product_access')) return '/error'
-        }
+          if (!canUserAccess('product_access')) return '/error'
+        },
+      },
+      {
+        path: 'bundles',
+        name: 'bundles',
+        component: () => import('@/pages/bundles.vue'),
+        beforeEnter() {
+          if (!canUserAccess('bundle_access')) return '/error'
+        },
       },
       {
         path: 'banners',
-        name:'banners',
+        name: 'banners',
         component: () => import('@/pages/banners.vue'),
         beforeEnter() {
-          if(!canUserAccess('banner_access')) return '/error'
-        }
+          if (!canUserAccess('banner_access')) return '/error'
+        },
       },
       {
         path: 'facilities',
-        name:'facilities',
+        name: 'facilities',
         component: () => import('@/pages/facilities.vue'),
         beforeEnter() {
-          if(!canUserAccess('facility_access')) return '/error'
-        }
+          if (!canUserAccess('facility_access')) return '/error'
+        },
       },
       {
         path: 'collections',
-        name:'Collections',
+        name: 'Collections',
         component: () => import('@/pages/collections.vue'),
         beforeEnter() {
-          if(!canUserAccess('collection_access')) return '/error'
-        }
+          if (!canUserAccess('collection_access')) return '/error'
+        },
       },
       {
         path: 'social-medias',
-        name:'social-medias',
+        name: 'social-medias',
         component: () => import('@/pages/social-medias.vue'),
         beforeEnter() {
-          if(!canUserAccess('facility_access')) return '/error'
-        }
+          if (!canUserAccess('social_media_access')) return '/error'
+        },
       },
       {
         path: 'suppliers',
-        name:'suppliers',
+        name: 'suppliers',
         component: () => import('@/pages/suppliers.vue'),
         beforeEnter() {
-          if(!canUserAccess('supplier_access')) return '/error'
-        }
+          if (!canUserAccess('supplier_access')) return '/error'
+        },
       },
       {
         path: 'purchases',
-        name:'purchases',
+        name: 'purchases',
         component: () => import('@/pages/purchases.vue'),
         beforeEnter() {
-          if(!canUserAccess('purchase_access')) return '/error'
-        }
+          if (!canUserAccess('purchase_access')) return '/error'
+        },
       },
       {
         path: 'settings',
-        name:'settings',
+        name: 'settings',
         component: () => import('@/pages/settings.vue'),
         beforeEnter() {
-          if(!canUserAccess('setting_access')) return '/error'
-        }
+          if (!canUserAccess('setting_access')) return '/error'
+        },
       },
       {
         path: 'coupons',
-        name:'coupons',
+        name: 'coupons',
         component: () => import('@/pages/coupons.vue'),
         beforeEnter() {
-          if(!canUserAccess('coupon_access')) return '/error'
-        }
+          if (!canUserAccess('coupon_access')) return '/error'
+        },
       },
       {
         path: 'blogs',
-        name:'blogs',
+        name: 'blogs',
         component: () => import('@/pages/blogs.vue'),
         beforeEnter() {
-          if(!canUserAccess('blog_access')) return '/error'
-        }
+          if (!canUserAccess('blog_access')) return '/error'
+        },
       },
       {
         path: 'cod',
-        name:'cod',
+        name: 'cod',
         component: () => import('@/pages/cod.vue'),
         beforeEnter() {
-          if(!canUserAccess('cod_access')) return '/error'
-        }
+          if (!canUserAccess('cod_access')) return '/error'
+        },
       },
       {
         path: 'pages',
-        name:'pages',
+        name: 'pages',
         component: () => import('@/pages/pages.vue'),
         beforeEnter() {
-          if(!canUserAccess('page_access')) return '/error'
-        }
+          if (!canUserAccess('page_access')) return '/error'
+        },
       },
       {
         path: 'product-review',
-        name:'product-review',
+        name: 'product-review',
         component: () => import('@/pages/product-review.vue'),
         beforeEnter() {
-          if(!canUserAccess('product_review_access')) return '/error'
-        }
+          if (!canUserAccess('product_review_access')) return '/error'
+        },
       },
       {
         path: 'orders',
-        name:'orders',
+        name: 'orders',
         component: () => import('@/pages/order.vue'),
         beforeEnter() {
-          if(!canUserAccess('order_access')) return '/error'
-        }
+          if (!canUserAccess('order_access')) return '/error'
+        },
       },
     ],
   },
+
+  // 👉 Admin Blank Layout Pages (Login, Forgot Password, Invoice Prints)
+  {
+    path: '/admin',
+    component: () => import('@/layouts/blank.vue'),
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import('@/pages/login.vue'),
+      },
+      {
+        path: 'forgot-password',
+        name: 'forgot-password',
+        component: () => import('@/pages/forgot-password.vue'),
+      },
+      {
+        path: 'print/:id',
+        name: 'print',
+        component: () => import('@/pages/Prints/Invoice.vue'),
+      },
+    ],
+  },
+
+  // 👉 Error / 404 Route
   {
     path: '/',
     component: () => import('@/layouts/blank.vue'),
     children: [
       {
-        path: 'login',
-        name:'login',
-        component: () => import('@/pages/login.vue'),
-      },
-      {
-        path: 'forgot-password',
-        name:'forgot-password',
-        component: () => import('@/pages/forgot-password.vue'),
-      },
-      {
         path: 'error',
         name: 'error',
-        component: () => import('@/pages/[...error].vue')
+        component: () => import('@/pages/[...error].vue'),
       },
       {
-        path: '/print/:id',
-        name: 'print',
-        component: () => import('@/pages/prints/invoice.vue')
+        path: ':pathMatch(.*)*',
+        name: 'not-found',
+        component: () => import('@/pages/[...error].vue'),
       },
     ],
   },

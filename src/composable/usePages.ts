@@ -1,6 +1,7 @@
 import { IPagesList } from '@/Interfaces/IPage';
+import httpClient from '@/plugins/httpClient';
 import { fetchPages } from '@/services/PagesService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 
@@ -30,7 +31,7 @@ export function usePages(){
 
        const doFetchPages = () => {
             loading.value = true;
-            fetchPages(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchPages(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
               lstPages .value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

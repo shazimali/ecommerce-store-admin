@@ -1,6 +1,7 @@
 import { IProductList } from '@/Interfaces/IProduct';
+import httpClient from '@/plugins/httpClient';
 import { fetchProducts } from '@/services/ProductsService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useProducts(){
@@ -29,7 +30,7 @@ export function useProducts(){
 
        const doFetchProducts = () => {
             loading.value = true;
-            fetchProducts(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchProducts(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstProducts.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

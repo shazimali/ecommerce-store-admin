@@ -1,9 +1,11 @@
 import { slugify } from "@/@core/utils/helpers";
 import { IBlog } from "@/Interfaces/IBlog";
 import { ICountriesList } from "@/Interfaces/ICountry";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCountries, fetchBlogByID, saveBlog, updateBlog } from "@/services/BlogsService";
 
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useBlogOperation (){
     
@@ -15,6 +17,7 @@ export function useBlogOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllCountries = ref<boolean>(false);
     const form = ref<IBlog>({
+        id: 0,
         title:'',
         slug:'',
         image: imageInput,
@@ -25,18 +28,9 @@ export function useBlogOperation (){
         countries:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        slug:string, 
-        image:string, 
-        description:string, 
-        seo_title:string, 
-        seo_desc:string, 
-        status: string, 
-        countries:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
-    const handleImageChange = (e:HTMLInputElement) => {
+    const handleImageChange = (e:any) => {
       var files = e.target.files;
       if (!files.length) return;
       imageInput.value = e.target.files[0];
@@ -44,7 +38,7 @@ export function useBlogOperation (){
 
 
     const getBlogsByID =  (id:number) => {
-      fetchBlogByID(id).then((res) => {
+      fetchBlogByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         imageSrc.value = res.data.data.img_src
       }).catch((err) => {
@@ -59,7 +53,7 @@ export function useBlogOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveBlog(form.value).then((res) => {
+            saveBlog(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -79,7 +73,7 @@ export function useBlogOperation (){
               }
             })
         }else{
-            updateBlog(id,form.value).then((res) => {
+            updateBlog(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -92,7 +86,7 @@ export function useBlogOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -104,7 +98,7 @@ export function useBlogOperation (){
     const selectAllCountries = () => {
         if(isSelectAllCountries.value == true){
             isSelectAllCountries.value = true;
-            form.value.countries = lstCountries.value.map(({id}) => id);
+            form.value.countries = lstCountries.value.map(({id}:any) => id);
         }
         if(isSelectAllCountries.value == false){
             form.value.countries = []
@@ -125,11 +119,11 @@ export function useBlogOperation (){
             loading.value = true;
     
             //get all countries
-            fetchAllCountries().then((res) => {
+            fetchAllCountries(httpClient).then((res) => {
                 lstCountries.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchBlogByID(id).then((res) => {
+                    fetchBlogByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value.title = data.title;
                         form.value.slug = data.slug;
@@ -138,7 +132,7 @@ export function useBlogOperation (){
                         form.value.seo_title = data.seo_title;
                         form.value.seo_desc = data.seo_desc;
                         form.value.status = data.status;
-                        form.value.countries = data.countries.map(({id}) => id);
+                        form.value.countries = data.countries.map(({id}:any) => id);
     
                         if(form.value.countries.length  == lstCountries.value.length){
                             isSelectAllCountries.value = true;

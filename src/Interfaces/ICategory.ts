@@ -1,10 +1,9 @@
 export interface ICategory {
+    id: number,
     title: string,
     slug: string,
     image: {},
     order: number,
-    websites:[],
+    websites: number[],
 }
-export interface ICategoryList {
-    category : [ICategory]
-}
+export type ICategoryList = ICategory[];

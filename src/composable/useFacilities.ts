@@ -1,6 +1,7 @@
 import { IFacilityList } from '@/Interfaces/IFacility';
+import httpClient from '@/plugins/httpClient';
 import { fetchFacilities } from '@/services/FacilitiesService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useFacilities(){
@@ -23,7 +24,7 @@ export function useFacilities(){
 
        const doFetchFacilities = () => {
             loading.value = true;
-            fetchFacilities(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchFacilities(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstFacilities.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

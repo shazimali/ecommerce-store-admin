@@ -7,9 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BadgeOperation: typeof import('./src/components/BadgeOperation.vue')['default']
     BannerOperation: typeof import('./src/components/BannerOperation.vue')['default']
     BlogOperation: typeof import('./src/components/BlogOperation.vue')['default']
     BookOrder: typeof import('./src/components/BookOrder.vue')['default']
+    BundleColor: typeof import('./src/components/BundleColor.vue')['default']
+    BundleOperation: typeof import('./src/components/BundleOperation.vue')['default']
+    BundlePrice: typeof import('./src/components/BundlePrice.vue')['default']
     CardStatisticsHorizontal: typeof import('./src/@core/components/cards/CardStatisticsHorizontal.vue')['default']
     CardStatisticsVertical: typeof import('./src/@core/components/cards/CardStatisticsVertical.vue')['default']
     CardStatisticsWithImages: typeof import('./src/@core/components/cards/CardStatisticsWithImages.vue')['default']

@@ -1,8 +1,10 @@
 import { IBanner } from "@/Interfaces/IBanner";
 import { IWebsiteList } from "@/Interfaces/IWebsite";
+import httpClient from "@/plugins/httpClient";
 import { fetchBannerByID, saveBanner, updateBanner } from "@/services/BannersService";
 import { fetchAllWebsites } from "@/services/CategoriesService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function useBannerOperation (){
     
@@ -16,6 +18,7 @@ export function useBannerOperation (){
     const isCompleted = ref<number>(0);
     const isSelectAllWebsites = ref<boolean>(false);
     const form = ref<IBanner>({
+        id: 0,
         title:'',
         heading:'',
         sub_heading:'',
@@ -27,29 +30,23 @@ export function useBannerOperation (){
         websites:[]
     });
 
-    const errorMessages = ref<[
-        title:string, 
-        image:string,
-        mob_image:string,
-        order:string,
-        websites:string
-    ]>([]);
+    const errorMessages = ref<string[]>([]);
 
 
-    const handleImageChange = (e:HTMLInputElement) => {
+    const handleImageChange = (e:any) => {
       var files = e.target.files;
       if (!files.length) return;
       imageInput.value = e.target.files[0];
     }
 
-    const handleMobImageChange = (e:HTMLInputElement) => {
+    const handleMobImageChange = (e:any) => {
       var files = e.target.files;
       if (!files.length) return;
       mobImageInput.value = e.target.files[0];
     }
 
     const getBannerByID =  (id:number) => {
-      fetchBannerByID(id).then((res) => {
+      fetchBannerByID(httpClient, id).then((res) => {
         form.value = res.data.data;
         imageSrc.value = res.data.data.img_src
         mobImgSrc.value = res.data.data.mob_image_src
@@ -60,7 +57,7 @@ export function useBannerOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            saveBanner(form.value).then((res) => {
+            saveBanner(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -73,14 +70,14 @@ export function useBannerOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
               }
             })
         }else{
-            updateBanner(id,form.value).then((res) => {
+            updateBanner(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -93,7 +90,7 @@ export function useBannerOperation (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','','','','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -105,7 +102,7 @@ export function useBannerOperation (){
     const selectAllWebsites = () => {
         if(isSelectAllWebsites.value == true){
             isSelectAllWebsites.value = true;
-            form.value.websites = lstWebsites.value.map(({id}) => id);
+            form.value.websites = lstWebsites.value.map(({id}:any) => id);
         }
         if(isSelectAllWebsites.value == false){
             form.value.websites = []
@@ -127,16 +124,16 @@ export function useBannerOperation (){
             loading.value = true;
     
             //get all permissions
-            fetchAllWebsites().then((res) => {
+            fetchAllWebsites(httpClient).then((res) => {
                 lstWebsites.value = res.data.data
                 //get selected permissions in role edit case
                 if(id != 0){
-                    fetchBannerByID(id).then((res) => {
+                    fetchBannerByID(httpClient, id).then((res) => {
                         let data = res.data.data;
                         form.value = data;
                         imageSrc.value = data.image_src;
                         mobImgSrc.value = data.mob_image_src;
-                        form.value.websites = data.websites.map(({id}) => id);
+                        form.value.websites = data.websites.map(({id}:any) => id);
     
                         if(form.value.websites.length  == lstWebsites.value.length){
                             isSelectAllWebsites.value = true;

@@ -1,7 +1,9 @@
 import { ICountriesList } from "@/Interfaces/ICountry";
 import { IProductPriceList } from "@/Interfaces/IProduct";
 import { IProductPrice } from "@/Interfaces/IProductPrice";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllPricesByProductID, saveProductPrice } from "@/services/ProductsService";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function useProductPrice (){
@@ -26,7 +28,7 @@ export function useProductPrice (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         form.value.product_head_id=id;
-            saveProductPrice(form.value).then((res) => {
+            saveProductPrice(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 toast.success(res.data.message)
                 getAllPrices(form.value.product_head_id);
@@ -54,7 +56,7 @@ export function useProductPrice (){
 
     const getAllPrices = (id:number) => {
         priceLoading.value = true;
-        fetchAllPricesByProductID(id).then((res) => {
+        fetchAllPricesByProductID(httpClient, id).then((res) => {
             priceLoading.value = false;
             lstPrices.value = res.data.prices
             lstCountries.value = res.data.countries

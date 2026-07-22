@@ -1,4 +1,5 @@
 export interface IWebsite {
+    id: number,
     title: string,
     domain: string,
     phone: string,
@@ -13,7 +14,5 @@ export interface IWebsite {
     about: string
 }
 
-export interface IWebsiteList {
-    website : [IWebsite]
-}
+export type IWebsiteList = IWebsite[];
 

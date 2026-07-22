@@ -1,16 +1,18 @@
+import httpClient from "@/plugins/httpClient";
 import { logout } from "@/services/AuthService";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 export function useUserProfile() {
 
     const router = useRouter();
-    const user_name = ref<string>(localStorage.getItem('user_name'));
+    const user_name = ref<string>(localStorage.getItem('user_name') || '');
     const handleLogOut = () => {
 
-        let id:number = localStorage.getItem('user_id')
+        let id: string = localStorage.getItem('user_id') || '0';
           window.localStorage.clear()
-          logout(id).then((res) => {
-            router.push('/login')
+          logout(httpClient, parseInt(id)).then((res) => {
+            router.push('/admin/login')
           }).catch((err) => {
             console.log(err);
           })

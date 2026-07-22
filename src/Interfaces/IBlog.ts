@@ -1,4 +1,5 @@
 export interface IBlog {
+    id: number,
     title: string,
     slug: string,
     image: {},
@@ -6,8 +7,6 @@ export interface IBlog {
     seo_title: string,
     seo_desc: string,
     status: string,
-    countries:[],
+    countries: number[],
 }
-export interface IBlogList {
-    blog : [IBlog]
-}
+export type IBlogList = IBlog[];

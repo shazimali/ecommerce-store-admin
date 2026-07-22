@@ -1,4 +1,5 @@
 import { INotification, INotificationsList } from "@/Interfaces/INotification";
+import httpClient from "@/plugins/httpClient";
 import { deleteAllNotifications, fetchNotifications, storeNotification, updateNotification } from "@/services/AuthService";
 import { ref } from "vue";
 import { toast } from 'vue3-toastify';
@@ -11,7 +12,7 @@ export function useNotifications(){
         is_read: false,
       })
     const newNotification = () => {
-        storeNotification(form.value).then((res) => {
+        storeNotification(httpClient, form.value).then((res) => {
             lstNotifications.value = res.data.notifications;
             unread.value = res.data.unread_notifications;
         })
@@ -21,7 +22,7 @@ export function useNotifications(){
     }
 
     const fetAllNotifications = () => {
-        fetchNotifications().then((res) => {
+        fetchNotifications(httpClient).then((res) => {
            lstNotifications.value = res.data.notifications;
             unread.value = res.data.unread_notifications;
         })
@@ -31,7 +32,7 @@ export function useNotifications(){
     }
 
      const doSetToReadNotification = (id:number) => {
-        updateNotification(id).then((res:any) => {
+        updateNotification(httpClient, id).then((res:any) => {
            lstNotifications.value = res.data.notifications;
             unread.value = res.data.unread_notifications;
         })
@@ -41,7 +42,7 @@ export function useNotifications(){
     }
 
      const clearAllNotifications = () => {
-        deleteAllNotifications().then((res:any) => {
+        deleteAllNotifications(httpClient).then((res:any) => {
             lstNotifications.value = res.data.notifications;
             unread.value = res.data.unread_notifications;
         })

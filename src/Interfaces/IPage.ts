@@ -1,4 +1,5 @@
 export interface IPages{
+  id: number,
   title: string,
   slug: string,
   content: string,
@@ -6,9 +7,7 @@ export interface IPages{
   seo_title: string,
   seo_description: string,
   position: string,
-  countries:[]
+  countries:number[]
 
 }
-export interface IPagesList {
- page : [IPages] 
-}
+export type IPagesList = IPages[];

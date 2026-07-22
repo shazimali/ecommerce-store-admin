@@ -1,26 +1,26 @@
-import { IUser } from "@/interfaces/IUser"
-import axios from "axios"
+import { IUser } from "@/Interfaces/IUser"
+import { AxiosInstance } from "axios"
 
-export const  fetchUsers = async (current_page :number,item_per_page :number, search:string) => {
-    return await axios.get('/users')  
+export const  fetchUsers = async (axiosInstance: AxiosInstance, current_page :number,item_per_page :number, search:string) => {
+    return await axiosInstance.get('/users')  
 }
 
-export const  fetchAllRoles = async () => {
-    return await axios.get('/users/get-all-roles')  
+export const  fetchAllRoles = async (axiosInstance: AxiosInstance) => {
+    return await axiosInstance.get('/users/get-all-roles')  
 }
 
-export const saveUser = async (data : IUser) => {
-    return await axios.post('/users/store',{ ...data})
+export const saveUser = async (axiosInstance: AxiosInstance, data : IUser) => {
+    return await axiosInstance.post('/users/store',{ ...data})
 }
 
-export const fetchUserByID = async (id :number) => {
-    return await axios.get('/users/edit/'+id)
+export const fetchUserByID = async (axiosInstance: AxiosInstance, id :number) => {
+    return await axiosInstance.get('/users/edit/'+id)
 }
 
-export const updateUser = async  (id : number , data : IUser )=>{
-    return await axios.put('/users/update/'+id,{...data})
+export const updateUser = async  (axiosInstance: AxiosInstance, id : number , data : IUser )=>{
+    return await axiosInstance.put('/users/update/'+id,{...data})
 }
 
-export const deleteUser = async  (id : number)=>{
-    return await axios.delete('/users/delete/'+id)
+export const deleteUser = async  (axiosInstance: AxiosInstance, id : number)=>{
+    return await axiosInstance.delete('/users/delete/'+id)
 }

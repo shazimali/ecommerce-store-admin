@@ -1,6 +1,8 @@
-import { IUserList } from '@/interfaces/IUser';
+import { IUserList } from '@/Interfaces/IUser';
+import httpClient from '@/plugins/httpClient';
 import { deleteUser, fetchUsers } from '@/services/UsersService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 
 export function useUsers(){
@@ -30,10 +32,10 @@ export function useUsers(){
        const  handleDelete = (id:number)=>{
         
             if(confirm("Do you really want to delete?")){
-                deleteUser(id).then((res) => {
+                deleteUser(httpClient, id).then((res) => {
                 if(res.data.status == 200){
                     toast.success(res.data.message);
-                    fetchUsers();
+                    fetchUsersList();
                 }if(res.data.status == 201){
                     toast.error(res.data.message);
                 }
@@ -45,7 +47,7 @@ export function useUsers(){
 
        const fetchUsersList = () => {
             loading.value = true;
-            fetchUsers(current_page.value,item_per_page.value,search.value).then((res:any) => {
+            fetchUsers(httpClient, current_page.value,item_per_page.value,search.value).then((res:any) => {
                lstUsers.value = res.data.data
                total_items.value = res.data.meta.total
                loading.value = false;

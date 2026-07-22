@@ -1,6 +1,7 @@
 import { ICouponList } from '@/Interfaces/ICoupon';
+import httpClient from '@/plugins/httpClient';
 import { fetchCoupons } from '@/services/CouponsService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 
@@ -29,7 +30,7 @@ export function useCoupons(){
 
        const doFetchCoupons = () => {
             loading.value = true;
-            fetchCoupons(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchCoupons(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
             lstCoupons .value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

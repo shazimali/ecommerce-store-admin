@@ -1,26 +1,26 @@
 import { ICoupon } from "@/Interfaces/ICoupon"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-export const  fetchCoupons = async (current_page :number,item_per_page :number, search:string) => {
-  return await axios.get('/coupons?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
+export const  fetchCoupons = async (axiosInstance: AxiosInstance, current_page :number,item_per_page :number, search:string) => {
+  return await axiosInstance.get('/coupons?page='+current_page+'&item_per_page='+item_per_page+'&search='+search)  
 }
 
-export const  fetchAllCountries = async () => {
-    return await axios.get('/coupons/get-all-countries')  
+export const  fetchAllCountries = async (axiosInstance: AxiosInstance) => {
+    return await axiosInstance.get('/coupons/get-all-countries')  
 }
 
-export const saveCoupon = async (data : ICoupon) => {
-  return await axios.post('/coupons/store',{ ...data })
+export const saveCoupon = async (axiosInstance: AxiosInstance, data : ICoupon) => {
+  return await axiosInstance.post('/coupons/store',{ ...data })
 }
 
-export const fetchCouponByID = async (id :number) => {
-  return await axios.get('/coupons/edit/'+id)
+export const fetchCouponByID = async (axiosInstance: AxiosInstance, id :number) => {
+  return await axiosInstance.get('/coupons/edit/'+id)
 }
 
-export const updateCoupon = async  (id : number , data : ICoupon )=>{
-  return await axios.put('/coupons/update/'+id,{ ...data })
+export const updateCoupon = async  (axiosInstance: AxiosInstance, id : number , data : ICoupon )=>{
+  return await axiosInstance.put('/coupons/update/'+id,{ ...data })
 }
 
-export const deleteCoupon = async  (id : number)=>{
-  return await axios.delete('/coupons/delete/'+id)
+export const deleteCoupon = async  (axiosInstance: AxiosInstance, id : number)=>{
+  return await axiosInstance.delete('/coupons/delete/'+id)
 }

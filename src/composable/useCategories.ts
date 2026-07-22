@@ -1,6 +1,7 @@
 import { ICategoryList } from '@/Interfaces/ICategory';
+import httpClient from '@/plugins/httpClient';
 import { fetchCategories } from '@/services/CategoriesService';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 
 export function useCategories(){
@@ -25,7 +26,7 @@ export function useCategories(){
 
        const doFetchCategories = () => {
             loading.value = true;
-            fetchCategories(current_page.value,item_per_page.value,search.value).then((res) => {
+            fetchCategories(httpClient, current_page.value,item_per_page.value,search.value).then((res) => {
                 lstCategories.value = res.data.data
                total_items.value= res.data.meta.total
                loading.value = false;

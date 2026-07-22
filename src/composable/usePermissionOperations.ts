@@ -1,6 +1,8 @@
 import { IPermission } from "@/Interfaces/IPermission";
+import httpClient from "@/plugins/httpClient";
 import { fetchPermissionByID, savePermission, updatePermission } from "@/services/PermissionsService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 
 export function usePermissionOperations (){
@@ -9,16 +11,17 @@ export function usePermissionOperations (){
     const formLoading = ref<boolean>(false);
     const isCompleted = ref<number>(0);
     const form = ref<IPermission>({
+        id: 0,
         name:'',
         key:''
     });
 
-    const errorMessages = ref<[name:string, key: string]>([]);
+    const errorMessages = ref<string[]>([]);
 
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            savePermission(form.value).then((res) => {
+            savePermission(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -31,14 +34,14 @@ export function usePermissionOperations (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
               }
             })
         }else{
-            updatePermission(id,form.value).then((res) => {
+            updatePermission(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
@@ -51,7 +54,7 @@ export function usePermissionOperations (){
               }else if(err.response.status == "401"){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
-                errorMessages.value = ['','']
+                errorMessages.value = []
               }else{
                 toast.error(err.message)
                 formLoading.value = false;
@@ -64,7 +67,7 @@ export function usePermissionOperations (){
         form.value.name= '';
         form.value.key='';
         loading.value = true;
-        fetchPermissionByID(id).then((res) => {
+        fetchPermissionByID(httpClient, id).then((res) => {
             form.value.name  = res.data.data.name;
             form.value.key  = res.data.data.key;
             loading.value = false;

@@ -1,4 +1,5 @@
 export interface IBanner {
+    id: number,
     title: string,
     heading: string,
     sub_heading: string,
@@ -7,8 +8,6 @@ export interface IBanner {
     image: {},
     mob_image: {},
     order: number,
-    websites:[],
+    websites:number[],
 }
-export interface IBannerList {
-    banner : [IBanner]
-}
+export type IBannerList = IBanner[];

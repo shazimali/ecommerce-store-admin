@@ -1,10 +1,9 @@
 import { ICod } from "@/Interfaces/ICod";
 import { ICountriesList } from "@/Interfaces/ICountry";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllCountries, fetchCodByID, saveCod, updateCod } from "@/services/CodService";
-
-
-
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from "vue3-toastify";
 
 export function useCodOperation (){
@@ -16,6 +15,7 @@ export function useCodOperation (){
   const isSelectAllCountries = ref<boolean>(false);
   
   const form = ref<ICod>({
+      id:0,
       title:'',
       api_test_url:'',
       api_url: '',
@@ -25,19 +25,11 @@ export function useCodOperation (){
       countries: []
   });
 
-  const errorMessages = ref<[
-      title:string,  
-      api_test_url:string,  
-      api_url:number, 
-      api_key:string, 
-      api_password:string,
-      status :string,
-      countries: string
-  ]>([]);
+  const errorMessages = ref<string[]>([]);
 
 
   const getCodByID =  (id:number) => {
-    fetchCodByID(id).then((res) => {
+    fetchCodByID(httpClient, id).then((res) => {
       form.value = res.data.data;
     }).catch((err) => {
       toast.error(err.message);
@@ -48,7 +40,7 @@ export function useCodOperation (){
   const handleSubmit = (id:number, isActive:Ref<boolean>) => {
       formLoading.value = true;
       if(id == 0){
-          saveCod(form.value).then((res) => {
+          saveCod(httpClient, form.value).then((res) => {
               formLoading.value = false;
               isActive.value = false;
               isCompleted.value = rand(1,10);
@@ -61,14 +53,14 @@ export function useCodOperation (){
             }else if(err.response.status == "401"){  
               toast.error(err.response.data.message);
               formLoading.value = false;
-              errorMessages.value = ['','','','','','','']
+                errorMessages.value = []
             }else{
               toast.error(err.message)
               formLoading.value = false;
             }
           })
       }else{
-          updateCod(id,form.value).then((res) => {
+          updateCod(httpClient, id,form.value).then((res) => {
               formLoading.value = false;
               isActive.value = false;
               isCompleted.value = rand(1,10);
@@ -81,7 +73,7 @@ export function useCodOperation (){
             }else if(err.response.status == "401"){  
               toast.error(err.response.data.message);
               formLoading.value = false;
-              errorMessages.value = ['','','','','','','']
+                errorMessages.value = []
             }else{
               toast.error(err.message)
               formLoading.value = false;
@@ -93,7 +85,7 @@ export function useCodOperation (){
   const selectAllCountries = () => {
     if(isSelectAllCountries.value == true){
         isSelectAllCountries.value = true;
-        form.value.countries = lstCountries.value.map(({id}) => id);
+        form.value.countries = lstCountries.value.map(({id}:any) => id);
     }
     if(isSelectAllCountries.value == false){
         form.value.countries = []
@@ -115,13 +107,13 @@ export function useCodOperation (){
           loading.value = true;
   
           //get all countries
-          fetchAllCountries().then((res) => {
+          fetchAllCountries(httpClient).then((res) => {
               lstCountries.value = res.data.data
               if(id != 0){
-                  fetchCodByID(id).then((res) => {
+                  fetchCodByID(httpClient, id).then((res) => {
                       let data = res.data.data;
                       form.value = data;
-                      form.value.countries = data.countries.map(({id}) => id);
+                      form.value.countries = data.countries.map(({id}:any) => id);
                   }).catch((err) => {
                       toast.error(err.message)
                       loading.value = false;
