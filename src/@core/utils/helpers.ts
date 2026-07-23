@@ -31,10 +31,11 @@ export const isToday = (date: Date) => {
   )
 }
 
-// 👉 CanUserAccess
-export const canUserAccess = (val:string) => {
-  let user_permissions = localStorage.getItem('permissions').split(',')
-  return user_permissions.filter(pr => pr == val).length > 0 ? true : false;
+export const canUserAccess = (val: string) => {
+  const permissions = localStorage.getItem('permissions')
+  if (!permissions) return false
+  const user_permissions = permissions.split(',')
+  return user_permissions.includes(val)
 } 
 
 // 👉 Slug

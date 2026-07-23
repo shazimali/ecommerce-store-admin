@@ -1,11 +1,24 @@
 import { canUserAccess } from '@/@core/utils/helpers';
 
+const checkPermission = (permission: string) => {
+  const token = localStorage.getItem('token')
+  if (!token) return '/admin/login'
+  if (!canUserAccess(permission)) return '/admin/login'
+  return true
+}
+
 export const routes = [
   // 👉 Public Home Portal (5 Website Widgets - No Login Required)
   {
     path: '/',
     name: 'home-portal',
     component: () => import('@/pages/index.vue'),
+  },
+
+  // 👉 Direct Login Shortcut (/login -> /admin/login)
+  {
+    path: '/login',
+    redirect: '/admin/login',
   },
 
   // 👉 Admin Panel Dashboard & Management Routes (Under /admin)
@@ -22,7 +35,8 @@ export const routes = [
         name: 'dashboard',
         component: () => import('@/pages/dashboard.vue'),
         beforeEnter() {
-          if (!canUserAccess('dashboard_access')) return '/error'
+          const res = checkPermission('dashboard_access')
+          if (res !== true) return res
         },
       },
       {
@@ -30,7 +44,8 @@ export const routes = [
         name: 'roles',
         component: () => import('@/pages/roles.vue'),
         beforeEnter() {
-          if (!canUserAccess('role_access')) return '/error'
+          const res = checkPermission('role_access')
+          if (res !== true) return res
         },
       },
       {
@@ -38,7 +53,8 @@ export const routes = [
         name: 'users',
         component: () => import('@/pages/users.vue'),
         beforeEnter() {
-          if (!canUserAccess('user_access')) return '/error'
+          const res = checkPermission('user_access')
+          if (res !== true) return res
         },
       },
       {
@@ -46,7 +62,8 @@ export const routes = [
         name: 'permissions',
         component: () => import('@/pages/permissions.vue'),
         beforeEnter() {
-          if (!canUserAccess('permission_access')) return '/error'
+          const res = checkPermission('permission_access')
+          if (res !== true) return res
         },
       },
       {
@@ -54,7 +71,8 @@ export const routes = [
         name: 'websites',
         component: () => import('@/pages/websites.vue'),
         beforeEnter() {
-          if (!canUserAccess('website_access')) return '/error'
+          const res = checkPermission('website_access')
+          if (res !== true) return res
         },
       },
       {
@@ -62,7 +80,8 @@ export const routes = [
         name: 'categories',
         component: () => import('@/pages/categories.vue'),
         beforeEnter() {
-          if (!canUserAccess('category_access')) return '/error'
+          const res = checkPermission('category_access')
+          if (res !== true) return res
         },
       },
       {
@@ -70,7 +89,8 @@ export const routes = [
         name: 'subcategories',
         component: () => import('@/pages/sub-categories.vue'),
         beforeEnter() {
-          if (!canUserAccess('subcategory_access')) return '/error'
+          const res = checkPermission('subcategory_access')
+          if (res !== true) return res
         },
       },
       {
@@ -78,7 +98,8 @@ export const routes = [
         name: 'badges',
         component: () => import('@/pages/badges.vue'),
         beforeEnter() {
-          if (!canUserAccess('badge_access')) return '/error'
+          const res = checkPermission('badge_access')
+          if (res !== true) return res
         },
       },
       {
@@ -86,7 +107,8 @@ export const routes = [
         name: 'products',
         component: () => import('@/pages/products.vue'),
         beforeEnter() {
-          if (!canUserAccess('product_access')) return '/error'
+          const res = checkPermission('product_access')
+          if (res !== true) return res
         },
       },
       {
@@ -94,7 +116,8 @@ export const routes = [
         name: 'bundles',
         component: () => import('@/pages/bundles.vue'),
         beforeEnter() {
-          if (!canUserAccess('bundle_access')) return '/error'
+          const res = checkPermission('bundle_access')
+          if (res !== true) return res
         },
       },
       {
@@ -102,7 +125,8 @@ export const routes = [
         name: 'banners',
         component: () => import('@/pages/banners.vue'),
         beforeEnter() {
-          if (!canUserAccess('banner_access')) return '/error'
+          const res = checkPermission('banner_access')
+          if (res !== true) return res
         },
       },
       {
@@ -110,7 +134,8 @@ export const routes = [
         name: 'facilities',
         component: () => import('@/pages/facilities.vue'),
         beforeEnter() {
-          if (!canUserAccess('facility_access')) return '/error'
+          const res = checkPermission('facility_access')
+          if (res !== true) return res
         },
       },
       {
@@ -118,7 +143,8 @@ export const routes = [
         name: 'Collections',
         component: () => import('@/pages/collections.vue'),
         beforeEnter() {
-          if (!canUserAccess('collection_access')) return '/error'
+          const res = checkPermission('collection_access')
+          if (res !== true) return res
         },
       },
       {
@@ -126,7 +152,8 @@ export const routes = [
         name: 'social-medias',
         component: () => import('@/pages/social-medias.vue'),
         beforeEnter() {
-          if (!canUserAccess('social_media_access')) return '/error'
+          const res = checkPermission('social_media_access')
+          if (res !== true) return res
         },
       },
       {
@@ -134,7 +161,8 @@ export const routes = [
         name: 'suppliers',
         component: () => import('@/pages/suppliers.vue'),
         beforeEnter() {
-          if (!canUserAccess('supplier_access')) return '/error'
+          const res = checkPermission('supplier_access')
+          if (res !== true) return res
         },
       },
       {
@@ -142,7 +170,8 @@ export const routes = [
         name: 'purchases',
         component: () => import('@/pages/purchases.vue'),
         beforeEnter() {
-          if (!canUserAccess('purchase_access')) return '/error'
+          const res = checkPermission('purchase_access')
+          if (res !== true) return res
         },
       },
       {
@@ -150,7 +179,8 @@ export const routes = [
         name: 'settings',
         component: () => import('@/pages/settings.vue'),
         beforeEnter() {
-          if (!canUserAccess('setting_access')) return '/error'
+          const res = checkPermission('setting_access')
+          if (res !== true) return res
         },
       },
       {
@@ -158,7 +188,8 @@ export const routes = [
         name: 'coupons',
         component: () => import('@/pages/coupons.vue'),
         beforeEnter() {
-          if (!canUserAccess('coupon_access')) return '/error'
+          const res = checkPermission('coupon_access')
+          if (res !== true) return res
         },
       },
       {
@@ -166,7 +197,8 @@ export const routes = [
         name: 'blogs',
         component: () => import('@/pages/blogs.vue'),
         beforeEnter() {
-          if (!canUserAccess('blog_access')) return '/error'
+          const res = checkPermission('blog_access')
+          if (res !== true) return res
         },
       },
       {
@@ -174,7 +206,8 @@ export const routes = [
         name: 'cod',
         component: () => import('@/pages/cod.vue'),
         beforeEnter() {
-          if (!canUserAccess('cod_access')) return '/error'
+          const res = checkPermission('cod_access')
+          if (res !== true) return res
         },
       },
       {
@@ -182,7 +215,8 @@ export const routes = [
         name: 'pages',
         component: () => import('@/pages/pages.vue'),
         beforeEnter() {
-          if (!canUserAccess('page_access')) return '/error'
+          const res = checkPermission('page_access')
+          if (res !== true) return res
         },
       },
       {
@@ -190,7 +224,8 @@ export const routes = [
         name: 'product-review',
         component: () => import('@/pages/product-review.vue'),
         beforeEnter() {
-          if (!canUserAccess('product_review_access')) return '/error'
+          const res = checkPermission('product_review_access')
+          if (res !== true) return res
         },
       },
       {
@@ -198,7 +233,8 @@ export const routes = [
         name: 'orders',
         component: () => import('@/pages/order.vue'),
         beforeEnter() {
-          if (!canUserAccess('order_access')) return '/error'
+          const res = checkPermission('order_access')
+          if (res !== true) return res
         },
       },
     ],
