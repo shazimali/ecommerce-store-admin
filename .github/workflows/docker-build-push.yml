@@ -28,26 +28,22 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKER_HUB_IMAGE }}
-          tags: |
-            type=raw,value=latest
-            type=sha,format=short
-
-      - name: Build and Push Docker Image
+      - name: Build Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          push: false
+          load: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_IMAGE }}:latest
+            ${{ secrets.DOCKER_HUB_IMAGE }}:${{ github.sha }}
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL }}
             VITE_PUSHER_APP_KEY=${{ secrets.VITE_PUSHER_APP_KEY }}
             VITE_PUSHER_APP_CLUSTER=${{ secrets.VITE_PUSHER_APP_CLUSTER }}
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_IMAGE }}:latest
+          docker push ${{ secrets.DOCKER_HUB_IMAGE }}:${{ github.sha }}

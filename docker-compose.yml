@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  ecommerce-store-admin:
-    image: ${DOCKER_HUB_IMAGE:-ecommerce-store-admin:latest}
-    container_name: ecommerce_store_admin
+  everyday-shop-admin:
+    image: ${DOCKER_HUB_IMAGE:-everyday-shop-admin:latest}
+    container_name: everyday-shop-admin
     restart: unless-stopped
     ports:
       - "85:80"
