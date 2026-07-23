@@ -1,1173 +1,479 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import httpClient from '@/plugins/httpClient'
+import { computed, ref } from 'vue'
 
-const router = useRouter()
-
-// Interface definitions
-interface Product {
+interface BrandWebsite {
   id: number
   title: string
-  category: string
-  price: number
-  oldPrice?: number
-  rating: number
-  reviewsCount: number
+  subtitle: string
+  description: string
+  domain: string
+  domainDisplay: string
+  tag: string
+  iconClass: string
   image: string
-  badge?: string
-  badgeColor?: string
-  inStock: boolean
-  description?: string
-  isTrending?: boolean
-  isFeatured?: boolean
-  isNew?: boolean
+  highlights: string[]
 }
 
-interface CategoryItem {
-  id: number
-  name: string
-  icon: string
-  itemCount: number
-  image: string
-}
-
-// Reactive States
+const darkMode = ref(false)
 const searchQuery = ref('')
-const selectedCategory = ref('All')
-const cartDrawer = ref(false)
-const quickViewDialog = ref(false)
-const selectedProduct = ref<Product | null>(null)
-const quantity = ref(1)
+const menuOpen = ref(false)
 
-// Cart State
-interface CartItem {
-  product: Product
-  qty: number
-}
-const cartItems = ref<CartItem[]>([])
-
-// Notification Snackbar
-const snackbar = ref(false)
-const snackbarText = ref('')
-
-function showToast(msg: string) {
-  snackbarText.value = msg
-  snackbar.value = true
-}
-
-// Categories list matching Everyday Plastic theme
-const categories = ref<CategoryItem[]>([
-  { id: 1, name: 'Kitchenware Range', icon: 'bx-bowl-hot', itemCount: 42, image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop&q=80' },
-  { id: 2, name: 'Household & Storage', icon: 'bx-home-alt', itemCount: 38, image: 'https://images.unsplash.com/photo-1584473457406-6df3a5025a7c?w=600&auto=format&fit=crop&q=80' },
-  { id: 3, name: 'Furniture Range', icon: 'bx-chair', itemCount: 25, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop&q=80' },
-  { id: 4, name: 'Bath Accessories', icon: 'bx-bath', itemCount: 29, image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=80' },
-  { id: 5, name: 'Plastic Crates & Racks', icon: 'bx-box', itemCount: 18, image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&auto=format&fit=crop&q=80' },
-  { id: 6, name: 'Utility & Organizers', icon: 'bx-grid-alt', itemCount: 31, image: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=600&auto=format&fit=crop&q=80' },
-])
-
-// Rich Product Catalog matching theme screenshot
-const products = ref<Product[]>([
+const websites = ref<BrandWebsite[]>([
   {
-    id: 101,
-    title: '3-Tier Deluxe Utensil & Spice Rack',
-    category: 'Kitchenware Range',
-    price: 2450,
-    oldPrice: 2950,
-    rating: 4.9,
-    reviewsCount: 124,
-    image: 'https://images.unsplash.com/photo-1584473457406-6df3a5025a7c?w=600&auto=format&fit=crop&q=80',
-    badge: 'HOT',
-    badgeColor: 'error',
-    inStock: true,
-    description: 'Durable 3-tier plastic kitchen shelf organizer. Rust-free, space-saving design ideal for spices, jars, and cutlery.',
-    isTrending: true,
-    isFeatured: true,
-  },
-  {
-    id: 102,
-    title: '6-Piece Airtight Condiment Jar Stand',
-    category: 'Kitchenware Range',
-    price: 1850,
-    oldPrice: 2200,
-    rating: 4.8,
-    reviewsCount: 89,
-    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop&q=80',
-    badge: '15% OFF',
-    badgeColor: 'warning',
-    inStock: true,
-    description: 'Clear acrylic spice container set with ergonomic wooden stand and airtight seals to keep spices fresh.',
-    isTrending: true,
-    isFeatured: true,
-  },
-  {
-    id: 103,
-    title: 'Heavy Duty 2-Tier Kitchen Organizer',
-    category: 'Kitchenware Range',
-    price: 1450,
-    oldPrice: 1750,
-    rating: 4.7,
-    reviewsCount: 65,
-    image: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=600&auto=format&fit=crop&q=80',
-    badge: 'BESTSELLER',
-    badgeColor: 'success',
-    inStock: true,
-    description: 'Compact 2-level storage rack for countertops and cabinets. Made from high-grade BPA-free plastic.',
-    isTrending: true,
-    isFeatured: false,
-  },
-  {
-    id: 104,
-    title: 'Rattan Style Laundry Basket with Lid',
-    category: 'Household & Storage',
-    price: 1950,
-    oldPrice: 2300,
-    rating: 4.9,
-    reviewsCount: 142,
-    image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&auto=format&fit=crop&q=80',
-    badge: 'SALE',
-    badgeColor: 'error',
-    inStock: true,
-    description: 'Elegant woven pattern laundry hamptons hamper. Lightweight, ventilated, and handles for easy transport.',
-    isTrending: false,
-    isFeatured: true,
-  },
-  {
-    id: 105,
-    title: 'Ergonomic Plastic Armchair Set (4 Pcs)',
-    category: 'Furniture Range',
-    price: 8900,
-    oldPrice: 10500,
-    rating: 5.0,
-    reviewsCount: 98,
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop&q=80',
-    badge: 'POPULAR',
-    badgeColor: 'primary',
-    inStock: true,
-    description: 'Weather-proof, heavy-duty molded outdoor/indoor plastic chairs. UV resistant and stackable.',
-    isTrending: true,
-    isFeatured: true,
-  },
-  {
-    id: 106,
-    title: 'Luxury Floral Print Bathroom Bucket & Stool Set',
-    category: 'Bath Accessories',
-    price: 1650,
-    oldPrice: 1990,
-    rating: 4.8,
-    reviewsCount: 76,
-    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=80',
-    badge: 'NEW',
-    badgeColor: 'info',
-    inStock: true,
-    description: 'Complete 5-piece bathroom set including 20L bucket, heavy stool, mug, and basin with floral print.',
-    isTrending: false,
-    isFeatured: true,
-    isNew: true,
-  },
-  {
-    id: 107,
-    title: 'Multi-Function Rotary Chutney & Chopper Maker',
-    category: 'Kitchenware Range',
-    price: 1250,
-    oldPrice: 1500,
-    rating: 4.6,
-    reviewsCount: 53,
-    image: 'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=600&auto=format&fit=crop&q=80',
-    badge: 'MUST HAVE',
-    badgeColor: 'warning',
-    inStock: true,
-    description: 'Manual hand-crank vegetable chopper and chutney maker. Stainless steel blades with sturdy plastic container.',
-    isTrending: true,
-    isFeatured: false,
-    isNew: true,
-  },
-  {
-    id: 108,
-    title: '4-Tier Multipurpose Drawer Storage Unit',
-    category: 'Household & Storage',
-    price: 3200,
-    oldPrice: 3800,
-    rating: 4.9,
-    reviewsCount: 110,
-    image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&auto=format&fit=crop&q=80',
-    badge: 'TOP RATED',
-    badgeColor: 'success',
-    inStock: true,
-    description: '4-level sliding drawer cabinet for clothes, toys, office supplies, and household organization.',
-    isTrending: true,
-    isFeatured: true,
-    isNew: true,
-  },
-])
-
-// Collections thumbnails matching screenshot circle bar
-const collections = [
-  { name: 'Vegetable Rack', image: 'https://images.unsplash.com/photo-1584473457406-6df3a5025a7c?w=300&auto=format&fit=crop&q=80' },
-  { name: 'Chutney Maker', image: 'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=300&auto=format&fit=crop&q=80' },
-  { name: 'Spice Racks', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=300&auto=format&fit=crop&q=80' },
-  { name: 'Multi-Plug Racks', image: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=300&auto=format&fit=crop&q=80' },
-  { name: 'Bath Tubs & Stools', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=300&auto=format&fit=crop&q=80' },
-]
-
-// Category Banner Cards (4 large cards in screenshot)
-const categoryBanners = [
-  {
-    title: 'KITCHENWARE RANGE',
-    subtitle: 'Organized & Elegant Kitchen Solutions',
+    id: 1,
+    title: 'Everyday Plastic',
+    subtitle: 'Kitchenware & Homeware',
+    description: 'Shop premium plastic kitchen storage, 3-in-1 plate racks, spice racks, shoe racks, laundry baskets and home organizers for Pakistani homes.',
+    domain: 'https://everydayplastic.co',
+    domainDisplay: 'everydayplastic.co',
+    tag: 'Kitchenware & Storage',
+    iconClass: 'fa-solid fa-box-open',
     image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=800&auto=format&fit=crop&q=80',
-    color: '#854d0e',
-    bgColor: '#fef9c3',
+    highlights: ['Plate Racks (3-in-1)', 'Spice Racks', 'Multi-Purpose Racks', 'Laundry Baskets'],
   },
   {
-    title: 'HOUSEHOLD RANGE',
-    subtitle: 'Essential Storage & Clean Home',
-    image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&auto=format&fit=crop&q=80',
-    color: '#1e3a8a',
-    bgColor: '#dbeafe',
+    id: 2,
+    title: 'Everyday Home Appliances',
+    subtitle: 'Home & Kitchen Electronics',
+    description: 'Smart kitchen gadgets, electric choppers, food processors, fans and home comfort tech for modern Pakistani households.',
+    domain: 'https://everydayhomeappliances.co',
+    domainDisplay: 'everydayhomeappliances.co',
+    tag: 'Appliances & Tech',
+    iconClass: 'fa-solid fa-plug',
+    image: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=800&auto=format&fit=crop&q=80',
+    highlights: ['Electric Choppers', 'Food Processors', 'Cooling & Heating', 'Kitchen Gadgets'],
   },
   {
-    title: 'FURNITURE RANGE',
-    subtitle: 'Durable Indoor & Outdoor Seating',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=80',
-    color: '#991b1b',
-    bgColor: '#fee2e2',
-  },
-  {
-    title: 'BATH ACCESSORIES',
-    subtitle: 'Premium Bucket & Bath Utilities',
+    id: 3,
+    title: 'Everyday Sanitary',
+    subtitle: 'Bath Accessories & Fittings',
+    description: 'Complete bath sets, 20L heavy buckets, bath stools, soap dishes, ceramic basins and durable plumbing ware.',
+    domain: 'https://everydaysanitary.co',
+    domainDisplay: 'everydaysanitary.co',
+    tag: 'Bath & Sanitary Ware',
+    iconClass: 'fa-solid fa-bath',
     image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&auto=format&fit=crop&q=80',
-    color: '#065f46',
-    bgColor: '#d1fae5',
+    highlights: ['5-Piece Bath Sets', 'Bath Stools & Tubs', 'Soap Dishes & Mugs', 'Sanitary Fittings'],
   },
-]
+  {
+    id: 4,
+    title: 'Everyday Furniture',
+    subtitle: 'Chairs, Tables & Baby Seating',
+    description: 'Baby rocking chairs, small and jumbo plastic tables, ergonomic armchairs, study desks and outdoor patio furniture.',
+    domain: 'https://everydayfurniture.co',
+    domainDisplay: 'everydayfurniture.co',
+    tag: 'Furniture & Seating',
+    iconClass: 'fa-solid fa-chair',
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=80',
+    highlights: ['Baby Rocking Chairs', 'Jumbo Plastic Tables', 'Armchairs & Seating', 'Kids Study Desks'],
+  },
+])
 
-// Computed filters
-const filteredProducts = computed(() => {
-  return products.value.filter(p => {
-    const matchesSearch = !searchQuery.value || p.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const matchesCat = selectedCategory.value === 'All' || p.category === selectedCategory.value
-    return matchesSearch && matchesCat
-  })
+const filteredWebsites = computed(() => {
+  if (!searchQuery.value) return websites.value
+  const q = searchQuery.value.toLowerCase()
+  return websites.value.filter(
+    w => w.title.toLowerCase().includes(q) ||
+         w.tag.toLowerCase().includes(q) ||
+         w.subtitle.toLowerCase().includes(q)
+  )
 })
-
-const trendingProducts = computed(() => products.value.filter(p => p.isTrending))
-const newArrivals = computed(() => products.value.filter(p => p.isNew))
-
-const cartTotalCount = computed(() => cartItems.value.reduce((acc, item) => acc + item.qty, 0))
-const cartTotalPrice = computed(() => cartItems.value.reduce((acc, item) => acc + (item.product.price * item.qty), 0))
-
-// Actions
-function addToCart(product: Product) {
-  const existing = cartItems.value.find(item => item.product.id === product.id)
-  if (existing) {
-    existing.qty += quantity.value
-  } else {
-    cartItems.value.push({ product, qty: quantity.value })
-  }
-  quantity.value = 1
-  showToast(`Added "${product.title}" to Cart!`)
-}
-
-function removeFromCart(id: number) {
-  cartItems.value = cartItems.value.filter(item => item.product.id !== id)
-  showToast('Item removed from cart')
-}
-
-function openQuickView(product: Product) {
-  selectedProduct.value = product
-  quantity.value = 1
-  quickViewDialog.value = true
-}
 
 function openWhatsApp() {
-  window.open('https://wa.me/923214840041?text=Hello%20Everyday%20Plastic,%20I%20am%20interested%20in%20your%20products!', '_blank')
+  window.open('https://wa.me/923363413244', '_blank')
 }
-
-// Optional API fetch on mount to enrich with real database products if available
-onMounted(async () => {
-  try {
-    const res = await httpClient.get('/products?page=1&item_per_page=12')
-    if (res.data && res.data.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
-      const apiProds: Product[] = res.data.data.map((item: any, idx: number) => ({
-        id: item.id || (1000 + idx),
-        title: item.name || item.title || 'Everyday Quality Plastic Product',
-        category: item.category?.name || 'Kitchenware Range',
-        price: Number(item.price || 1500),
-        oldPrice: Number(item.old_price || item.price ? Number(item.price) * 1.2 : 1800),
-        rating: 4.8,
-        reviewsCount: 45 + idx,
-        image: item.image || 'https://images.unsplash.com/photo-1584473457406-6df3a5025a7c?w=600&auto=format&fit=crop&q=80',
-        badge: idx % 3 === 0 ? 'SALE' : 'HOT',
-        badgeColor: idx % 3 === 0 ? 'error' : 'warning',
-        inStock: true,
-        description: item.description || 'High quality plastic household item manufactured by Everyday Plastic.',
-        isTrending: true,
-        isFeatured: true,
-      }))
-      products.value = [...apiProds, ...products.value]
-    }
-  } catch (err) {
-    console.log('Using predefined theme catalog data')
-  }
-})
 </script>
 
 <template>
-  <div class="theme-wrapper">
-    <!-- 1. TOP ANNOUNCEMENT & CONTACT BAR -->
-    <div class="top-announcement-bar">
-      <div class="theme-container d-flex justify-space-between align-center py-1 text-caption">
-        <div class="d-none d-md-flex align-center gap-4 text-white">
-          <span><VIcon icon="bx-phone-call" size="14" class="mr-1" color="amber-lighten-2" /> +92 321 484 0041 | +92 300 484 0041</span>
-          <span><VIcon icon="bx-envelope" size="14" class="mr-1" color="amber-lighten-2" /> info@everydayplastic.co</span>
+  <!--
+    This page uses the EXACT same HTML structure and CSS classes as ~/Sites/everyday-shops
+    CSS is loaded from https://everydayplastic.co/build/assets/ in index.html
+    so all Tailwind tokens (bg-primary, bg-secondary, text-primary, etc.) work as-is.
+  -->
+  <div :class="{ 'dark': darkMode }" class="dark:bg-black bg-white w-full">
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- STICKY HEADER WRAPPER                                  -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div class="sticky lg:block md:block xs:hidden top-0 z-50">
+
+      <!-- 1. NEWS MARQUEE — inc/news.blade.php -->
+      <div class="flex flex-col items-center justify-center">
+        <marquee class="bg-primary text-black">
+          <small>
+            Enjoy FREE Home Delivery on orders above Rs. 3,999/- | Welcome to Every Day Group — Deal in Quality Products
+          </small>
+        </marquee>
+      </div>
+
+      <!-- 2. HEADER INFO BAR — inc/header_with_info.blade.php -->
+      <div class="grid lg:grid-cols-3 md:grid-cols-3 bg-secondary dark:bg-black py-2 px-8 font-normal dark:border-b dark:border-b-slate-800" :style="{ backgroundColor: darkMode ? '#000000' : 'rgb(237 241 255)' }">
+        <div>
+          <a class="hover:text-primary dark:text-secondary border-solid border-black dark:border-secondary border-r-2 pr-2 dark:hover:text-primary" href="tel:+923363413244">
+            <i class="fa-solid fa-phone text-primary dark:hover:text-primary"></i>&nbsp;
+            <span class="text-black hover:text-primary dark:text-secondary dark:hover:text-primary">+92 336 3413244</span>
+          </a>
+          <a class="hover:text-primary dark:text-secondary pl-3 dark:hover:text-primary" href="mailto:info@everydayplastic.co">
+            <i class="fa-solid fa-envelope text-primary dark:hover:text-primary"></i>&nbsp;
+            <span class="text-black hover:text-primary dark:text-secondary dark:hover:text-primary">info@everydayplastic.co</span>
+          </a>
         </div>
 
-        <div class="ticker-text font-weight-medium text-amber-lighten-3 mx-auto mx-md-0">
-          <VIcon icon="bx-gift" size="14" class="mr-1" color="amber" /> FREE DELIVERY ON ORDERS ABOVE RS. 5000 | 100% DURABLE PLASTIC
+        <div class="text-center bg-gradient-to-r from-orange-200 via-red-500 to-violet-600 bg-clip-text text-transparent font-semibold">
+          Welcome to Every Day Group. Deal in Quality Products
         </div>
 
-        <div class="d-none d-sm-flex align-center gap-3 text-white">
-          <span class="font-weight-semibold">PKR (Rs.)</span>
-          <span>|</span>
-          <RouterLink to="/admin/login" class="text-white text-decoration-none d-flex align-center gap-1 font-weight-medium hover-gold">
-            <VIcon icon="bx-user-circle" size="16" color="amber-lighten-2" /> Admin Login
-          </RouterLink>
+        <div class="text-end text-black dark:text-primary">
+          <a class="mr-3 text-black dark:text-primary hover:text-primary py-2" target="_blank" href="https://www.facebook.com/everydayoffcl">
+            <i class="fa-brands fa-facebook"></i>
+          </a>
+          <a class="mr-3 text-black dark:text-primary hover:text-primary py-2" target="_blank" href="https://www.instagram.com/everydayoffcl/">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a class="mr-3 text-black dark:text-primary hover:text-primary py-2" target="_blank" href="https://twitter.com/EverydayOffcl">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a class="mr-3 text-black dark:text-primary hover:text-primary py-2" target="_blank" href="https://www.youtube.com/@everydayoffcl">
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+          <!-- theme_changer.blade.php — exact copy -->
+          <button
+            @click="darkMode = !darkMode"
+            class="lg:border-l-2 md:border-l-2 lg:border-solid md:border-solid lg:border-black md:border-black lg:dark:border-primary md:dark:border-primary lg:dark:border-solid md:dark:border-solid lg:dark:border-l-2 md:dark:border-l-2 pl-3"
+          >
+            <i v-show="!darkMode" class="fa-solid fa-moon text-black dark:text-primary"></i>
+            <i v-show="darkMode" class="fa-solid fa-sun text-secondary dark:text-primary"></i>
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- 2. MAIN BRAND HEADER -->
-    <header class="main-header py-3 bg-surface border-bottom shadow-sm">
-      <div class="theme-container d-flex align-center justify-space-between gap-4">
-        <!-- Logo -->
-        <div class="brand-logo cursor-pointer" @click="router.push('/')">
-          <div class="d-flex align-center gap-2">
-            <div class="logo-badge bg-red-darken-3 text-white px-3 py-1 rounded-lg font-weight-black text-h6 tracking-wide shadow-sm">
-              EVERYDAY
-            </div>
-            <span class="logo-text font-weight-bold text-h6 text-grey-darken-3 tracking-wider">PLASTIC</span>
-          </div>
-          <div class="logo-tagline text-caption text-grey-darken-1 font-weight-medium tracking-tight">
-            House of Premium Utensils & Household Solutions
-          </div>
+      <!-- 3. LOGO + SEARCH + CART — layouts/header.blade.php -->
+      <div class="grid lg:grid-cols-3 md:grid-cols-3 py-5 px-8 bg-white border-secondary border-b dark:bg-black dark:border-b-slate-800">
+        <div class="text-4xl font-semibold">
+          <a href="/">
+            <span class="text-primary dark:text-secondary uppercase">everyday</span>
+            <span class="dark:text-primary text-black uppercase"> Group</span>
+          </a>
         </div>
 
-        <!-- Search Bar -->
-        <div class="search-box-container flex-grow-1 mx-4 d-none d-md-block max-width-600">
-          <div class="d-flex align-center search-pill border rounded-pill overflow-hidden bg-grey-lighten-4">
-            <select v-model="selectedCategory" class="cat-select border-0 bg-transparent px-3 py-2 text-caption font-weight-semibold text-grey-darken-2 cursor-pointer">
-              <option value="All">All Categories</option>
-              <option v-for="cat in categories" :key="cat.id" :value="cat.name">{{ cat.name }}</option>
-            </select>
-            <div class="divider-v bg-grey-lighten-2"></div>
+        <!-- Search — global-search livewire equivalent -->
+        <div class="relative text-black dark:text-white">
+          <div class="flex justify-center">
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Search for kitchenware, racks, containers..."
-              class="search-input flex-grow-1 border-0 bg-transparent px-3 py-2 text-body-2 text-grey-darken-3 outline-none"
+              placeholder="Search For Products"
+              class="placeholder-black dark:placeholder-white lg:py-3 md:py-3 sm:py-2 xs:py-2 lg:px-4 md:px-4 sm:px-2 xs:px-2 block text-sm border border-secondary w-full dark:bg-black dark:border-slate-800"
             />
-            <button class="search-btn bg-red-darken-3 text-white border-0 px-4 py-2 cursor-pointer d-flex align-center justify-center transition-fast">
-              <VIcon icon="bx-search" size="20" />
-            </button>
+            <i class="lg:-ml-7 md:-ml-7 sm:-ml-[1.4rem] xs:-ml-[1.4rem] lg:mt-4 md:mt-4 sm:mt-[0.7rem] xs:mt-[0.7rem] text-primary fas fa-search"></i>
           </div>
         </div>
 
-        <!-- Right Quick Actions -->
-        <div class="header-actions d-flex align-center gap-3">
-          <!-- Wishlist -->
-          <VBtn icon variant="text" color="grey-darken-2" class="d-none d-sm-flex">
-            <VBadge content="0" color="red-darken-2">
-              <VIcon icon="bx-heart" size="24" />
-            </VBadge>
-          </VBtn>
-
-          <!-- Cart Icon -->
-          <VBtn color="red-darken-3" variant="flat" class="rounded-pill px-4" @click="cartDrawer = true">
-            <VBadge :content="cartTotalCount" color="amber-darken-2" class="mr-2">
-              <VIcon icon="bx-shopping-bag" size="22" />
-            </VBadge>
-            <span class="d-none d-sm-inline font-weight-bold">Rs. {{ cartTotalPrice.toLocaleString() }}</span>
-          </VBtn>
+        <!-- Cart button (Admin Portal for this admin app) -->
+        <div class="text-end">
+          <div class="drawer-content mt-3 cursor-pointer">
+            <RouterLink
+              to="/login"
+              class="drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-3 px-6 inline-block"
+            >
+              <i class="fa-solid fa-user-lock"></i>
+              <span class="text-black dark:text-white text-sm font-semibold ml-1">Admin Portal</span>
+            </RouterLink>
+          </div>
         </div>
       </div>
-    </header>
 
-    <!-- 3. NAVIGATION BAR -->
-    <nav class="theme-nav bg-red-darken-4 text-white">
-      <div class="theme-container d-flex align-center justify-space-between">
-        <!-- Categories Dropdown Button -->
-        <div class="cat-dropdown-trigger bg-amber-darken-2 px-4 py-3 d-flex align-center gap-2 cursor-pointer text-grey-darken-4 font-weight-bold">
-          <VIcon icon="bx-grid-alt" size="20" />
-          <span>ALL CATEGORIES</span>
-          <VIcon icon="bx-chevron-down" size="18" />
-        </div>
-
-        <!-- Horizontal Nav Links -->
-        <div class="nav-links d-none d-md-flex align-center gap-6 text-subtitle-2 font-weight-medium">
-          <RouterLink to="/" class="nav-item active">Home</RouterLink>
-          <a href="#kitchenware" class="nav-item">Everyday Kitchen</a>
-          <a href="#furniture" class="nav-item">Shop By Furniture</a>
-          <a href="#household" class="nav-item">Plastic Range</a>
-          <a href="#trending" class="nav-item">Trending Deals</a>
-          <a href="#contact" class="nav-item">Contact Us</a>
-        </div>
-
-        <!-- Quick Login / Contact Info -->
-        <div class="d-flex align-center gap-3 text-caption font-weight-semibold text-amber-lighten-3 pr-2">
-          <VIcon icon="bx-time" size="16" /> Mon - Sat: 9:00 AM - 9:00 PM
-        </div>
-      </div>
-    </nav>
-
-    <!-- 4. HERO SECTION (SIDEBAR + MAIN BANNER MATCHING SCREENSHOT) -->
-    <section class="hero-wrapper py-4 bg-grey-lighten-4">
-      <div class="theme-container">
-        <VRow no-gutters class="gap-y-4">
-          <!-- Left Category Sidebar -->
-          <VCol cols="12" md="3" class="pr-md-3">
-            <div class="category-sidebar bg-white rounded-lg border shadow-xs overflow-hidden h-100">
-              <div class="sidebar-header bg-grey-lighten-3 px-4 py-3 font-weight-bold text-grey-darken-3 border-bottom d-flex align-center gap-2">
-                <VIcon icon="bx-menu" color="red-darken-3" /> Explore Categories
+      <!-- 4. NAVBAR — inc/navbar.blade.php -->
+      <div class="lg:block md:block sm:hidden xs:hidden relative z-40">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8 bg-white dark:bg-black">
+          <!-- Left: Collections dropdown trigger (nav-bar-collection livewire equivalent) -->
+          <div>
+            <li
+              @click="menuOpen = !menuOpen"
+              class="bg-primary text-black block py-3 font-normal pl-5 border-secondary dark:text-white dark:border-slate-800 border-b list-none cursor-pointer flex justify-between items-center"
+            >
+              <span>
+                <i class="fa-solid fa-layer-group mr-2"></i> Our Divisions
+              </span>
+              <div class="inline-block pr-5">
+                <i :class="menuOpen ? 'fa-solid fa-caret-up' : 'fa-solid fa-caret-down'"></i>
               </div>
-              <ul class="sidebar-list list-none p-0 m-0">
-                <li v-for="cat in categories" :key="cat.id" class="sidebar-item border-bottom">
-                  <a href="#products-section" @click="selectedCategory = cat.name" class="d-flex align-center justify-space-between px-4 py-3 text-decoration-none text-grey-darken-3 hover-bg-red">
-                    <span class="d-flex align-center gap-3 text-body-2 font-weight-medium">
-                      <VIcon :icon="cat.icon" size="20" color="red-darken-3" />
-                      {{ cat.name }}
+            </li>
+            <!-- Dropdown menu -->
+            <li
+              v-show="menuOpen"
+              class="absolute z-50 list-none"
+              style="width: 22.8%"
+            >
+              <ul class="relative">
+                <li
+                  v-for="site in websites"
+                  :key="site.id"
+                  class="bg-white text-black cursor-pointer pl-5 block font-normal py-2 border-secondary border-b border-l border-r dark:text-secondary dark:border-slate-800 dark:bg-black hover:text-primary"
+                >
+                  <a :href="site.domain" target="_blank" class="hover:text-primary flex justify-between items-center pr-5">
+                    <span>
+                      <i :class="site.iconClass" class="text-primary mr-2.5 w-4 text-center"></i>
+                      {{ site.title }}
                     </span>
-                    <VIcon icon="bx-chevron-right" size="18" color="grey" />
+                    <i class="fa-solid fa-caret-right text-xs"></i>
                   </a>
                 </li>
               </ul>
-            </div>
-          </VCol>
+            </li>
+          </div>
 
-          <!-- Main Hero Banner (Green & Gold Theme matching Screenshot) -->
-          <VCol cols="12" md="9">
-            <div class="hero-banner-card rounded-lg overflow-hidden position-relative shadow-md">
-              <VImg src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1200&auto=format&fit=crop&q=80" height="380" cover class="hero-bg-img">
-                <div class="hero-overlay d-flex align-center px-6 px-md-10 fill-height">
-                  <div class="hero-text-content text-white max-width-500">
-                    <span class="hero-badge bg-amber-darken-2 text-grey-darken-4 font-weight-bold px-3 py-1 rounded text-caption mb-3 d-inline-block shadow-sm">
-                      Every Day Plastic
-                    </span>
-                    <h1 class="hero-headline text-h4 text-md-h3 font-weight-black text-amber-lighten-4 mb-2 leading-tight">
-                      BEST UTENSIL ORGANIZERS
-                    </h1>
-                    <p class="hero-subline text-subtitle-1 text-grey-lighten-3 mb-6 font-weight-medium">
-                      MAKE YOUR KITCHEN ORGANIZED & ELEGANT
-                    </p>
-
-                    <div class="d-flex align-center gap-3">
-                      <VBtn color="amber-darken-2" variant="flat" size="large" class="rounded-pill font-weight-bold text-grey-darken-4 px-6 shadow-md" href="#trending">
-                        SHOP NOW <VIcon icon="bx-right-arrow-alt" end />
-                      </VBtn>
-                      <span class="text-caption text-amber-lighten-3 font-weight-semibold">www.everydayplastic.co</span>
-                    </div>
-                  </div>
-                </div>
-              </VImg>
-            </div>
-          </VCol>
-        </VRow>
-      </div>
-    </section>
-
-    <!-- 5. VALUE PROPOSITION FEATURE HIGHLIGHTS BAR -->
-    <section class="value-bar py-6 bg-white border-block shadow-xs">
-      <div class="theme-container">
-        <VRow>
-          <VCol cols="6" sm="3" class="border-right">
-            <div class="feature-item d-flex align-center gap-3 justify-center">
-              <div class="feature-icon-circle bg-red-lighten-5 text-red-darken-3 p-3 rounded-circle">
-                <VIcon icon="bx-check-shield" size="28" />
-              </div>
-              <div>
-                <h4 class="text-subtitle-2 font-weight-bold text-grey-darken-3 mb-0">Quality Products</h4>
-                <span class="text-caption text-grey">100% Durable Plastic</span>
-              </div>
-            </div>
-          </VCol>
-
-          <VCol cols="6" sm="3" class="border-right">
-            <div class="feature-item d-flex align-center gap-3 justify-center">
-              <div class="feature-icon-circle bg-red-lighten-5 text-red-darken-3 p-3 rounded-circle">
-                <VIcon icon="bx-package" size="28" />
-              </div>
-              <div>
-                <h4 class="text-subtitle-2 font-weight-bold text-grey-darken-3 mb-0">Free Delivery</h4>
-                <span class="text-caption text-grey">On Orders Above Rs. 5000</span>
-              </div>
-            </div>
-          </VCol>
-
-          <VCol cols="6" sm="3" class="border-right">
-            <div class="feature-item d-flex align-center gap-3 justify-center">
-              <div class="feature-icon-circle bg-red-lighten-5 text-red-darken-3 p-3 rounded-circle">
-                <VIcon icon="bx-refresh" size="28" />
-              </div>
-              <div>
-                <h4 class="text-subtitle-2 font-weight-bold text-grey-darken-3 mb-0">7 Days Return</h4>
-                <span class="text-caption text-grey">Easy Money Back Guarantee</span>
-              </div>
-            </div>
-          </VCol>
-
-          <VCol cols="6" sm="3">
-            <div class="feature-item d-flex align-center gap-3 justify-center">
-              <div class="feature-icon-circle bg-red-lighten-5 text-red-darken-3 p-3 rounded-circle">
-                <VIcon icon="bx-support" size="28" />
-              </div>
-              <div>
-                <h4 class="text-subtitle-2 font-weight-bold text-grey-darken-3 mb-0">24/7 Support</h4>
-                <span class="text-caption text-grey">Dedicated Assistance</span>
-              </div>
-            </div>
-          </VCol>
-        </VRow>
-      </div>
-    </section>
-
-    <!-- 6. TRENDING PRODUCTS SECTION -->
-    <section id="trending" class="trending-section py-8 bg-grey-lighten-5">
-      <div class="theme-container">
-        <!-- Section Title -->
-        <div class="text-center mb-6">
-          <h2 class="section-title text-h5 font-weight-black text-grey-darken-3 tracking-wide mb-1">
-            Trending Products
-          </h2>
-          <div class="title-underline mx-auto bg-red-darken-3 mb-3"></div>
-          <p class="text-caption text-grey-darken-1">Handpicked best-selling organizers & plastic accessories for your home</p>
-        </div>
-
-        <!-- Product Cards Grid -->
-        <VRow>
-          <VCol v-for="product in trendingProducts" :key="product.id" cols="12" sm="6" md="4" lg="3">
-            <VCard class="product-card h-100 border rounded-lg overflow-hidden elevation-1 hover-shadow transition-fast">
-              <!-- Card Image & Badge -->
-              <div class="product-img-wrapper position-relative bg-grey-lighten-4 overflow-hidden">
-                <VImg :src="product.image" height="220" cover class="product-image transition-slow" />
-                
-                <span v-if="product.badge" :class="`badge-tag bg-${product.badgeColor} text-white text-caption font-weight-bold px-2 py-1 rounded-r shadow-xs`">
-                  {{ product.badge }}
-                </span>
-
-                <!-- Quick Action Overlays -->
-                <div class="quick-actions-overlay position-absolute fill-height fill-width d-flex align-center justify-center gap-2 transition-fast">
-                  <VBtn icon color="white" variant="flat" size="small" class="shadow-md" @click="openQuickView(product)">
-                    <VIcon icon="bx-search" color="grey-darken-3" />
-                  </VBtn>
-                  <VBtn icon color="red-darken-3" variant="flat" size="small" class="shadow-md" @click="addToCart(product)">
-                    <VIcon icon="bx-cart-add" color="white" />
-                  </VBtn>
-                </div>
-              </div>
-
-              <!-- Product Details -->
-              <VCardItem class="pa-4">
-                <span class="text-caption text-grey font-weight-medium d-block mb-1">{{ product.category }}</span>
-                <h3 class="product-name text-subtitle-1 font-weight-bold text-grey-darken-3 text-truncate mb-2" :title="product.title">
-                  {{ product.title }}
-                </h3>
-
-                <!-- Rating -->
-                <div class="d-flex align-center gap-1 mb-3">
-                  <VRating :model-value="product.rating" color="amber-darken-2" density="compact" size="small" readonly half-increments />
-                  <span class="text-caption text-grey font-weight-semibold">({{ product.reviewsCount }})</span>
-                </div>
-
-                <!-- Price & Action -->
-                <div class="d-flex align-center justify-space-between pt-2 border-top">
-                  <div>
-                    <span class="text-h6 font-weight-bold text-red-darken-3">Rs. {{ product.price.toLocaleString() }}</span>
-                    <span v-if="product.oldPrice" class="text-caption text-grey text-decoration-line-through ml-2">Rs. {{ product.oldPrice.toLocaleString() }}</span>
-                  </div>
-
-                  <VBtn color="red-darken-3" size="small" variant="tonal" class="rounded-pill font-weight-bold" @click="addToCart(product)">
-                    Add +
-                  </VBtn>
-                </div>
-              </VCardItem>
-            </VCard>
-          </VCol>
-        </VRow>
-      </div>
-    </section>
-
-    <!-- 7. CATEGORY BANNERS GRID (4 Visual Cards matching screenshot) -->
-    <section class="category-banners-section py-8 bg-white">
-      <div class="theme-container">
-        <VRow>
-          <VCol v-for="(banner, idx) in categoryBanners" :key="idx" cols="12" sm="6" md="3">
-            <div class="cat-banner-card rounded-lg overflow-hidden border shadow-sm position-relative group cursor-pointer" @click="selectedCategory = banner.title.split(' ')[0]">
-              <VImg :src="banner.image" height="240" cover class="cat-banner-img transition-slow">
-                <div class="cat-banner-overlay d-flex flex-column justify-end pa-4 text-white">
-                  <h3 class="cat-banner-title font-weight-black text-subtitle-1 text-uppercase tracking-wider text-amber-lighten-3 mb-1" :style="{ color: banner.color }">
-                    {{ banner.title }}
-                  </h3>
-                  <span class="cat-banner-sub text-caption text-grey-lighten-3 font-weight-medium mb-3">
-                    {{ banner.subtitle }}
-                  </span>
-                  <div class="cat-banner-link text-caption font-weight-bold text-amber-lighten-2 d-flex align-center gap-1">
-                    SHOP COLLECTION <VIcon icon="bx-right-arrow-alt" />
-                  </div>
-                </div>
-              </VImg>
-            </div>
-          </VCol>
-        </VRow>
-      </div>
-    </section>
-
-    <!-- 8. OUR COLLECTION CIRCLE SHOWCASE -->
-    <section class="our-collection-section py-8 bg-grey-lighten-4">
-      <div class="theme-container">
-        <div class="text-center mb-6">
-          <h2 class="section-title text-h5 font-weight-black text-grey-darken-3 tracking-wide mb-1">
-            Our Collection
-          </h2>
-          <div class="title-underline mx-auto bg-red-darken-3 mb-3"></div>
-        </div>
-
-        <div class="d-flex align-center justify-center flex-wrap gap-6 py-3">
-          <div v-for="(col, i) in collections" :key="i" class="collection-circle-item text-center cursor-pointer" @click="searchQuery = col.name">
-            <div class="circle-avatar border-3 border-red-darken-3 rounded-circle overflow-hidden mx-auto mb-2 shadow-sm transition-fast">
-              <VImg :src="col.image" width="110" height="110" cover />
-            </div>
-            <span class="text-subtitle-2 font-weight-bold text-grey-darken-3 d-block">{{ col.name }}</span>
+          <!-- Right: nav links -->
+          <div class="col-span-3 grid grid-cols-2 py-3 bg-white text-black dark:bg-black relative">
+            <ul class="flex items-center">
+              <li class="mr-6">
+                <a class="text-primary dark:text-primary font-semibold flex items-center gap-1.5" href="#portals">
+                  <i class="fa-solid fa-house text-xs"></i> Home
+                </a>
+              </li>
+              <li class="mr-6">
+                <a class="hover:text-primary dark:text-secondary dark:hover:text-primary flex items-center gap-1.5" href="https://everydayplastic.co" target="_blank">
+                  <i class="fa-solid fa-box-open text-primary text-xs"></i> Plastic
+                </a>
+              </li>
+              <li class="mr-6">
+                <a class="hover:text-primary dark:text-secondary dark:hover:text-primary flex items-center gap-1.5" href="https://everydayhomeappliances.co" target="_blank">
+                  <i class="fa-solid fa-plug text-primary text-xs"></i> Appliances
+                </a>
+              </li>
+              <li class="mr-6">
+                <a class="hover:text-primary dark:text-secondary dark:hover:text-primary flex items-center gap-1.5" href="https://everydaysanitary.co" target="_blank">
+                  <i class="fa-solid fa-bath text-primary text-xs"></i> Sanitary
+                </a>
+              </li>
+              <li class="mr-6">
+                <a class="hover:text-primary dark:text-secondary dark:hover:text-primary flex items-center gap-1.5" href="https://everydayfurniture.co" target="_blank">
+                  <i class="fa-solid fa-chair text-primary text-xs"></i> Furniture
+                </a>
+              </li>
+            </ul>
+            <ul class="flex justify-end">
+              <li class="mr-4 text-xs text-black dark:text-secondary font-semibold">
+                <i class="fa-solid fa-clock text-primary mr-1"></i> Mon - Sat: 9:00 AM - 9:00 PM
+              </li>
+            </ul>
           </div>
         </div>
       </div>
-    </section>
+    </div><!-- end sticky -->
 
-    <!-- 9. FEATURED PRODUCTS SECTION -->
-    <section id="products-section" class="featured-section py-8 bg-white">
-      <div class="theme-container">
-        <div class="d-flex align-center justify-space-between mb-6 flex-wrap gap-3">
-          <div>
-            <h2 class="section-title text-h5 font-weight-black text-grey-darken-3 tracking-wide mb-1">
-              Featured Products
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT — home.blade.php @section('content')     -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="bg-white dark:bg-black text-black dark:text-secondary">
+
+      <!-- Facilities row (matching home.blade.php facilities grid) -->
+      <div class="lg:block md:block sm:block xs:hidden">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 gap-5 lg:px-8 md:px-8 xs:px-2 mt-12 lg:mt-16 md:mt-16 dark:text-secondary">
+          <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
+            <span><i class="fa-solid fa-truck text-primary text-5xl"></i></span>
+            <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">Free Delivery</h1>
+          </div>
+          <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
+            <span><i class="fa-solid fa-shield-halved text-primary text-5xl"></i></span>
+            <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">Quality Assured</h1>
+          </div>
+          <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
+            <span><i class="fa-solid fa-rotate-left text-primary text-5xl"></i></span>
+            <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">Easy Returns</h1>
+          </div>
+          <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
+            <span><i class="fa-solid fa-headset text-primary text-5xl"></i></span>
+            <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">24/7 Support</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section heading — matching home.blade.php "Our Collection" h1 style -->
+      <div id="portals" class="mt-16 text-center">
+        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">
+          Our Brand Websites
+        </h1>
+      </div>
+
+      <!-- 4 Brand Website cards — product_box.blade.php pattern -->
+      <div class="mt-10 grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-5 lg:px-8 md:px-8 sm:px-2 xs:px-2 pb-16">
+
+        <a
+          v-for="site in filteredWebsites"
+          :key="site.id"
+          :href="site.domain"
+          target="_blank"
+          class="block border border-secondary dark:border-slate-800 group hover:border-primary/60 dark:hover:border-primary/60 hover:shadow-lg hover:-translate-y-1 bg-white dark:bg-slate-950 transition-all duration-300"
+        >
+          <!-- Card image (product_box image div pattern) -->
+          <div class="w-full relative overflow-hidden bg-cover bg-no-repeat border-b border-secondary dark:border-slate-800">
+            <!-- Active store badge (discount badge pattern) -->
+            <div class="absolute right-0 top-0 z-10 w-auto px-2 py-1 bg-green-600 text-white text-center text-xs font-extrabold">
+              Active Store
+            </div>
+
+            <img
+              :src="site.image"
+              :alt="site.title"
+              class="transition duration-300 ease-in-out group-hover:scale-110 w-full"
+              style="height: 280px; object-fit: cover;"
+            />
+          </div>
+
+          <!-- Card body (product_box text div pattern) -->
+          <div class="border-b border-secondary dark:border-slate-800 py-5 px-6 text-center dark:text-secondary">
+            <!-- Tag / category -->
+            <div class="flex items-center justify-center gap-2 text-primary text-xs font-semibold mb-2">
+              <i :class="site.iconClass"></i>
+              <span>{{ site.tag }}</span>
+            </div>
+
+            <!-- Title — group-hover:text-primary as in product_box -->
+            <h1 class="text-xl font-bold group-hover:text-primary transition-colors duration-300 mb-1">
+              {{ site.title }}
+            </h1>
+
+            <!-- Subtitle -->
+            <h2 class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+              {{ site.subtitle }}
             </h2>
-            <div class="title-underline bg-red-darken-3"></div>
+
+            <!-- Description -->
+            <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+              {{ site.description }}
+            </p>
+
+            <!-- Highlights -->
+            <div class="flex flex-wrap justify-center gap-2 mb-4">
+              <span
+                v-for="(hl, i) in site.highlights"
+                :key="i"
+                class="bg-primary text-black font-medium text-xs px-2.5 py-1 border border-primary"
+                :style="{ backgroundColor: 'rgb(209, 156, 151)', color: '#000000' }"
+              >
+                {{ hl }}
+              </span>
+            </div>
+
+            <!-- CTA — "View Detail" link pattern from navbar new arrivals -->
+            <div class="w-full">
+              <span class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary dark:border-slate-700 py-2 transition-colors duration-200 group-hover:text-primary group-hover:border-primary">
+                <i class="fa-regular fa-eye text-primary"></i>
+                Visit {{ site.domainDisplay }}
+              </span>
+            </div>
           </div>
+        </a>
 
-          <!-- Category filter buttons -->
-          <div class="cat-filter-btns d-flex align-center gap-2 flex-wrap">
-            <VBtn
-              size="small"
-              :variant="selectedCategory === 'All' ? 'flat' : 'outlined'"
-              color="red-darken-3"
-              class="rounded-pill"
-              @click="selectedCategory = 'All'"
-            >
-              All Items
-            </VBtn>
-            <VBtn
-              v-for="cat in categories"
-              :key="cat.id"
-              size="small"
-              :variant="selectedCategory === cat.name ? 'flat' : 'outlined'"
-              color="red-darken-3"
-              class="rounded-pill"
-              @click="selectedCategory = cat.name"
-            >
-              {{ cat.name }}
-            </VBtn>
-          </div>
-        </div>
-
-        <!-- Products Grid -->
-        <VRow v-if="filteredProducts.length > 0">
-          <VCol v-for="product in filteredProducts" :key="product.id" cols="12" sm="6" md="4" lg="3">
-            <VCard class="product-card h-100 border rounded-lg overflow-hidden elevation-1 hover-shadow transition-fast">
-              <div class="product-img-wrapper position-relative bg-grey-lighten-4 overflow-hidden">
-                <VImg :src="product.image" height="220" cover class="product-image transition-slow" />
-                <span v-if="product.badge" :class="`badge-tag bg-${product.badgeColor} text-white text-caption font-weight-bold px-2 py-1 rounded-r shadow-xs`">
-                  {{ product.badge }}
-                </span>
-
-                <div class="quick-actions-overlay position-absolute fill-height fill-width d-flex align-center justify-center gap-2 transition-fast">
-                  <VBtn icon color="white" variant="flat" size="small" class="shadow-md" @click="openQuickView(product)">
-                    <VIcon icon="bx-search" color="grey-darken-3" />
-                  </VBtn>
-                  <VBtn icon color="red-darken-3" variant="flat" size="small" class="shadow-md" @click="addToCart(product)">
-                    <VIcon icon="bx-cart-add" color="white" />
-                  </VBtn>
-                </div>
-              </div>
-
-              <VCardItem class="pa-4">
-                <span class="text-caption text-grey font-weight-medium d-block mb-1">{{ product.category }}</span>
-                <h3 class="product-name text-subtitle-1 font-weight-bold text-grey-darken-3 text-truncate mb-2" :title="product.title">
-                  {{ product.title }}
-                </h3>
-
-                <div class="d-flex align-center gap-1 mb-3">
-                  <VRating :model-value="product.rating" color="amber-darken-2" density="compact" size="small" readonly half-increments />
-                  <span class="text-caption text-grey font-weight-semibold">({{ product.reviewsCount }})</span>
-                </div>
-
-                <div class="d-flex align-center justify-space-between pt-2 border-top">
-                  <div>
-                    <span class="text-h6 font-weight-bold text-red-darken-3">Rs. {{ product.price.toLocaleString() }}</span>
-                    <span v-if="product.oldPrice" class="text-caption text-grey text-decoration-line-through ml-2">Rs. {{ product.oldPrice.toLocaleString() }}</span>
-                  </div>
-
-                  <VBtn color="red-darken-3" size="small" variant="flat" class="rounded-pill font-weight-bold" @click="addToCart(product)">
-                    Buy Now
-                  </VBtn>
-                </div>
-              </VCardItem>
-            </VCard>
-          </VCol>
-        </VRow>
-
-        <div v-else class="text-center py-12">
-          <VIcon icon="bx-package" size="56" color="grey" class="mb-2" />
-          <h3 class="text-h6 text-grey-darken-2 font-weight-bold">No products found</h3>
-          <p class="text-caption text-grey">Try clearing your category or search filter</p>
-          <VBtn color="red-darken-3" variant="tonal" size="small" class="mt-2" @click="selectedCategory = 'All'; searchQuery = ''">
-            Reset Filters
-          </VBtn>
+        <!-- Empty search state -->
+        <div v-if="filteredWebsites.length === 0" class="col-span-2 text-center py-16 dark:text-secondary">
+          <i class="fa-solid fa-search text-4xl text-primary mb-3 block"></i>
+          <h3 class="text-lg font-bold mb-2">No website matching "{{ searchQuery }}"</h3>
+          <p class="text-xs text-gray-500 mb-4">Try: Plastic, Appliances, Sanitary, or Furniture</p>
+          <button @click="searchQuery = ''" class="bg-primary text-white py-2 px-4 text-sm">
+            Show All Websites
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- 10. JUST ARRIVED SECTION -->
-    <section class="just-arrived-section py-8 bg-grey-lighten-5">
-      <div class="theme-container">
-        <div class="text-center mb-6">
-          <h2 class="section-title text-h5 font-weight-black text-grey-darken-3 tracking-wide mb-1">
-            Just Arrived
-          </h2>
-          <div class="title-underline mx-auto bg-red-darken-3 mb-3"></div>
-          <p class="text-caption text-grey-darken-1">Check out our latest plastic kitchenware & household arrivals</p>
-        </div>
-
-        <VRow>
-          <VCol v-for="product in newArrivals" :key="product.id" cols="12" sm="6" md="4" lg="3">
-            <VCard class="product-card h-100 border rounded-lg overflow-hidden elevation-1 hover-shadow transition-fast">
-              <div class="product-img-wrapper position-relative bg-grey-lighten-4 overflow-hidden">
-                <VImg :src="product.image" height="220" cover class="product-image transition-slow" />
-                <span class="badge-tag bg-info text-white text-caption font-weight-bold px-2 py-1 rounded-r shadow-xs">
-                  NEW ARRIVAL
-                </span>
-              </div>
-
-              <VCardItem class="pa-4">
-                <span class="text-caption text-grey font-weight-medium d-block mb-1">{{ product.category }}</span>
-                <h3 class="product-name text-subtitle-1 font-weight-bold text-grey-darken-3 text-truncate mb-2">
-                  {{ product.title }}
-                </h3>
-
-                <div class="d-flex align-center justify-space-between pt-2 border-top">
-                  <span class="text-h6 font-weight-bold text-red-darken-3">Rs. {{ product.price.toLocaleString() }}</span>
-                  <VBtn color="red-darken-3" size="small" variant="flat" class="rounded-pill font-weight-bold" @click="addToCart(product)">
-                    Add to Cart
-                  </VBtn>
-                </div>
-              </VCardItem>
-            </VCard>
-          </VCol>
-        </VRow>
-      </div>
-    </section>
-
-    <!-- 11. FOOTER SECTION MATCHING BLUE BRAND FOOTER IN SCREENSHOT -->
-    <footer id="contact" class="theme-footer bg-grey-darken-4 text-grey-lighten-3 pt-10 pb-6">
-      <div class="theme-container">
-        <VRow class="mb-8">
-          <!-- Col 1: Brand & Contact Info -->
-          <VCol cols="12" md="4">
-            <div class="footer-brand mb-4">
-              <div class="logo-badge bg-blue-darken-4 text-white px-3 py-2 rounded-lg font-weight-black text-h6 tracking-wide d-inline-block shadow-sm mb-2 border border-blue-lighten-1">
-                EVERYDAY PLASTIC
-              </div>
-              <p class="text-body-2 text-grey-lighten-1 line-height-relaxed mb-4">
-                Everyday Plastic is Pakistan's leading manufacturer of high-grade plastic kitchenware, utility racks, spice containers, and household solutions.
-              </p>
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- FOOTER — layouts/footer.blade.php (exact copy)        -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div class="mt-16 text-black">
+      <div class="bg-secondary py-10 border-b-2 border-white dark:bg-black dark:border-slate-800" :style="{ backgroundColor: darkMode ? '#000000' : 'rgb(237 241 255)' }">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-10 px-8">
+          <!-- Col 1: Brand + Address -->
+          <div>
+            <a class="block" href="/">
+              <h1 class="text-2xl font-semibold text-center my-2">
+                <span class="text-primary dark:text-black uppercase">EveryDay</span>
+                <span class="text-black dark:text-primary ml-1 uppercase">Group</span>
+              </h1>
+            </a>
+            <div class="mt-3">
+              <i class="fa-solid fa-location-dot text-primary"></i>
+              <span class="text-black"> Ali Pur Chowk, Raj Kot, Gondlanwala Road, Gujranwala, PK</span>
             </div>
-
-            <div class="contact-details text-caption text-grey-lighten-2 d-flex flex-column gap-2">
-              <div class="d-flex align-center gap-2">
-                <VIcon icon="bx-map" color="amber" size="18" />
-                <span>Ferozepur Road Industrial Zone, Lahore, Pakistan</span>
-              </div>
-              <div class="d-flex align-center gap-2">
-                <VIcon icon="bx-phone" color="amber" size="18" />
-                <span>+92 321 484 0041 | +92 300 484 0041</span>
-              </div>
-              <div class="d-flex align-center gap-2">
-                <VIcon icon="bx-envelope" color="amber" size="18" />
-                <span>sales@everydayplastic.co</span>
-              </div>
+            <div class="mt-3">
+              <i class="fa-solid fa-envelope text-primary"></i>
+              <a href="mailto:info@everydayplastic.co" class="hover:text-primary"> info@everydayplastic.co</a>
             </div>
-          </VCol>
+            <div class="mt-3">
+              <i class="fa-solid fa-phone text-primary"></i>
+              <a href="tel:+923363413244" class="hover:text-primary"> +92 336 3413244</a>
+            </div>
+          </div>
 
           <!-- Col 2: Quick Links -->
-          <VCol cols="6" md="2">
-            <h4 class="footer-heading text-subtitle-1 font-weight-bold text-amber-lighten-3 mb-4">Quick Links</h4>
-            <ul class="footer-links list-none p-0 m-0 text-body-2 d-flex flex-column gap-2">
-              <li><a href="#" class="text-grey-lighten-2 text-decoration-none hover-gold">Home Page</a></li>
-              <li><a href="#kitchenware" class="text-grey-lighten-2 text-decoration-none hover-gold">Kitchenware Range</a></li>
-              <li><a href="#furniture" class="text-grey-lighten-2 text-decoration-none hover-gold">Furniture Range</a></li>
-              <li><a href="#household" class="text-grey-lighten-2 text-decoration-none hover-gold">Household Accessories</a></li>
-              <li><a href="/admin/login" class="text-amber-lighten-3 text-decoration-none font-weight-bold">Admin Portal Login</a></li>
+          <div>
+            <h1 class="font-bold text-2xl mb-3">Quick Links</h1>
+            <ul>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="#portals">Home</a></li>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="https://everydayplastic.co" target="_blank">Everyday Plastic</a></li>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="https://everydayhomeappliances.co" target="_blank">Everyday Appliances</a></li>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="https://everydaysanitary.co" target="_blank">Everyday Sanitary</a></li>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="https://everydayfurniture.co" target="_blank">Everyday Furniture</a></li>
             </ul>
-          </VCol>
+          </div>
 
           <!-- Col 3: Support -->
-          <VCol cols="6" md="2">
-            <h4 class="footer-heading text-subtitle-1 font-weight-bold text-amber-lighten-3 mb-4">Customer Support</h4>
-            <ul class="footer-links list-none p-0 m-0 text-body-2 d-flex flex-column gap-2">
-              <li><a href="#" class="text-grey-lighten-2 text-decoration-none hover-gold">Free Shipping Policy</a></li>
-              <li><a href="#" class="text-grey-lighten-2 text-decoration-none hover-gold">7 Days Return Guarantee</a></li>
-              <li><a href="#" class="text-grey-lighten-2 text-decoration-none hover-gold">Wholesale & Bulk Orders</a></li>
-              <li><a href="#" class="text-grey-lighten-2 text-decoration-none hover-gold">Privacy & Terms</a></li>
+          <div>
+            <h1 class="font-bold text-2xl mb-3">Support</h1>
+            <ul>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="#">Privacy Policy</a></li>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="#">Terms &amp; Conditions</a></li>
+              <li class="py-1"><a class="hover:text-primary hover:underline" href="#">Return Policy</a></li>
+              <li class="py-1"><RouterLink class="hover:text-primary hover:underline" to="/login">Admin Portal</RouterLink></li>
             </ul>
-          </VCol>
+          </div>
 
-          <!-- Col 4: Newsletter -->
-          <VCol cols="12" md="4">
-            <h4 class="footer-heading text-subtitle-1 font-weight-bold text-amber-lighten-3 mb-4">Subscribe to Newsletter</h4>
-            <p class="text-caption text-grey-lighten-1 mb-3">Get discount updates & new product launch alerts in your inbox.</p>
-            
-            <div class="newsletter-form d-flex flex-column gap-2">
-              <input type="text" placeholder="Your Name" class="px-3 py-2 rounded bg-grey-darken-3 border-0 text-body-2 text-white outline-none" />
-              <input type="email" placeholder="Your Email Address" class="px-3 py-2 rounded bg-grey-darken-3 border-0 text-body-2 text-white outline-none" />
-              <VBtn color="amber-darken-2" class="font-weight-bold text-grey-darken-4 rounded" @click="showToast('Thank you for subscribing!')">
-                SUBSCRIBE NOW
-              </VBtn>
-            </div>
-          </VCol>
-        </VRow>
-
-        <div class="footer-bottom border-top border-grey-darken-3 pt-4 d-flex align-center justify-space-between flex-wrap gap-2 text-caption text-grey">
-          <span>&copy; {{ new Date().getFullYear() }} Everyday Plastic / Everyday Group of Companies. All Rights Reserved.</span>
-          <span>Designed & Maintained for everydaygroup.co</span>
+          <!-- Col 4: Newsletter — exact from footer.blade.php -->
+          <div>
+            <h1 class="font-bold text-2xl mb-3">Newsletter</h1>
+            <form @submit.prevent>
+              <input type="text" placeholder="Your Name" class="w-full p-2 py-3 my-2 border border-secondary dark:bg-slate-900 dark:border-slate-800 dark:text-secondary dark:placeholder-gray-500" />
+              <input type="email" placeholder="Your Email" class="w-full p-2 py-3 my-2 border border-secondary dark:bg-slate-900 dark:border-slate-800 dark:text-secondary dark:placeholder-gray-500" />
+              <button class="bg-primary text-white p-2 my-2 w-full py-3 hover:opacity-90 transition">Subscribe</button>
+            </form>
+          </div>
         </div>
       </div>
-    </footer>
 
-    <!-- FLOATING WHATSAPP & ASK COMPANY BUTTONS -->
-    <div class="floating-actions position-fixed bottom-6 right-6 d-flex flex-column gap-3 z-index-99">
-      <VBtn color="green-darken-2" icon size="large" class="elevation-6 rounded-circle" @click="openWhatsApp" title="Chat on WhatsApp">
-        <VIcon icon="bxl-whatsapp" size="32" color="white" />
-      </VBtn>
+      <!-- Copyright bar -->
+      <div class="bg-secondary lg:px-8 md:px-8 sm:px-8 grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 xs:grid-cols-1 py-5 dark:bg-black dark:border-t dark:border-slate-800" :style="{ backgroundColor: darkMode ? '#000000' : 'rgb(237 241 255)' }">
+        <div class="lg:text-start md:text-start sm:text-start xs:text-center">
+          All reserved by <b>Every day Group</b>
+        </div>
+      </div>
     </div>
 
-    <!-- QUICK VIEW DIALOG -->
-    <VDialog v-model="quickViewDialog" max-width="650">
-      <VCard v-if="selectedProduct" class="rounded-lg overflow-hidden pa-4">
-        <VRow>
-          <VCol cols="12" md="6">
-            <VImg :src="selectedProduct.image" height="280" cover class="rounded-lg border" />
-          </VCol>
-          <VCol cols="12" md="6" class="d-flex flex-column justify-space-between">
-            <div>
-              <span class="text-caption text-red-darken-3 font-weight-bold text-uppercase">{{ selectedProduct.category }}</span>
-              <h2 class="text-h6 font-weight-bold text-grey-darken-3 mb-2">{{ selectedProduct.title }}</h2>
-              <div class="d-flex align-center gap-1 mb-2">
-                <VRating :model-value="selectedProduct.rating" color="amber-darken-2" density="compact" size="small" readonly half-increments />
-                <span class="text-caption text-grey">({{ selectedProduct.reviewsCount }} customer reviews)</span>
-              </div>
-              <p class="text-body-2 text-grey-darken-1 mb-4">{{ selectedProduct.description }}</p>
-              
-              <div class="price-box mb-4">
-                <span class="text-h5 font-weight-bold text-red-darken-3">Rs. {{ selectedProduct.price.toLocaleString() }}</span>
-                <span v-if="selectedProduct.oldPrice" class="text-caption text-grey text-decoration-line-through ml-2">Rs. {{ selectedProduct.oldPrice.toLocaleString() }}</span>
-              </div>
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- WHATSAPP FLOATING BUTTON — footer.blade.php exact copy -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div class="fixed bottom-4 left-4 sm:bottom-6 sm:left-6" style="z-index: 2147483647;">
+      <button
+        id="whatsappButton"
+        class="bg-[#25D366] w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-[#1ea952] transition-all duration-300 transform hover:scale-105 active:scale-95 border border-emerald-400/40 cursor-pointer"
+        @click="openWhatsApp"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path>
+        </svg>
+      </button>
+    </div>
 
-              <div class="qty-selector d-flex align-center gap-3 mb-4">
-                <span class="text-caption font-weight-bold">Quantity:</span>
-                <VBtn icon size="x-small" variant="outlined" @click="quantity > 1 ? quantity-- : null">-</VBtn>
-                <span class="font-weight-bold px-2">{{ quantity }}</span>
-                <VBtn icon size="x-small" variant="outlined" @click="quantity++">+</VBtn>
-              </div>
-            </div>
-
-            <VBtn color="red-darken-3" block size="large" class="rounded-pill font-weight-bold" @click="addToCart(selectedProduct); quickViewDialog = false">
-              Add to Shopping Cart
-            </VBtn>
-          </VCol>
-        </VRow>
-      </VCard>
-    </VDialog>
-
-    <!-- CART SLIDE-OVER DRAWER -->
-    <VNavigationDrawer v-model="cartDrawer" location="right" temporary width="380" class="cart-drawer">
-      <div class="pa-4 bg-red-darken-4 text-white d-flex align-center justify-space-between">
-        <div class="d-flex align-center gap-2">
-          <VIcon icon="bx-shopping-bag" size="24" />
-          <h3 class="text-subtitle-1 font-weight-bold mb-0">Your Shopping Cart</h3>
-        </div>
-        <VBtn icon variant="text" color="white" size="small" @click="cartDrawer = false">
-          <VIcon icon="bx-x" />
-        </VBtn>
-      </div>
-
-      <div v-if="cartItems.length > 0" class="cart-body pa-4 flex-grow-1 overflow-y-auto">
-        <div v-for="item in cartItems" :key="item.product.id" class="cart-item d-flex gap-3 py-3 border-bottom align-center">
-          <VImg :src="item.product.image" width="60" height="60" cover class="rounded border flex-shrink-0" />
-          <div class="flex-grow-1 min-width-0">
-            <h4 class="text-body-2 font-weight-bold text-truncate text-grey-darken-3 mb-1">{{ item.product.title }}</h4>
-            <span class="text-caption text-grey">{{ item.qty }} x Rs. {{ item.product.price.toLocaleString() }}</span>
-          </div>
-          <VBtn icon variant="text" color="error" size="x-small" @click="removeFromCart(item.product.id)">
-            <VIcon icon="bx-trash" />
-          </VBtn>
-        </div>
-
-        <div class="cart-footer border-top pt-4 mt-4">
-          <div class="d-flex align-center justify-space-between mb-3 text-subtitle-1 font-weight-bold">
-            <span>Total Subtotal:</span>
-            <span class="text-red-darken-3">Rs. {{ cartTotalPrice.toLocaleString() }}</span>
-          </div>
-          <p class="text-caption text-grey mb-4">Taxes and shipping calculated at checkout.</p>
-          <VBtn color="red-darken-3" block size="large" class="rounded-pill font-weight-bold mb-2" @click="showToast('Proceeding to Checkout...')">
-            Proceed to Checkout
-          </VBtn>
-          <VBtn variant="outlined" color="grey" block size="small" class="rounded-pill" @click="cartDrawer = false">
-            Continue Shopping
-          </VBtn>
-        </div>
-      </div>
-
-      <div v-else class="text-center pa-8">
-        <VIcon icon="bx-cart" size="64" color="grey-lighten-1" class="mb-3" />
-        <h4 class="text-subtitle-1 font-weight-bold text-grey-darken-2">Your cart is empty</h4>
-        <p class="text-caption text-grey mb-4">Add products from the catalog to see them here.</p>
-        <VBtn color="red-darken-3" variant="flat" size="small" class="rounded-pill" @click="cartDrawer = false">
-          Start Shopping
-        </VBtn>
-      </div>
-    </VNavigationDrawer>
-
-    <!-- GLOBAL TOAST SNACKBAR -->
-    <VSnackbar v-model="snackbar" timeout="3000" color="red-darken-4" location="bottom right">
-      <div class="d-flex align-center gap-2 text-subtitle-2 font-weight-medium">
-        <VIcon icon="bx-check-circle" color="amber" />
-        {{ snackbarText }}
-      </div>
-    </VSnackbar>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.theme-wrapper {
-  font-family: 'Roboto', 'Outfit', sans-serif;
-  color: #333;
-  background-color: #f8fafc;
-  min-height: 100vh;
+<style>
+.bg-secondary {
+  background-color: rgb(237 241 255 / var(--tw-bg-opacity, 1)) !important;
 }
-
-.theme-container {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding-inline: 1rem;
-}
-
-/* 1. Top Bar */
-.top-announcement-bar {
-  background-color: #7f1d1d;
-  color: #fff;
-
-  .hover-gold:hover {
-    color: #fcd34d !important;
-  }
-}
-
-/* 2. Header */
-.main-header {
-  .logo-badge {
-    letter-spacing: 1px;
-    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
-  }
-
-  .search-pill {
-    background-color: #f1f5f9;
-
-    .cat-select {
-      outline: none;
-      width: 140px;
-    }
-
-    .divider-v {
-      width: 1px;
-      height: 24px;
-    }
-
-    .search-input {
-      min-width: 200px;
-    }
-
-    .search-btn:hover {
-      background-color: #991b1b !important;
-    }
-  }
-}
-
-/* 3. Navigation */
-.theme-nav {
-  .cat-dropdown-trigger {
-    transition: background-color 0.2s ease;
-    border-radius: 4px 4px 0 0;
-
-    &:hover {
-      background-color: #f59e0b !important;
-    }
-  }
-
-  .nav-links {
-    .nav-item {
-      color: rgba(255, 255, 255, 0.9);
-      text-decoration: none;
-      padding-block: 0.75rem;
-      position: relative;
-      transition: color 0.2s ease;
-
-      &:hover,
-      &.active {
-        color: #fcd34d;
-      }
-
-      &.active::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background-color: #fcd34d;
-        border-radius: 3px 3px 0 0;
-      }
-    }
-  }
-}
-
-/* 4. Hero Section */
-.hero-wrapper {
-  .category-sidebar {
-    .sidebar-item a {
-      transition: all 0.2s ease;
-
-      &:hover {
-        background-color: #fef2f2;
-        padding-left: 1.25rem !important;
-
-        span {
-          color: #b91c1c !important;
-        }
-      }
-    }
-  }
-
-  .hero-banner-card {
-    border: 1px solid #e2e8f0;
-
-    .hero-overlay {
-      background: linear-gradient(90deg, rgba(6, 78, 59, 0.92) 0%, rgba(4, 120, 87, 0.75) 50%, rgba(0, 0, 0, 0.3) 100%);
-    }
-
-    .hero-headline {
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-  }
-}
-
-/* 5. Value Bar */
-.value-bar {
-  .border-right {
-    border-right: 1px solid #f1f5f9;
-
-    @media (max-width: 600px) {
-      border-right: none;
-    }
-  }
-
-  .feature-icon-circle {
-    transition: transform 0.3s ease;
-  }
-
-  .feature-item:hover .feature-icon-circle {
-    transform: scale(1.1);
-  }
-}
-
-/* Section Title Underline */
-.section-title {
-  position: relative;
-}
-
-.title-underline {
-  width: 60px;
-  height: 3.5px;
-  border-radius: 2px;
-}
-
-/* Product Cards */
-.product-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    transform: translateY(-6px);
-
-    .product-image {
-      transform: scale(1.06);
-    }
-
-    .quick-actions-overlay {
-      opacity: 1;
-    }
-  }
-
-  .badge-tag {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    z-index: 2;
-  }
-
-  .quick-actions-overlay {
-    opacity: 0;
-    background: rgba(0, 0, 0, 0.25);
-    z-index: 3;
-  }
-}
-
-/* 7. Category Banners */
-.cat-banner-card {
-  .cat-banner-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
-    transition: background 0.3s ease;
-  }
-
-  &:hover {
-    .cat-banner-img {
-      transform: scale(1.08);
-    }
-
-    .cat-banner-overlay {
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.3) 70%, transparent 100%);
-    }
-  }
-}
-
-/* 8. Our Collection Circles */
-.collection-circle-item {
-  &:hover {
-    .circle-avatar {
-      transform: scale(1.08) rotate(2deg);
-      border-color: #b91c1c !important;
-    }
-  }
-}
-
-.z-index-99 {
-  z-index: 99;
+.dark .dark\:bg-black,
+.dark .bg-secondary {
+  background-color: #000000 !important;
 }
 </style>
+
