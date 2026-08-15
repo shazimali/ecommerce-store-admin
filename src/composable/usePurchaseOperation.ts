@@ -1,9 +1,10 @@
 import { IProductListForPurchase } from "@/Interfaces/IProduct";
 import { IPurchase } from "@/Interfaces/IPurchase";
 import { ISupplierList } from "@/Interfaces/ISupplier";
-import { fetchCategoryByID } from "@/services/CategoriesService";
+import httpClient from "@/plugins/httpClient";
 import { fetchAllSuppliers, fetchPurchaseByID, savePurchase, updatePurchase } from "@/services/PurchaseService";
 import { rand } from "@vueuse/core";
+import { Ref, ref } from "vue";
 import { toast } from 'vue3-toastify';
 export function usePurchaseOperation (){
     
@@ -31,7 +32,7 @@ export function usePurchaseOperation (){
     ]>([]);
 
     const getPurchaseByID =  (id:number) => {
-      fetchCategoryByID(id).then((res) => {
+      fetchPurchaseByID(httpClient, id).then((res) => {
         form.value = res.data.data;
       }).catch((err) => {
         toast.error(err.message);
@@ -40,17 +41,17 @@ export function usePurchaseOperation (){
     const handleSubmit = (id:number, isActive:Ref<boolean>) => {
         formLoading.value = true;
         if(id == 0){
-            savePurchase(form.value).then((res) => {
+            savePurchase(httpClient, form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
                 toast.success(res.data.message)
             })
             .catch((err) => {
-              if(err.response.status == "422"){
+              if(err.response?.status == "422" || err.response?.status == 422){
                 errorMessages.value =  err.response.data.errors
                 formLoading.value = false;
-              }else if(err.response.status == "401"){  
+              }else if(err.response?.status == "401" || err.response?.status == 401){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
                 errorMessages.value = ['','','','','']
@@ -60,17 +61,17 @@ export function usePurchaseOperation (){
               }
             })
         }else{
-            updatePurchase(id,form.value).then((res) => {
+            updatePurchase(httpClient, id,form.value).then((res) => {
                 formLoading.value = false;
                 isActive.value = false;
                 isCompleted.value = rand(1,10);
                 toast.success(res.data.message)
             })
             .catch((err) => {
-              if(err.response.status == "422"){
+              if(err.response?.status == "422" || err.response?.status == 422){
                 errorMessages.value =  err.response.data.errors
                 formLoading.value = false;
-              }else if(err.response.status == "401"){  
+              }else if(err.response?.status == "401" || err.response?.status == 401){  
                 toast.error(err.response.data.message);
                 formLoading.value = false;
                 errorMessages.value = ['','','']
@@ -151,11 +152,11 @@ const getAllSuppliers = (id:number) => {
         form.value.supplier_id='';
         loading.value = true;
 
-        fetchAllSuppliers().then((res) => {
-            lstSuppliers.value = res.data.suppliers,
-            lstProducts.value = res.data.products
+        fetchAllSuppliers(httpClient).then((res) => {
+            lstSuppliers.value = res.data.suppliers;
+            lstProducts.value = res.data.products;
             if(id != 0){
-                fetchPurchaseByID(id).then((res) => {
+                fetchPurchaseByID(httpClient, id).then((res) => {
                     let data = res.data.data;
                     form.value.invoice_id = data.invoice_id;
                     form.value.supplier_id = data.supplier_id;
@@ -163,7 +164,7 @@ const getAllSuppliers = (id:number) => {
                     form.value.total_qty = data.total_qty;
                     data.purchase_detail.map((purchase_detail_data) => {
                       form.value.purchase_detail.push({
-                        list_id: lstProducts.value.find((item)=> item.product_id == purchase_detail_data.product_head_id && item.color_id ==purchase_detail_data.color_id).list_id,
+                        list_id: lstProducts.value.find((item)=> item.product_id == purchase_detail_data.product_head_id && item.color_id ==purchase_detail_data.color_id)?.list_id,
                         id :purchase_detail_data.product_head_id,
                         title:purchase_detail_data.title,
                         code:purchase_detail_data.code,
