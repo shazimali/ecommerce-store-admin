@@ -32,3 +32,42 @@ export interface IBookOrder {
   'order_id': number | string,
   'special_instruction': string
 }
+
+export interface IOrderItem {
+  id: number,
+  is_bundle: boolean,
+  title: string,
+  sku: string,
+  color: string,
+  image: string,
+  currency: string,
+  unit_amount: number,
+  quantity: number,
+  total_amount: number
+}
+
+export interface IOrderDetail {
+  id: number,
+  order_id: number | string,
+  status: string,
+  created_at: string,
+  customer_name: string,
+  customer_email: string,
+  phone: string,
+  address: string,
+  billing_address: string,
+  country: string,
+  city: string,
+  special_instructions: string,
+  cod_company: string,
+  track_number: string,
+  slip_link: string,
+  sub_total: number,
+  free_shipping: number,
+  shipping_charges: number,
+  code: string,
+  discount: number,
+  discount_amount: number,
+  total: number,
+  items: IOrderItem[]
+}

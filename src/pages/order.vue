@@ -20,9 +20,7 @@
             @update:options ="doFetchOrder"
             >
             <template v-slot:item.order_id="{item}">
-            <a :href="item.slip_link" target="_blank">
-              ED#{{ item.order_id }}
-            </a>
+            <OrderDetail :order-id="item.order_id" />
             </template>
             <!-- <template v-slot:item.free_shipping="{ item }">
                 <v-chip v-if="item.free_shipping == 1"  :key="item.id" color="success" class="mx-1 my-1">
@@ -105,6 +103,7 @@
 
 import { commaFormate } from '@/@core/utils/helpers';
 import BookOrder from '@/components/BookOrder.vue';
+import OrderDetail from '@/components/OrderDetail.vue';
 import { useOrder } from '@/composable/useOrder';
 
 

@@ -20,3 +20,7 @@ export const  updateBookedOrderStatus = async (axiosInstance: AxiosInstance, dat
 export const  deleteOrder = async (axiosInstance: AxiosInstance, id:number) => {
   return await axiosInstance.post('/orders/delete/'+id)  
 }
+
+export const  fetchOrderDetail = async (axiosInstance: AxiosInstance, order_id: number | string) => {
+  return await axiosInstance.get('/orders/'+order_id+'/detail')  
+}

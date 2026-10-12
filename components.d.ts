@@ -25,6 +25,7 @@ declare module 'vue' {
     ErrorHeader: typeof import('./src/components/ErrorHeader.vue')['default']
     FacilityOperation: typeof import('./src/components/FacilityOperation.vue')['default']
     MoreBtn: typeof import('./src/@core/components/MoreBtn.vue')['default']
+    OrderDetail: typeof import('./src/components/OrderDetail.vue')['default']
     PagesOperation: typeof import('./src/components/PagesOperation.vue')['default']
     PermissionOperations: typeof import('./src/components/PermissionOperations.vue')['default']
     ProductColor: typeof import('./src/components/ProductColor.vue')['default']
